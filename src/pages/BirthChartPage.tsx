@@ -20,11 +20,25 @@ export default function BirthChartPage() {
   });
   const [chart, setChart] = useState<HoroscopeChart | null>(null);
   const [navamsa, setNavamsa] = useState<NavamsaChart | null>(null);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const handleGenerate = () => {
     const horoscope = generateHoroscope(birthData);
     setChart(horoscope);
     setNavamsa(calculateNavamsa(horoscope.planets));
+  };
+
+  const handleSave = async () => {
+    if (!user || !chart) return;
+    const { error } = await supabase.from("birth_charts").insert({
+      user_id: user.id,
+      chart_type: "rasi",
+      name: birthData.name || "Unnamed Chart",
+      chart_data: { chart, navamsa, birthData: { ...birthData, dateOfBirth: birthData.dateOfBirth.toISOString() } } as any,
+    });
+    if (error) toast({ title: "பிழை", description: error.message, variant: "destructive" });
+    else toast({ title: "சேமிக்கப்பட்டது!", description: "ஜாதகம் வெற்றிகரமாக சேமிக்கப்பட்டது" });
   };
 
   return (

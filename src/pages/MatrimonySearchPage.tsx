@@ -11,7 +11,6 @@ import { Search, Heart, MapPin, GraduationCap, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { ContactUnlockButton } from "@/components/matrimony/ContactUnlockButton";
-import { useAuth } from "@/contexts/AuthContext";
 
 export default function MatrimonySearchPage() {
   const { user } = useAuth();

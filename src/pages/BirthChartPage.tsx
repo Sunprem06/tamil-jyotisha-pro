@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { Header } from "@/components/layout/Header";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Save } from "lucide-react";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,11 +20,25 @@ export default function BirthChartPage() {
   });
   const [chart, setChart] = useState<HoroscopeChart | null>(null);
   const [navamsa, setNavamsa] = useState<NavamsaChart | null>(null);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const handleGenerate = () => {
     const horoscope = generateHoroscope(birthData);
     setChart(horoscope);
     setNavamsa(calculateNavamsa(horoscope.planets));
+  };
+
+  const handleSave = async () => {
+    if (!user || !chart) return;
+    const { error } = await supabase.from("birth_charts").insert({
+      user_id: user.id,
+      chart_type: "rasi",
+      name: birthData.name || "Unnamed Chart",
+      chart_data: { chart, navamsa, birthData: { ...birthData, dateOfBirth: birthData.dateOfBirth.toISOString() } } as any,
+    });
+    if (error) toast({ title: "பிழை", description: error.message, variant: "destructive" });
+    else toast({ title: "சேமிக்கப்பட்டது!", description: "ஜாதகம் வெற்றிகரமாக சேமிக்கப்பட்டது" });
   };
 
   return (
@@ -68,6 +86,16 @@ export default function BirthChartPage() {
               ஜாதகம் கணிக்க (Generate Chart)
             </Button>
           </div>
+
+          {chart && (
+            <div className="flex justify-center mb-6">
+              {user && (
+                <Button variant="outline" className="font-tamil" onClick={handleSave}>
+                  <Save className="h-4 w-4 mr-2" /> ஜாதகம் சேமிக்க (Save Chart)
+                </Button>
+              )}
+            </div>
+          )}
 
           {chart && (
             <div className="animate-fade-up space-y-8">

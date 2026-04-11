@@ -65,6 +65,7 @@ export default function MatrimonyProfilePage() {
     const { error } = await supabase.from("matrimony_profiles").upsert({
       user_id: user.id,
       ...form,
+      photos,
       height_cm: form.height_cm ? parseInt(form.height_cm) : null,
       weight_kg: form.weight_kg ? parseInt(form.weight_kg) : null,
       siblings_count: parseInt(form.siblings_count) || 0,

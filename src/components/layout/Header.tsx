@@ -1,0 +1,98 @@
+import { Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
+
+const navLinks = [
+  { href: "/", label: "முகப்பு", labelEn: "Home" },
+  { href: "/rasi", label: "ராசிபலன்", labelEn: "Horoscope" },
+  { href: "/birth-chart", label: "ஜாதகம்", labelEn: "Birth Chart" },
+  { href: "/panchangam", label: "பஞ்சாங்கம்", labelEn: "Panchangam" },
+  { href: "/porutham", label: "பொருத்தம்", labelEn: "Matching" },
+  { href: "/dasha", label: "தசா", labelEn: "Dasha" },
+  { href: "/dosha", label: "தோஷம்", labelEn: "Dosha" },
+  { href: "/transit", label: "கோசாரம்", labelEn: "Transit" },
+  { href: "/remedies", label: "பரிகாரம்", labelEn: "Remedies" },
+];
+
+export function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  return (
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
+      <div className="container flex items-center justify-between h-16">
+        <Link to="/" className="flex items-center gap-2">
+          <div className="h-10 w-10 rounded-full bg-gradient-sacred flex items-center justify-center shadow-sacred">
+            <span className="text-primary-foreground text-lg">ௐ</span>
+          </div>
+          <div>
+            <h1 className="text-lg font-bold font-tamil text-gradient-sacred leading-tight">தமிழ் ஜோதிடம்</h1>
+            <p className="text-xs text-muted-foreground">Tamil Jothidam</p>
+          </div>
+        </Link>
+
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-center gap-1">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className={`px-3 py-2 rounded-lg text-sm font-tamil transition-colors ${
+                location.pathname === link.href
+                  ? "bg-primary/10 text-primary font-semibold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="hidden lg:flex items-center gap-2">
+          <Link to="/about">
+            <Button variant="ghost" size="sm" className="font-tamil">பற்றி</Button>
+          </Link>
+          <Link to="/contact">
+            <Button variant="ghost" size="sm" className="font-tamil">தொடர்பு</Button>
+          </Link>
+        </div>
+
+        {/* Mobile menu button */}
+        <button className="lg:hidden p-2" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+      </div>
+
+      {/* Mobile Nav */}
+      {isOpen && (
+        <div className="lg:hidden border-t border-border bg-background">
+          <nav className="container py-4 flex flex-col gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                onClick={() => setIsOpen(false)}
+                className={`px-4 py-3 rounded-lg text-sm font-tamil transition-colors ${
+                  location.pathname === link.href
+                    ? "bg-primary/10 text-primary font-semibold"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                }`}
+              >
+                {link.label} <span className="text-xs text-muted-foreground ml-1">({link.labelEn})</span>
+              </Link>
+            ))}
+            <div className="flex gap-2 mt-2 px-4">
+              <Link to="/about" onClick={() => setIsOpen(false)}>
+                <Button variant="ghost" size="sm" className="font-tamil">பற்றி</Button>
+              </Link>
+              <Link to="/contact" onClick={() => setIsOpen(false)}>
+                <Button variant="ghost" size="sm" className="font-tamil">தொடர்பு</Button>
+              </Link>
+            </div>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+}

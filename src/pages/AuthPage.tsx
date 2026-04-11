@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { LogIn, UserPlus, Mail, Lock, User } from "lucide-react";
+import { LogIn, UserPlus, Mail, Lock, User, Chrome } from "lucide-react";
+import { lovable } from "@/integrations/lovable";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -109,6 +110,37 @@ export default function AuthPage() {
                 )}
               </Button>
             </form>
+
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">அல்லது (or)</span>
+              </div>
+            </div>
+
+            <Button
+              variant="outline"
+              className="w-full font-tamil"
+              onClick={async () => {
+                setLoading(true);
+                try {
+                  const result = await lovable.auth.signInWithOAuth("google");
+                  if (result?.error) {
+                    toast({ title: "பிழை", description: String(result.error), variant: "destructive" });
+                  }
+                } catch (error: any) {
+                  toast({ title: "பிழை", description: error.message, variant: "destructive" });
+                } finally {
+                  setLoading(false);
+                }
+              }}
+              disabled={loading}
+            >
+              <Chrome className="h-4 w-4 mr-2" />
+              Google மூலம் உள்நுழைக
+            </Button>
 
             <div className="mt-6 text-center">
               <button

@@ -35,6 +35,8 @@ import AdminConfigPage from "./pages/admin/AdminConfigPage";
 import AdminReportsPage from "./pages/admin/AdminReportsPage";
 import MatrimonyProfilePage from "./pages/MatrimonyProfilePage";
 import MatrimonySearchPage from "./pages/MatrimonySearchPage";
+import MatrimonyViewProfilePage from "./pages/MatrimonyViewProfilePage";
+import PartnerPreferencesPage from "./pages/PartnerPreferencesPage";
 import MessagesPage from "./pages/MessagesPage";
 import NotFound from "./pages/NotFound";
 

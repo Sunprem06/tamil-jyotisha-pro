@@ -35,6 +35,7 @@ import AdminConfigPage from "./pages/admin/AdminConfigPage";
 import AdminReportsPage from "./pages/admin/AdminReportsPage";
 import MatrimonyProfilePage from "./pages/MatrimonyProfilePage";
 import MatrimonySearchPage from "./pages/MatrimonySearchPage";
+import MessagesPage from "./pages/MessagesPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -68,6 +69,7 @@ const App = () => (
             <Route path="/saved-charts" element={<ProtectedRoute><SavedChartsPage /></ProtectedRoute>} />
             <Route path="/matrimony/profile" element={<ProtectedRoute><MatrimonyProfilePage /></ProtectedRoute>} />
             <Route path="/matrimony/search" element={<MatrimonySearchPage />} />
+            <Route path="/messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
             <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="/admin/users" element={<AdminUsersPage />} />
             <Route path="/admin/profiles" element={<AdminProfilesPage />} />

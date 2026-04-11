@@ -115,7 +115,9 @@ export default function MatrimonySearchPage() {
 
                   <div className="flex gap-2">
                     <ContactUnlockButton targetUserId={p.user_id} targetName={`${age(p.date_of_birth)} yrs, ${p.city ?? "Unknown"}`} />
-                    <Button variant="outline" size="sm" className="flex-1">View Profile</Button>
+                    <Link to={`/matrimony/profile/${p.user_id}`}>
+                      <Button variant="outline" size="sm">View Profile</Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>

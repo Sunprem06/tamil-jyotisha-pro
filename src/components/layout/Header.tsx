@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogIn, LogOut, User, Shield } from "lucide-react";
+import { Menu, X, LogIn, LogOut, User, Shield, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -72,6 +72,11 @@ export function Header() {
               </Link>
               <Link to="/saved-charts">
                 <Button variant="ghost" size="sm" className="font-tamil">ஜாதகங்கள்</Button>
+              </Link>
+              <Link to="/messages">
+                <Button variant="ghost" size="sm">
+                  <MessageSquare className="h-4 w-4 mr-1" /> செய்திகள்
+                </Button>
               </Link>
               {isAdmin && (
                 <Link to="/admin">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -11,12 +11,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { PhotoUpload } from "@/components/matrimony/PhotoUpload";
 
 export default function MatrimonyProfilePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
+  const [photos, setPhotos] = useState<string[]>([]);
   const [form, setForm] = useState({
     gender: "", date_of_birth: "", height_cm: "", weight_kg: "",
     complexion: "", body_type: "", marital_status: "never_married",
@@ -30,6 +32,31 @@ export default function MatrimonyProfilePage() {
 
   const set = (key: string, val: string) => setForm(f => ({ ...f, [key]: val }));
 
+  // Load existing profile
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("matrimony_profiles").select("*").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+      if (data) {
+        setPhotos(data.photos ?? []);
+        setForm({
+          gender: data.gender ?? "", date_of_birth: data.date_of_birth ?? "",
+          height_cm: data.height_cm?.toString() ?? "", weight_kg: data.weight_kg?.toString() ?? "",
+          complexion: data.complexion ?? "", body_type: data.body_type ?? "",
+          marital_status: data.marital_status ?? "never_married",
+          mother_tongue: data.mother_tongue ?? "Tamil", religion: data.religion ?? "Hindu",
+          caste: data.caste ?? "", sub_caste: data.sub_caste ?? "", gothram: data.gothram ?? "",
+          education: data.education ?? "", education_detail: data.education_detail ?? "",
+          occupation: data.occupation ?? "", occupation_detail: data.occupation_detail ?? "",
+          annual_income: data.annual_income ?? "", company_name: data.company_name ?? "",
+          city: data.city ?? "", state: data.state ?? "Tamil Nadu", country: data.country ?? "India",
+          about_me: data.about_me ?? "", family_type: data.family_type ?? "",
+          family_status: data.family_status ?? "", father_occupation: data.father_occupation ?? "",
+          mother_occupation: data.mother_occupation ?? "", siblings_count: data.siblings_count?.toString() ?? "0",
+        });
+      }
+    });
+  }, [user]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
@@ -38,6 +65,7 @@ export default function MatrimonyProfilePage() {
     const { error } = await supabase.from("matrimony_profiles").upsert({
       user_id: user.id,
       ...form,
+      photos,
       height_cm: form.height_cm ? parseInt(form.height_cm) : null,
       weight_kg: form.weight_kg ? parseInt(form.weight_kg) : null,
       siblings_count: parseInt(form.siblings_count) || 0,
@@ -146,6 +174,13 @@ export default function MatrimonyProfilePage() {
             <CardHeader><CardTitle>என்னைப் பற்றி (About Me)</CardTitle></CardHeader>
             <CardContent>
               <Textarea value={form.about_me} onChange={e => set("about_me", e.target.value)} rows={4} placeholder="உங்களைப் பற்றி சுருக்கமாக எழுதுங்கள்..." />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader><CardTitle>புகைப்படங்கள் (Photos)</CardTitle></CardHeader>
+            <CardContent>
+              <PhotoUpload photos={photos} onPhotosChange={setPhotos} maxPhotos={5} />
             </CardContent>
           </Card>
 

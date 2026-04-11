@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search, Heart, MapPin, GraduationCap, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { ContactUnlockButton } from "@/components/matrimony/ContactUnlockButton";
 
 export default function MatrimonySearchPage() {
   const { user } = useAuth();
@@ -87,9 +88,13 @@ export default function MatrimonySearchPage() {
                 <CardContent className="p-5 space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <User className="h-6 w-6 text-primary" />
-                      </div>
+                      {p.photos && p.photos.length > 0 ? (
+                        <img src={p.photos[0]} alt="Profile" className="h-12 w-12 rounded-full object-cover" />
+                      ) : (
+                        <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                          <User className="h-6 w-6 text-primary" />
+                        </div>
+                      )}
                       <div>
                         <p className="font-semibold">{age(p.date_of_birth)} வயது, {p.gender === "male" ? "ஆண்" : "பெண்"}</p>
                         <p className="text-sm text-muted-foreground">{p.marital_status === "never_married" ? "முதல் திருமணம்" : p.marital_status}</p>
@@ -108,7 +113,10 @@ export default function MatrimonySearchPage() {
 
                   {p.about_me && <p className="text-sm text-muted-foreground line-clamp-2">{p.about_me}</p>}
 
-                  <Button className="w-full" size="sm">View Full Profile</Button>
+                  <div className="flex gap-2">
+                    <ContactUnlockButton targetUserId={p.user_id} targetName={`${age(p.date_of_birth)} yrs, ${p.city ?? "Unknown"}`} />
+                    <Button variant="outline" size="sm" className="flex-1">View Profile</Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}

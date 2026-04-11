@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogIn, LogOut, User } from "lucide-react";
-import { useState } from "react";
+import { Menu, X, LogIn, LogOut, User, Shield } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const navLinks = [
   { href: "/", label: "முகப்பு", labelEn: "Home" },
@@ -14,12 +15,22 @@ const navLinks = [
   { href: "/dosha", label: "தோஷம்", labelEn: "Dosha" },
   { href: "/transit", label: "கோசாரம்", labelEn: "Transit" },
   { href: "/remedies", label: "பரிகாரம்", labelEn: "Remedies" },
+  { href: "/matrimony/search", label: "திருமணம்", labelEn: "Matrimony" },
 ];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   const { user, signOut } = useAuth();
+
+  useEffect(() => {
+    if (!user) { setIsAdmin(false); return; }
+    supabase.from("user_roles").select("role").eq("user_id", user.id).then(({ data }) => {
+      const adminRoles = ["super_admin", "admin", "moderator", "support_agent", "analyst"];
+      setIsAdmin(data?.some(r => adminRoles.includes(r.role)) ?? false);
+    });
+  }, [user]);
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -62,6 +73,13 @@ export function Header() {
               <Link to="/saved-charts">
                 <Button variant="ghost" size="sm" className="font-tamil">ஜாதகங்கள்</Button>
               </Link>
+              {isAdmin && (
+                <Link to="/admin">
+                  <Button variant="ghost" size="sm">
+                    <Shield className="h-4 w-4 mr-1" /> Admin
+                  </Button>
+                </Link>
+              )}
               <Button variant="ghost" size="sm" onClick={() => signOut()}>
                 <LogOut className="h-4 w-4" />
               </Button>

@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       birth_charts: {
         Row: {
           chart_data: Json
@@ -54,6 +90,96 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      contact_unlocks: {
+        Row: {
+          admin_override: boolean
+          consent_given: boolean
+          created_at: string
+          credits_spent: number
+          id: string
+          requester_id: string
+          revoked: boolean
+          revoked_by: string | null
+          target_id: string
+        }
+        Insert: {
+          admin_override?: boolean
+          consent_given?: boolean
+          created_at?: string
+          credits_spent?: number
+          id?: string
+          requester_id: string
+          revoked?: boolean
+          revoked_by?: string | null
+          target_id: string
+        }
+        Update: {
+          admin_override?: boolean
+          consent_given?: boolean
+          created_at?: string
+          credits_spent?: number
+          id?: string
+          requester_id?: string
+          revoked?: boolean
+          revoked_by?: string | null
+          target_id?: string
+        }
+        Relationships: []
+      }
+      credit_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          reference_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      credits: {
+        Row: {
+          balance: number
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       family_members: {
         Row: {
@@ -100,6 +226,279 @@ export type Database = {
         }
         Relationships: []
       }
+      fraud_logs: {
+        Row: {
+          created_at: string
+          details: Json | null
+          id: string
+          resolved: boolean
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string
+          signal_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          id?: string
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          signal_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          id?: string
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          signal_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      matrimony_profiles: {
+        Row: {
+          about_me: string | null
+          annual_income: string | null
+          body_type: string | null
+          caste: string | null
+          city: string | null
+          company_name: string | null
+          complexion: string | null
+          country: string
+          created_at: string
+          date_of_birth: string
+          education: string | null
+          education_detail: string | null
+          family_status: string | null
+          family_type: string | null
+          father_occupation: string | null
+          gender: string
+          gothram: string | null
+          height_cm: number | null
+          horoscope_id: string | null
+          id: string
+          is_premium: boolean
+          is_verified: boolean
+          marital_status: string
+          mother_occupation: string | null
+          mother_tongue: string
+          occupation: string | null
+          occupation_detail: string | null
+          photos: string[] | null
+          profile_status: string
+          religion: string
+          siblings_count: number | null
+          state: string | null
+          sub_caste: string | null
+          updated_at: string
+          user_id: string
+          visibility: string
+          weight_kg: number | null
+        }
+        Insert: {
+          about_me?: string | null
+          annual_income?: string | null
+          body_type?: string | null
+          caste?: string | null
+          city?: string | null
+          company_name?: string | null
+          complexion?: string | null
+          country?: string
+          created_at?: string
+          date_of_birth: string
+          education?: string | null
+          education_detail?: string | null
+          family_status?: string | null
+          family_type?: string | null
+          father_occupation?: string | null
+          gender: string
+          gothram?: string | null
+          height_cm?: number | null
+          horoscope_id?: string | null
+          id?: string
+          is_premium?: boolean
+          is_verified?: boolean
+          marital_status?: string
+          mother_occupation?: string | null
+          mother_tongue?: string
+          occupation?: string | null
+          occupation_detail?: string | null
+          photos?: string[] | null
+          profile_status?: string
+          religion?: string
+          siblings_count?: number | null
+          state?: string | null
+          sub_caste?: string | null
+          updated_at?: string
+          user_id: string
+          visibility?: string
+          weight_kg?: number | null
+        }
+        Update: {
+          about_me?: string | null
+          annual_income?: string | null
+          body_type?: string | null
+          caste?: string | null
+          city?: string | null
+          company_name?: string | null
+          complexion?: string | null
+          country?: string
+          created_at?: string
+          date_of_birth?: string
+          education?: string | null
+          education_detail?: string | null
+          family_status?: string | null
+          family_type?: string | null
+          father_occupation?: string | null
+          gender?: string
+          gothram?: string | null
+          height_cm?: number | null
+          horoscope_id?: string | null
+          id?: string
+          is_premium?: boolean
+          is_verified?: boolean
+          marital_status?: string
+          mother_occupation?: string | null
+          mother_tongue?: string
+          occupation?: string | null
+          occupation_detail?: string | null
+          photos?: string[] | null
+          profile_status?: string
+          religion?: string
+          siblings_count?: number | null
+          state?: string | null
+          sub_caste?: string | null
+          updated_at?: string
+          user_id?: string
+          visibility?: string
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_read: boolean
+          receiver_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          receiver_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          receiver_id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
+      partner_preferences: {
+        Row: {
+          age_max: number | null
+          age_min: number | null
+          annual_income_min: string | null
+          caste: string[] | null
+          city: string[] | null
+          country: string[] | null
+          created_at: string
+          dosha_check_required: boolean | null
+          education: string[] | null
+          height_max: number | null
+          height_min: number | null
+          id: string
+          marital_status: string[] | null
+          mother_tongue: string[] | null
+          occupation: string[] | null
+          star_compatibility_required: boolean | null
+          state: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age_max?: number | null
+          age_min?: number | null
+          annual_income_min?: string | null
+          caste?: string[] | null
+          city?: string[] | null
+          country?: string[] | null
+          created_at?: string
+          dosha_check_required?: boolean | null
+          education?: string[] | null
+          height_max?: number | null
+          height_min?: number | null
+          id?: string
+          marital_status?: string[] | null
+          mother_tongue?: string[] | null
+          occupation?: string[] | null
+          star_compatibility_required?: boolean | null
+          state?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age_max?: number | null
+          age_min?: number | null
+          annual_income_min?: string | null
+          caste?: string[] | null
+          city?: string[] | null
+          country?: string[] | null
+          created_at?: string
+          dosha_check_required?: boolean | null
+          education?: string[] | null
+          height_max?: number | null
+          height_min?: number | null
+          id?: string
+          marital_status?: string[] | null
+          mother_tongue?: string[] | null
+          occupation?: string[] | null
+          star_compatibility_required?: boolean | null
+          state?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      permissions: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -130,6 +529,203 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          reason: string
+          reported_user_id: string
+          reporter_id: string
+          resolution_notes: string | null
+          resolved_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason: string
+          reported_user_id: string
+          reporter_id: string
+          resolution_notes?: string | null
+          resolved_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason?: string
+          reported_user_id?: string
+          reporter_id?: string
+          resolution_notes?: string | null
+          resolved_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      role_permissions: {
+        Row: {
+          created_at: string
+          id: string
+          permission_id: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          permission_id: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          permission_id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_permission_id_fkey"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "permissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          amount: number
+          canceled_at: string | null
+          created_at: string
+          currency: string
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          interval: string
+          plan_name: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          canceled_at?: string | null
+          created_at?: string
+          currency?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          interval?: string
+          plan_name: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          canceled_at?: string | null
+          created_at?: string
+          currency?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          interval?: string
+          plan_name?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      system_configurations: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
+      trust_scores: {
+        Row: {
+          activity_quality: number
+          behavior_score: number
+          created_at: string
+          id: string
+          last_calculated_at: string
+          payment_history_score: number
+          profile_completeness: number
+          report_count: number
+          score: number
+          updated_at: string
+          user_id: string
+          verification_level: number
+        }
+        Insert: {
+          activity_quality?: number
+          behavior_score?: number
+          created_at?: string
+          id?: string
+          last_calculated_at?: string
+          payment_history_score?: number
+          profile_completeness?: number
+          report_count?: number
+          score?: number
+          updated_at?: string
+          user_id: string
+          verification_level?: number
+        }
+        Update: {
+          activity_quality?: number
+          behavior_score?: number
+          created_at?: string
+          id?: string
+          last_calculated_at?: string
+          payment_history_score?: number
+          profile_completeness?: number
+          report_count?: number
+          score?: number
+          updated_at?: string
+          user_id?: string
+          verification_level?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -153,6 +749,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_permission: {
+        Args: { _permission: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -162,7 +762,14 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role:
+        | "admin"
+        | "moderator"
+        | "user"
+        | "super_admin"
+        | "support_agent"
+        | "analyst"
+        | "astrologer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -290,7 +897,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user"],
+      app_role: [
+        "admin",
+        "moderator",
+        "user",
+        "super_admin",
+        "support_agent",
+        "analyst",
+        "astrologer",
+      ],
     },
   },
 } as const

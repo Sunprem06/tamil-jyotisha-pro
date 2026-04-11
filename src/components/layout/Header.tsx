@@ -15,6 +15,7 @@ const navLinks = [
   { href: "/dosha", label: "தோஷம்", labelEn: "Dosha" },
   { href: "/transit", label: "கோசாரம்", labelEn: "Transit" },
   { href: "/remedies", label: "பரிகாரம்", labelEn: "Remedies" },
+  { href: "/matrimony/search", label: "திருமணம்", labelEn: "Matrimony" },
 ];
 
 export function Header() {

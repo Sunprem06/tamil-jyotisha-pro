@@ -88,6 +88,16 @@ export default function BirthChartPage() {
           </div>
 
           {chart && (
+            <div className="flex justify-center mb-6">
+              {user && (
+                <Button variant="outline" className="font-tamil" onClick={handleSave}>
+                  <Save className="h-4 w-4 mr-2" /> ஜாதகம் சேமிக்க (Save Chart)
+                </Button>
+              )}
+            </div>
+          )}
+
+          {chart && (
             <div className="animate-fade-up space-y-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <SouthIndianChart lagna={chart.lagna} planets={chart.planets} title="ராசி சக்கரம்" />

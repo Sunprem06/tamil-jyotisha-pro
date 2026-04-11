@@ -177,6 +177,13 @@ export default function MatrimonyProfilePage() {
             </CardContent>
           </Card>
 
+          <Card>
+            <CardHeader><CardTitle>புகைப்படங்கள் (Photos)</CardTitle></CardHeader>
+            <CardContent>
+              <PhotoUpload photos={photos} onPhotosChange={setPhotos} maxPhotos={5} />
+            </CardContent>
+          </Card>
+
           <Button type="submit" className="w-full" disabled={saving || !form.gender || !form.date_of_birth}>
             {saving ? "சேமிக்கிறது..." : "சுயவிவரத்தை சேமி"}
           </Button>

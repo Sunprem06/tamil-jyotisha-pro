@@ -33,6 +33,8 @@ import AdminAnalyticsPage from "./pages/admin/AdminAnalyticsPage";
 import AdminRolesPage from "./pages/admin/AdminRolesPage";
 import AdminConfigPage from "./pages/admin/AdminConfigPage";
 import AdminReportsPage from "./pages/admin/AdminReportsPage";
+import MatrimonyProfilePage from "./pages/MatrimonyProfilePage";
+import MatrimonySearchPage from "./pages/MatrimonySearchPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

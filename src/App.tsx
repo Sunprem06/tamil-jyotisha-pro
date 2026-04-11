@@ -70,7 +70,9 @@ const App = () => (
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             <Route path="/saved-charts" element={<ProtectedRoute><SavedChartsPage /></ProtectedRoute>} />
             <Route path="/matrimony/profile" element={<ProtectedRoute><MatrimonyProfilePage /></ProtectedRoute>} />
+            <Route path="/matrimony/preferences" element={<ProtectedRoute><PartnerPreferencesPage /></ProtectedRoute>} />
             <Route path="/matrimony/search" element={<MatrimonySearchPage />} />
+            <Route path="/matrimony/profile/:userId" element={<MatrimonyViewProfilePage />} />
             <Route path="/messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
             <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="/admin/users" element={<AdminUsersPage />} />

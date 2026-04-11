@@ -142,7 +142,12 @@ export default function AuthPage() {
               Google மூலம் உள்நுழைக
             </Button>
 
-            <div className="mt-6 text-center">
+            <div className="mt-6 text-center space-y-2">
+              {isLogin && (
+                <Link to="/forgot-password" className="block text-sm text-muted-foreground hover:text-primary hover:underline font-tamil">
+                  கடவுச்சொல் மறந்துவிட்டதா? (Forgot Password?)
+                </Link>
+              )}
               <button
                 onClick={() => setIsLogin(!isLogin)}
                 className="text-sm text-primary hover:underline font-tamil"

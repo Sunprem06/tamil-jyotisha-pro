@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogIn, LogOut, User } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { href: "/", label: "முகப்பு", labelEn: "Home" },
@@ -18,6 +19,7 @@ const navLinks = [
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -50,12 +52,27 @@ export function Header() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-2">
-          <Link to="/about">
-            <Button variant="ghost" size="sm" className="font-tamil">பற்றி</Button>
-          </Link>
-          <Link to="/contact">
-            <Button variant="ghost" size="sm" className="font-tamil">தொடர்பு</Button>
-          </Link>
+          {user ? (
+            <>
+              <Link to="/profile">
+                <Button variant="ghost" size="sm" className="font-tamil">
+                  <User className="h-4 w-4 mr-1" /> சுயவிவரம்
+                </Button>
+              </Link>
+              <Link to="/saved-charts">
+                <Button variant="ghost" size="sm" className="font-tamil">ஜாதகங்கள்</Button>
+              </Link>
+              <Button variant="ghost" size="sm" onClick={() => signOut()}>
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </>
+          ) : (
+            <Link to="/auth">
+              <Button variant="sacred" size="sm" className="font-tamil">
+                <LogIn className="h-4 w-4 mr-1" /> உள்நுழைக
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* Mobile menu button */}
@@ -83,12 +100,22 @@ export function Header() {
               </Link>
             ))}
             <div className="flex gap-2 mt-2 px-4">
-              <Link to="/about" onClick={() => setIsOpen(false)}>
-                <Button variant="ghost" size="sm" className="font-tamil">பற்றி</Button>
-              </Link>
-              <Link to="/contact" onClick={() => setIsOpen(false)}>
-                <Button variant="ghost" size="sm" className="font-tamil">தொடர்பு</Button>
-              </Link>
+              {user ? (
+                <>
+                  <Link to="/profile" onClick={() => setIsOpen(false)}>
+                    <Button variant="ghost" size="sm" className="font-tamil">சுயவிவரம்</Button>
+                  </Link>
+                  <Button variant="ghost" size="sm" onClick={() => { signOut(); setIsOpen(false); }}>
+                    <LogOut className="h-4 w-4 mr-1" /> வெளியேறு
+                  </Button>
+                </>
+              ) : (
+                <Link to="/auth" onClick={() => setIsOpen(false)}>
+                  <Button variant="sacred" size="sm" className="font-tamil">
+                    <LogIn className="h-4 w-4 mr-1" /> உள்நுழைக
+                  </Button>
+                </Link>
+              )}
             </div>
           </nav>
         </div>

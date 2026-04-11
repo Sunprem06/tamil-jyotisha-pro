@@ -24,6 +24,15 @@ import ProfilePage from "./pages/ProfilePage";
 import SavedChartsPage from "./pages/SavedChartsPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
+import AdminUsersPage from "./pages/admin/AdminUsersPage";
+import AdminProfilesPage from "./pages/admin/AdminProfilesPage";
+import AdminFraudPage from "./pages/admin/AdminFraudPage";
+import AdminPaymentsPage from "./pages/admin/AdminPaymentsPage";
+import AdminAnalyticsPage from "./pages/admin/AdminAnalyticsPage";
+import AdminRolesPage from "./pages/admin/AdminRolesPage";
+import AdminConfigPage from "./pages/admin/AdminConfigPage";
+import AdminReportsPage from "./pages/admin/AdminReportsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -55,6 +64,15 @@ const App = () => (
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             <Route path="/saved-charts" element={<ProtectedRoute><SavedChartsPage /></ProtectedRoute>} />
+            <Route path="/admin" element={<AdminDashboardPage />} />
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/admin/profiles" element={<AdminProfilesPage />} />
+            <Route path="/admin/fraud" element={<AdminFraudPage />} />
+            <Route path="/admin/payments" element={<AdminPaymentsPage />} />
+            <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
+            <Route path="/admin/roles" element={<AdminRolesPage />} />
+            <Route path="/admin/config" element={<AdminConfigPage />} />
+            <Route path="/admin/reports" element={<AdminReportsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

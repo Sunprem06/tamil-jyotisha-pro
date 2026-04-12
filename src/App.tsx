@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import RasiListPage from "./pages/RasiListPage";
 import RasiPage from "./pages/RasiPage";
@@ -50,6 +51,10 @@ import PassportPage from "./pages/PassportPage";
 
 const queryClient = new QueryClient();
 
+const E = ({ children }: { children: React.ReactNode }) => (
+  <ErrorBoundary>{children}</ErrorBoundary>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -58,48 +63,48 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/passport" element={<PassportPage />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route path="/rasi" element={<RasiListPage />} />
-            <Route path="/rasi/:rasiId" element={<RasiPage />} />
-            <Route path="/birth-chart" element={<BirthChartPage />} />
-            <Route path="/panchangam" element={<PanchangamPage />} />
-            <Route path="/muhurtham" element={<MuhurthamPage />} />
-            <Route path="/porutham" element={<PoruthamPage />} />
-            <Route path="/dasha" element={<DashaPage />} />
-            <Route path="/dosha" element={<DoshaPage />} />
-            <Route path="/transit" element={<TransitPage />} />
-            <Route path="/remedies" element={<RemediesPage />} />
-            <Route path="/astrologers" element={<AstrologersPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-            <Route path="/saved-charts" element={<ProtectedRoute><SavedChartsPage /></ProtectedRoute>} />
-            <Route path="/matrimony/profile" element={<ProtectedRoute><MatrimonyProfilePage /></ProtectedRoute>} />
-            <Route path="/matrimony/preferences" element={<ProtectedRoute><PartnerPreferencesPage /></ProtectedRoute>} />
-            <Route path="/matrimony/search" element={<MatrimonySearchPage />} />
-            <Route path="/matrimony/profile/:userId" element={<MatrimonyViewProfilePage />} />
-            <Route path="/messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
-            <Route path="/admin" element={<AdminDashboardPage />} />
-            <Route path="/admin/users" element={<AdminUsersPage />} />
-            <Route path="/admin/profiles" element={<AdminProfilesPage />} />
-            <Route path="/admin/fraud" element={<AdminFraudPage />} />
-            <Route path="/admin/payments" element={<AdminPaymentsPage />} />
-            <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
-            <Route path="/admin/roles" element={<AdminRolesPage />} />
-            <Route path="/admin/config" element={<AdminConfigPage />} />
-            <Route path="/admin/reports" element={<AdminReportsPage />} />
-            <Route path="/admin/spiritual" element={<AdminSpiritualPage />} />
-            <Route path="/deity-search" element={<UniversalSearchPage />} />
-            <Route path="/deity/:deityName" element={<DeityProfilePage />} />
-            <Route path="/temple/:id" element={<TempleDetailPage />} />
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/" element={<E><Index /></E>} />
+            <Route path="/dashboard" element={<E><DashboardPage /></E>} />
+            <Route path="/passport" element={<E><PassportPage /></E>} />
+            <Route path="/auth" element={<E><AuthPage /></E>} />
+            <Route path="/forgot-password" element={<E><ForgotPasswordPage /></E>} />
+            <Route path="/reset-password" element={<E><ResetPasswordPage /></E>} />
+            <Route path="/rasi" element={<E><RasiListPage /></E>} />
+            <Route path="/rasi/:rasiId" element={<E><RasiPage /></E>} />
+            <Route path="/birth-chart" element={<E><BirthChartPage /></E>} />
+            <Route path="/panchangam" element={<E><PanchangamPage /></E>} />
+            <Route path="/muhurtham" element={<E><MuhurthamPage /></E>} />
+            <Route path="/porutham" element={<E><PoruthamPage /></E>} />
+            <Route path="/dasha" element={<E><DashaPage /></E>} />
+            <Route path="/dosha" element={<E><DoshaPage /></E>} />
+            <Route path="/transit" element={<E><TransitPage /></E>} />
+            <Route path="/remedies" element={<E><RemediesPage /></E>} />
+            <Route path="/astrologers" element={<E><AstrologersPage /></E>} />
+            <Route path="/about" element={<E><AboutPage /></E>} />
+            <Route path="/contact" element={<E><ContactPage /></E>} />
+            <Route path="/profile" element={<ProtectedRoute><E><ProfilePage /></E></ProtectedRoute>} />
+            <Route path="/saved-charts" element={<ProtectedRoute><E><SavedChartsPage /></E></ProtectedRoute>} />
+            <Route path="/matrimony/profile" element={<ProtectedRoute><E><MatrimonyProfilePage /></E></ProtectedRoute>} />
+            <Route path="/matrimony/preferences" element={<ProtectedRoute><E><PartnerPreferencesPage /></E></ProtectedRoute>} />
+            <Route path="/matrimony/search" element={<E><MatrimonySearchPage /></E>} />
+            <Route path="/matrimony/profile/:userId" element={<E><MatrimonyViewProfilePage /></E>} />
+            <Route path="/messages" element={<ProtectedRoute><E><MessagesPage /></E></ProtectedRoute>} />
+            <Route path="/admin" element={<E><AdminDashboardPage /></E>} />
+            <Route path="/admin/users" element={<E><AdminUsersPage /></E>} />
+            <Route path="/admin/profiles" element={<E><AdminProfilesPage /></E>} />
+            <Route path="/admin/fraud" element={<E><AdminFraudPage /></E>} />
+            <Route path="/admin/payments" element={<E><AdminPaymentsPage /></E>} />
+            <Route path="/admin/analytics" element={<E><AdminAnalyticsPage /></E>} />
+            <Route path="/admin/roles" element={<E><AdminRolesPage /></E>} />
+            <Route path="/admin/config" element={<E><AdminConfigPage /></E>} />
+            <Route path="/admin/reports" element={<E><AdminReportsPage /></E>} />
+            <Route path="/admin/spiritual" element={<E><AdminSpiritualPage /></E>} />
+            <Route path="/deity-search" element={<E><UniversalSearchPage /></E>} />
+            <Route path="/deity/:deityName" element={<E><DeityProfilePage /></E>} />
+            <Route path="/temple/:id" element={<E><TempleDetailPage /></E>} />
+            <Route path="/terms" element={<E><TermsPage /></E>} />
+            <Route path="/privacy" element={<E><PrivacyPage /></E>} />
+            <Route path="*" element={<E><NotFound /></E>} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

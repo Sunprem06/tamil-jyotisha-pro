@@ -48,6 +48,8 @@ import DeityProfilePage from "./pages/DeityProfilePage";
 import TempleDetailPage from "./pages/TempleDetailPage";
 import DashboardPage from "./pages/DashboardPage";
 import PassportPage from "./pages/PassportPage";
+import RefundPolicyPage from "./pages/RefundPolicyPage";
+import TamilCalendarPage from "./pages/TamilCalendarPage";
 
 const queryClient = new QueryClient();
 
@@ -104,6 +106,9 @@ const App = () => (
             <Route path="/temple/:id" element={<E><TempleDetailPage /></E>} />
             <Route path="/terms" element={<E><TermsPage /></E>} />
             <Route path="/privacy" element={<E><PrivacyPage /></E>} />
+            <Route path="/refund-policy" element={<E><RefundPolicyPage /></E>} />
+            <Route path="/calendar" element={<E><TamilCalendarPage /></E>} />
+            <Route path="*" element={<E><NotFound /></E>} />
             <Route path="*" element={<E><NotFound /></E>} />
           </Routes>
         </AuthProvider>

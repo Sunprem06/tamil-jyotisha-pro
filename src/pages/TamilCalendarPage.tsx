@@ -71,7 +71,7 @@ function InfoCard({ icon, label, sublabel, value }: { icon: React.ReactNode; lab
       <div className="flex-shrink-0">{icon}</div>
       <div>
         <p className="text-xs text-muted-foreground">{label} / {sublabel}</p>
-        <p className="font-tamil font-semibold">{value}</p>
+        <p className="font-tamil font-semibold text-foreground">{value}</p>
       </div>
     </div>
   );

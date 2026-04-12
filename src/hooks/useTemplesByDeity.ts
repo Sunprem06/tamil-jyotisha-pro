@@ -12,6 +12,7 @@ const DEITY_FILTERS: Record<string, string> = {
   ayyanar: "deity_name_tamil.ilike.%அய்யனார்%,deity_name_english.ilike.%Ayyanar%,deity_name_english.ilike.%Ayyappan%",
   muneeswarar: "deity_name_tamil.ilike.%முனீஸ்வரர்%,deity_name_english.ilike.%Muneeswarar%",
   karuppasamy: "deity_name_tamil.ilike.%கருப்பசாமி%,deity_name_english.ilike.%Karuppasamy%",
+  parvathi: "deity_id.eq.12,deity_name_tamil.ilike.%பார்வதி%,deity_name_english.ilike.%Parvathi%,is_shakti_peetha.eq.true,temple_type.ilike.%Shakti Peetham%",
   shiva: "temple_type.ilike.%Jyotirlinga%,temple_type.ilike.%Shiva%,temple_type.ilike.%Pancha Bhuta%,deity_name_english.ilike.%Shiva%,deity_name_english.ilike.%Nataraja%,deity_name_english.ilike.%Mahadeva%",
   vishnu: "temple_type.ilike.%Divya Desam%,temple_type.ilike.%Char Dham%,deity_name_english.ilike.%Vishnu%,deity_name_english.ilike.%Perumal%,deity_name_english.ilike.%Krishna%,deity_name_english.ilike.%Venkateswara%,deity_name_english.ilike.%Narayan%",
 };

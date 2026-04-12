@@ -48,6 +48,9 @@ interface Temple {
   is_divya_desam: boolean;
   divya_desam_number: number | null;
   is_shakti_peetham: boolean;
+  is_shakti_peetha: boolean;
+  shakti_peetha_number: number | null;
+  country: string | null;
   image_url: string | null;
   sthala_varalaru: SthalaVaralaru[];
 }

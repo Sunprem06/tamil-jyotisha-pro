@@ -102,11 +102,11 @@ export default function DeityProfilePage() {
                     <h3 className="font-bold font-tamil text-foreground">{t.name_tamil}</h3>
                     <p className="text-sm text-muted-foreground">{t.name_english}</p>
                     <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
-                      <MapPin className="h-3.5 w-3.5" /> {t.location}, {t.district}
+                      <MapPin className="h-3.5 w-3.5" /> {t.location}, {t.district}{t.country && t.country !== 'India' ? `, ${t.country}` : ''}
                     </div>
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {t.is_arupadai_veedu && <Badge variant="secondary" className="text-xs">ஆறுபடை #{t.arupadai_number}</Badge>}
-                      {t.is_shakti_peetham && <Badge variant="secondary" className="text-xs">சக்தி பீடம்</Badge>}
+                      {(t.is_shakti_peetham || t.is_shakti_peetha) && <Badge variant="secondary" className="text-xs">சக்தி பீடம் {t.shakti_peetha_number ? `#${t.shakti_peetha_number}` : ''}</Badge>}
                       {t.auspicious_day && (
                         <Badge variant="outline" className="text-xs">
                           <Star className="h-3 w-3 mr-1" /> {t.auspicious_day}

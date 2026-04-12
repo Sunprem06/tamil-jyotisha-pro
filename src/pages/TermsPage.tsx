@@ -18,7 +18,7 @@ export default function TermsPage() {
 
         <h2>1. Definitions & Interpretation</h2>
         <ul>
-          <li><strong>"Platform"</strong> means Tamil Jothidam Pro (web application, mobile site, and all associated services) owned and operated by <strong>Maanagarram Hi Tech Solutions</strong>, a proprietorship registered in Chennai, Tamil Nadu, India.</li>
+          <li><strong>"Platform"</strong> means ஆன்மீகத் துணை (web application, mobile site, and all associated services) owned and operated by <strong>Maanagarram Hi Tech Solutions</strong>, a proprietorship registered in Chennai, Tamil Nadu, India.</li>
           <li><strong>"User"</strong> or <strong>"You"</strong> means any person who accesses, registers, or uses the Platform.</li>
           <li><strong>"Services"</strong> include astrology tools (birth chart, dasha, dosha, transit, porutham), temple information, matrimony matching, and any premium/paid features.</li>
           <li><strong>"Credits"</strong> means the in-app virtual currency purchased by Users to unlock premium features such as contact information.</li>
@@ -132,7 +132,7 @@ export default function TermsPage() {
         <div className="bg-muted p-4 rounded-lg border text-sm">
           <p><strong>Grievance Officer (as per IT Rules, 2021):</strong></p>
           <p>Name: Maanagarram Hi Tech Solutions</p>
-          <p>Email: grievance@tamiljothidampro.com</p>
+          <p>Email: grievance@anmeegathunai.com</p>
           <p>Address: Chennai, Tamil Nadu, India</p>
           <p>Response time: Within 24 hours of receipt. Resolution within 15 days as per <strong>Rule 3(2) of the IT Rules, 2021</strong>.</p>
         </div>

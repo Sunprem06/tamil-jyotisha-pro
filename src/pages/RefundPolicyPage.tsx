@@ -18,7 +18,7 @@ export default function RefundPolicyPage() {
         <hr />
 
         <h2>1. Scope & Applicability</h2>
-        <p>This Refund & Cancellation Policy applies to all paid transactions on Tamil Jothidam Pro, including but not limited to:</p>
+        <p>This Refund & Cancellation Policy applies to all paid transactions on ஆன்மீகத் துணை, including but not limited to:</p>
         <ul>
           <li>Purchase of Credits (virtual currency for contact unlocks)</li>
           <li>Subscription plans (Monthly / Yearly premium access)</li>
@@ -28,7 +28,7 @@ export default function RefundPolicyPage() {
 
         <h2>2. Nature of Digital Services — No Physical Goods</h2>
         <div className="bg-muted p-4 rounded-lg border text-sm font-tamil">
-          ⚠️ <strong>முக்கிய குறிப்பு:</strong> Tamil Jothidam Pro முழுவதுமாக டிஜிட்டல் சேவை தளம். இது உடல்சார்ந்த பொருட்களை விற்பனை செய்யாது. எனவே, பொருட்களை திருப்பி அனுப்புதல் (return) எனும் கொள்கை இதற்கு பொருந்தாது.
+          ⚠️ <strong>முக்கிய குறிப்பு:</strong> ஆன்மீகத் துணை முழுவதுமாக டிஜிட்டல் சேவை தளம். இது உடல்சார்ந்த பொருட்களை விற்பனை செய்யாது. எனவே, பொருட்களை திருப்பி அனுப்புதல் (return) எனும் கொள்கை இதற்கு பொருந்தாது.
         </div>
         <p>As the Platform provides <strong>purely digital services</strong> (astrological calculations, temple information, matrimony matching), there are no physical goods involved. Therefore, physical product return policies under Section 2(7) of the Consumer Protection Act, 2019 are not applicable.</p>
 
@@ -73,7 +73,7 @@ export default function RefundPolicyPage() {
 
         <h2>5. Refund Process</h2>
         <ol>
-          <li><strong>Submit Request:</strong> Email <strong>refund@tamiljothidampro.com</strong> with your registered email, transaction ID, date of purchase, and reason for refund.</li>
+          <li><strong>Submit Request:</strong> Email <strong>refund@anmeegathunai.com</strong> with your registered email, transaction ID, date of purchase, and reason for refund.</li>
           <li><strong>Acknowledgment:</strong> You will receive an acknowledgment within <strong>24 hours</strong>.</li>
           <li><strong>Review:</strong> Our team will review and verify the request within <strong>3-5 working days</strong>.</li>
           <li><strong>Decision:</strong> You will be notified of the decision via email. If approved, the refund is processed to the original payment method.</li>
@@ -121,8 +121,8 @@ export default function RefundPolicyPage() {
         <h2>12. Contact for Refund Queries</h2>
         <div className="bg-muted p-4 rounded-lg border text-sm">
           <p><strong>Refund Support:</strong></p>
-          <p>Email: refund@tamiljothidampro.com</p>
-          <p>Grievance Officer: grievance@tamiljothidampro.com</p>
+          <p>Email: refund@anmeegathunai.com</p>
+          <p>Grievance Officer: grievance@anmeegathunai.com</p>
           <p>Address: Maanagarram Hi Tech Solutions, Chennai, Tamil Nadu, India</p>
           <p>Response: Within 24 hours. Resolution within 15 days.</p>
         </div>

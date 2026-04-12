@@ -68,7 +68,7 @@ export default function PrivacyPage() {
         </ul>
 
         <h2>9. Contact the Data Protection Officer</h2>
-        <p>Email: privacy@tamiljothidam.com</p>
+        <p>Email: privacy@anmeegathunai.com</p>
       </main>
       <Footer />
     </div>

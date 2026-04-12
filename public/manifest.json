@@ -1,7 +1,7 @@
 {
-  "name": "Tamil Jothidam Pro",
-  "short_name": "TJ Pro",
-  "description": "தமிழகத்தின் முழுமையான ஜோதிட மற்றும் கோவில் தகவல் தளம்",
+  "name": "ஆன்மீகத் துணை",
+  "short_name": "ஆன்மீகத் துணை",
+  "description": "தமிழரின் முழுமையான ஆன்மீக வழிகாட்டி தளம்",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FFFDF5",

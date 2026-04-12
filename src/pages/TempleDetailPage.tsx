@@ -47,6 +47,17 @@ export default function TempleDetailPage() {
         <section className="bg-gradient-to-b from-primary/10 to-background py-10">
           <div className="container max-w-4xl">
           <BackButton />
+            {temple.image_url && (
+              <div className="mb-4 rounded-xl overflow-hidden border border-border shadow-md max-h-72 md:max-h-96">
+                <img 
+                  src={temple.image_url} 
+                  alt={temple.name_tamil} 
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+              </div>
+            )}
             <h1 className="text-3xl md:text-4xl font-bold font-tamil text-foreground">{temple.name_tamil}</h1>
             <p className="text-lg text-muted-foreground mt-1">{temple.name_english}</p>
 

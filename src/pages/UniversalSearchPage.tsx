@@ -30,6 +30,17 @@ function TempleCard({ temple }: { temple: any }) {
     <Card className="border-border hover:shadow-lg transition-shadow">
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-3">
+          {temple.image_url && (
+            <Link to={`/temple/${temple.id}`} className="shrink-0">
+              <img 
+                src={temple.image_url} 
+                alt={temple.name_tamil} 
+                className="w-20 h-20 rounded-lg object-cover border border-border"
+                loading="lazy"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+              />
+            </Link>
+          )}
           <div className="flex-1">
             <Link to={`/temple/${temple.id}`} className="hover:underline">
               <h3 className="text-lg font-bold font-tamil text-foreground">{temple.name_tamil}</h3>

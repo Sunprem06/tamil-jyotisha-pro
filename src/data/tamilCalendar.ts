@@ -132,7 +132,7 @@ export function getTamilYear(date: Date): { no: number; tamil: string; english: 
 }
 
 // Approximate Tamil month from date
-export function getTamilMonth(date: Date): { no: number; tamil: string; english: string } {
+export function getTamilMonth(date: Date) {
   const month = date.getMonth(); // 0-indexed
   const day = date.getDate();
   

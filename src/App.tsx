@@ -52,6 +52,7 @@ import RefundPolicyPage from "./pages/RefundPolicyPage";
 import TamilCalendarPage from "./pages/TamilCalendarPage";
 import NayanmarsPage from "./pages/NayanmarsPage";
 import AlwarsPage from "./pages/AlwarsPage";
+import SpiritualUpdatesPage from "./pages/SpiritualUpdatesPage";
 
 const queryClient = new QueryClient();
 

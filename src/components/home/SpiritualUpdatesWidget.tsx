@@ -27,12 +27,6 @@ export function SpiritualUpdatesWidget() {
   useEffect(() => {
     async function fetchUpdates() {
       try {
-        const { data, error } = await supabase.functions.invoke("spiritual-updates");
-        if (!error && data) {
-          setUpdates(Array.isArray(data) ? data : []);
-        }
-      } catch {
-        // Fallback: query directly
         const now = new Date();
         const dayOfYear = Math.floor(
           (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000
@@ -50,6 +44,8 @@ export function SpiritualUpdatesWidget() {
           const pick = (arr: any[]) => arr.length > 0 ? arr[dayOfYear % arr.length] : null;
           setUpdates([pick(guidance), pick(doThis), pick(avoidThis)].filter(Boolean));
         }
+      } catch (err) {
+        console.error("Failed to fetch spiritual updates:", err);
       } finally {
         setLoading(false);
       }

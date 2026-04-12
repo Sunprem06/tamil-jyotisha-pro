@@ -60,7 +60,7 @@ Generate a UNIQUE, SPECIFIC prediction in Tamil. Return ONLY valid JSON:
 
 IMPORTANT: Each rasi must get a DIFFERENT, UNIQUE prediction. Be specific, not generic. Use pure Tamil.`;
 
-      const aiResponse = await fetch("https://ai.lovable.dev/api/chat/completions", {
+      const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

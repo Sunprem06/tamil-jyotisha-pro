@@ -864,6 +864,7 @@ export type Database = {
           image_url: string | null
           is_arupadai_veedu: boolean | null
           is_divya_desam: boolean | null
+          is_navagraha: boolean | null
           is_nayanar_related: boolean | null
           is_pancha_bhuta_stala: boolean | null
           is_shakti_peetham: boolean | null
@@ -874,6 +875,8 @@ export type Database = {
           major_festival: string | null
           name_english: string
           name_tamil: string
+          navagraha_order: number | null
+          navagraha_planet: string | null
           phone: string | null
           problem_solved: string | null
           significance: string | null
@@ -903,6 +906,7 @@ export type Database = {
           image_url?: string | null
           is_arupadai_veedu?: boolean | null
           is_divya_desam?: boolean | null
+          is_navagraha?: boolean | null
           is_nayanar_related?: boolean | null
           is_pancha_bhuta_stala?: boolean | null
           is_shakti_peetham?: boolean | null
@@ -913,6 +917,8 @@ export type Database = {
           major_festival?: string | null
           name_english: string
           name_tamil: string
+          navagraha_order?: number | null
+          navagraha_planet?: string | null
           phone?: string | null
           problem_solved?: string | null
           significance?: string | null
@@ -942,6 +948,7 @@ export type Database = {
           image_url?: string | null
           is_arupadai_veedu?: boolean | null
           is_divya_desam?: boolean | null
+          is_navagraha?: boolean | null
           is_nayanar_related?: boolean | null
           is_pancha_bhuta_stala?: boolean | null
           is_shakti_peetham?: boolean | null
@@ -952,6 +959,8 @@ export type Database = {
           major_festival?: string | null
           name_english?: string
           name_tamil?: string
+          navagraha_order?: number | null
+          navagraha_planet?: string | null
           phone?: string | null
           problem_solved?: string | null
           significance?: string | null

@@ -177,17 +177,17 @@ export function useDeityProfile(deityName: string | undefined) {
     const decoded = decodeURIComponent(deityName);
     setLoading(true);
 
+    // Use ilike + search_keywords for flexible matching (handles "Vinayagar" → "Lord Ganesha")
     supabase
       .from("deities")
       .select("*")
-      .or(`name_english.eq.${decoded},name_tamil.eq.${decoded}`)
-      .single()
+      .or(`name_english.ilike.%${decoded}%,name_tamil.ilike.%${decoded}%,search_keywords.cs.{${decoded}}`)
+      .limit(1)
       .then(({ data }) => {
-        const d = data as unknown as Deity;
+        const d = (data && data.length > 0) ? (data[0] as unknown as Deity) : null;
         setDeity(d);
         setLoading(false);
         if (d) {
-          // Use ILIKE to find all temples matching the deity name variants
           supabase
             .from("temples")
             .select("*, sthala_varalaru(*)")

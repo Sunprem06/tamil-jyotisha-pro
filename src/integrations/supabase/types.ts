@@ -842,6 +842,79 @@ export type Database = {
         }
         Relationships: []
       }
+      temple_visits: {
+        Row: {
+          created_at: string | null
+          id: string
+          rating: number | null
+          temple_id: number | null
+          temple_name_tamil: string
+          user_id: string
+          visit_notes: string | null
+          visited_date: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          rating?: number | null
+          temple_id?: number | null
+          temple_name_tamil: string
+          user_id: string
+          visit_notes?: string | null
+          visited_date?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          rating?: number | null
+          temple_id?: number | null
+          temple_name_tamil?: string
+          user_id?: string
+          visit_notes?: string | null
+          visited_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "temple_visits_temple_id_fkey"
+            columns: ["temple_id"]
+            isOneToOne: false
+            referencedRelation: "temples"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      temple_wishlist: {
+        Row: {
+          added_at: string | null
+          id: string
+          temple_id: number | null
+          temple_name_tamil: string
+          user_id: string
+        }
+        Insert: {
+          added_at?: string | null
+          id?: string
+          temple_id?: number | null
+          temple_name_tamil: string
+          user_id: string
+        }
+        Update: {
+          added_at?: string | null
+          id?: string
+          temple_id?: number | null
+          temple_name_tamil?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "temple_wishlist_temple_id_fkey"
+            columns: ["temple_id"]
+            isOneToOne: false
+            referencedRelation: "temples"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       temples: {
         Row: {
           address: string | null

@@ -181,6 +181,78 @@ export type Database = {
         }
         Relationships: []
       }
+      deities: {
+        Row: {
+          color_association: string | null
+          consort_tamil: string | null
+          created_at: string | null
+          day_of_week: string | null
+          deity_type: string
+          flower_offering: string | null
+          fruit_offering: string | null
+          iconography_description: string | null
+          id: number
+          main_mantra: string | null
+          name_english: string
+          name_sanskrit: string | null
+          name_tamil: string
+          number_association: number | null
+          search_keywords: string[] | null
+          significance: string | null
+          star_nakshatra: string | null
+          tradition: string
+          vahana_english: string | null
+          vahana_tamil: string | null
+          weapon_tamil: string | null
+        }
+        Insert: {
+          color_association?: string | null
+          consort_tamil?: string | null
+          created_at?: string | null
+          day_of_week?: string | null
+          deity_type: string
+          flower_offering?: string | null
+          fruit_offering?: string | null
+          iconography_description?: string | null
+          id?: number
+          main_mantra?: string | null
+          name_english: string
+          name_sanskrit?: string | null
+          name_tamil: string
+          number_association?: number | null
+          search_keywords?: string[] | null
+          significance?: string | null
+          star_nakshatra?: string | null
+          tradition: string
+          vahana_english?: string | null
+          vahana_tamil?: string | null
+          weapon_tamil?: string | null
+        }
+        Update: {
+          color_association?: string | null
+          consort_tamil?: string | null
+          created_at?: string | null
+          day_of_week?: string | null
+          deity_type?: string
+          flower_offering?: string | null
+          fruit_offering?: string | null
+          iconography_description?: string | null
+          id?: number
+          main_mantra?: string | null
+          name_english?: string
+          name_sanskrit?: string | null
+          name_tamil?: string
+          number_association?: number | null
+          search_keywords?: string[] | null
+          significance?: string | null
+          star_nakshatra?: string | null
+          tradition?: string
+          vahana_english?: string | null
+          vahana_tamil?: string | null
+          weapon_tamil?: string | null
+        }
+        Relationships: []
+      }
       family_members: {
         Row: {
           created_at: string
@@ -639,6 +711,53 @@ export type Database = {
         }
         Relationships: []
       }
+      sthala_varalaru: {
+        Row: {
+          created_at: string | null
+          historical_facts: string | null
+          id: number
+          inscriptions: string | null
+          miracles_recorded: string | null
+          puranic_reference: string | null
+          story_english: string | null
+          story_tamil: string
+          temple_id: number | null
+          temple_name_tamil: string
+        }
+        Insert: {
+          created_at?: string | null
+          historical_facts?: string | null
+          id?: number
+          inscriptions?: string | null
+          miracles_recorded?: string | null
+          puranic_reference?: string | null
+          story_english?: string | null
+          story_tamil: string
+          temple_id?: number | null
+          temple_name_tamil: string
+        }
+        Update: {
+          created_at?: string | null
+          historical_facts?: string | null
+          id?: number
+          inscriptions?: string | null
+          miracles_recorded?: string | null
+          puranic_reference?: string | null
+          story_english?: string | null
+          story_tamil?: string
+          temple_id?: number | null
+          temple_name_tamil?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sthala_varalaru_temple_id_fkey"
+            columns: ["temple_id"]
+            isOneToOne: false
+            referencedRelation: "temples"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscriptions: {
         Row: {
           amount: number
@@ -722,6 +841,134 @@ export type Database = {
           value?: Json
         }
         Relationships: []
+      }
+      temples: {
+        Row: {
+          address: string | null
+          arupadai_number: number | null
+          auspicious_day: string | null
+          auspicious_star: string | null
+          blessing_for: string | null
+          built_by: string | null
+          created_at: string | null
+          deity_id: number | null
+          deity_name_english: string
+          deity_name_tamil: string
+          district: string
+          divya_desam_number: number | null
+          entry_fee: string | null
+          festival_month: string | null
+          google_maps_url: string | null
+          historical_period: string | null
+          id: number
+          image_url: string | null
+          is_arupadai_veedu: boolean | null
+          is_divya_desam: boolean | null
+          is_nayanar_related: boolean | null
+          is_pancha_bhuta_stala: boolean | null
+          is_shakti_peetham: boolean | null
+          is_thevaram_paadal: boolean | null
+          latitude: number | null
+          location: string
+          longitude: number | null
+          major_festival: string | null
+          name_english: string
+          name_tamil: string
+          phone: string | null
+          problem_solved: string | null
+          significance: string | null
+          special_puja: string | null
+          state: string
+          temple_type: string
+          timings: string | null
+        }
+        Insert: {
+          address?: string | null
+          arupadai_number?: number | null
+          auspicious_day?: string | null
+          auspicious_star?: string | null
+          blessing_for?: string | null
+          built_by?: string | null
+          created_at?: string | null
+          deity_id?: number | null
+          deity_name_english: string
+          deity_name_tamil: string
+          district: string
+          divya_desam_number?: number | null
+          entry_fee?: string | null
+          festival_month?: string | null
+          google_maps_url?: string | null
+          historical_period?: string | null
+          id?: number
+          image_url?: string | null
+          is_arupadai_veedu?: boolean | null
+          is_divya_desam?: boolean | null
+          is_nayanar_related?: boolean | null
+          is_pancha_bhuta_stala?: boolean | null
+          is_shakti_peetham?: boolean | null
+          is_thevaram_paadal?: boolean | null
+          latitude?: number | null
+          location: string
+          longitude?: number | null
+          major_festival?: string | null
+          name_english: string
+          name_tamil: string
+          phone?: string | null
+          problem_solved?: string | null
+          significance?: string | null
+          special_puja?: string | null
+          state?: string
+          temple_type: string
+          timings?: string | null
+        }
+        Update: {
+          address?: string | null
+          arupadai_number?: number | null
+          auspicious_day?: string | null
+          auspicious_star?: string | null
+          blessing_for?: string | null
+          built_by?: string | null
+          created_at?: string | null
+          deity_id?: number | null
+          deity_name_english?: string
+          deity_name_tamil?: string
+          district?: string
+          divya_desam_number?: number | null
+          entry_fee?: string | null
+          festival_month?: string | null
+          google_maps_url?: string | null
+          historical_period?: string | null
+          id?: number
+          image_url?: string | null
+          is_arupadai_veedu?: boolean | null
+          is_divya_desam?: boolean | null
+          is_nayanar_related?: boolean | null
+          is_pancha_bhuta_stala?: boolean | null
+          is_shakti_peetham?: boolean | null
+          is_thevaram_paadal?: boolean | null
+          latitude?: number | null
+          location?: string
+          longitude?: number | null
+          major_festival?: string | null
+          name_english?: string
+          name_tamil?: string
+          phone?: string | null
+          problem_solved?: string | null
+          significance?: string | null
+          special_puja?: string | null
+          state?: string
+          temple_type?: string
+          timings?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "temples_deity_id_fkey"
+            columns: ["deity_id"]
+            isOneToOne: false
+            referencedRelation: "deities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       trust_scores: {
         Row: {

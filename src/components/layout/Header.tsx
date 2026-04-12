@@ -38,8 +38,11 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [templeOpen, setTempleOpen] = useState(false);
+  const [jathagamOpen, setJathagamOpen] = useState(false);
   const [mobileTempleOpen, setMobileTempleOpen] = useState(false);
+  const [mobileJathagamOpen, setMobileJathagamOpen] = useState(false);
   const templeRef = useRef<HTMLDivElement>(null);
+  const jathagamRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { user, signOut } = useAuth();
 
@@ -51,18 +54,18 @@ export function Header() {
     });
   }, [user]);
 
-  // Close dropdown on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (templeRef.current && !templeRef.current.contains(e.target as Node)) {
-        setTempleOpen(false);
-      }
+      if (templeRef.current && !templeRef.current.contains(e.target as Node)) setTempleOpen(false);
+      if (jathagamRef.current && !jathagamRef.current.contains(e.target as Node)) setJathagamOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   const isTempleActive = location.pathname.startsWith("/dashboard") || location.pathname.startsWith("/deity") || location.pathname.startsWith("/temple");
+  const isJathagamActive = ["/birth-chart", "/porutham", "/dasha", "/dosha", "/transit", "/remedies"].some(p => location.pathname.startsWith(p));
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">

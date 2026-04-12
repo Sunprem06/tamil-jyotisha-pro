@@ -81,6 +81,10 @@ export default function PoruthamPage() {
                 </div>
                 <div>
                   <Label className="font-tamil">நட்சத்திரம்</Label>
+                  <Select value={String(boyNakshatra)} onValueChange={v => setBoyNakshatra(Number(v))}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {NAKSHATRA_DATA.map((n, i) => (
                         <SelectItem key={i} value={String(i)}>{n.ta} ({n.en})</SelectItem>
                       ))}
                     </SelectContent>

@@ -46,6 +46,8 @@ export function Footer() {
             <ul className="space-y-2 text-sm opacity-80">
               <li><Link to="/about" className="hover:opacity-100 font-tamil">எங்களைப் பற்றி</Link></li>
               <li><Link to="/contact" className="hover:opacity-100 font-tamil">தொடர்பு கொள்ள</Link></li>
+              <li><Link to="/terms" className="hover:opacity-100 font-tamil">விதிமுறைகள்</Link></li>
+              <li><Link to="/privacy" className="hover:opacity-100 font-tamil">தனியுரிமை</Link></li>
               <li><a href="https://mhtsdigixr.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-100">Maanagarram Hi Tech Solutions</a></li>
             </ul>
           </div>

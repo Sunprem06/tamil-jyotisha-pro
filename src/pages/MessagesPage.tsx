@@ -126,12 +126,19 @@ export default function MessagesPage() {
   async function sendMessage(e: React.FormEvent) {
     e.preventDefault();
     if (!user || !activeChat || !newMsg.trim()) return;
+    
+    const content = newMsg.trim();
+    // Input validation
+    if (content.length > 2000) {
+      return;
+    }
+    
     setSending(true);
 
     await supabase.from("messages").insert({
       sender_id: user.id,
       receiver_id: activeChat,
-      content: newMsg.trim(),
+      content,
     });
 
     setNewMsg("");

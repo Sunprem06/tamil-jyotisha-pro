@@ -60,6 +60,27 @@ export default function MatrimonyProfilePage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
+
+    // Validation
+    if (!form.gender) {
+      toast({ title: "பாலினம் தேவை", description: "Please select gender", variant: "destructive" });
+      return;
+    }
+    if (!form.date_of_birth) {
+      toast({ title: "பிறந்த தேதி தேவை", description: "Please enter date of birth", variant: "destructive" });
+      return;
+    }
+    const dob = new Date(form.date_of_birth);
+    const ageYears = (Date.now() - dob.getTime()) / (365.25 * 24 * 3600 * 1000);
+    if (ageYears < 18) {
+      toast({ title: "வயது குறைவு", description: "Must be at least 18 years old", variant: "destructive" });
+      return;
+    }
+    if (form.about_me && form.about_me.length > 1000) {
+      toast({ title: "About me too long", description: "Maximum 1000 characters", variant: "destructive" });
+      return;
+    }
+
     setSaving(true);
 
     const { error } = await supabase.from("matrimony_profiles").upsert({

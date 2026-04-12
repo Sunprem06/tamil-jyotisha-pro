@@ -38,6 +38,8 @@ import MatrimonySearchPage from "./pages/MatrimonySearchPage";
 import MatrimonyViewProfilePage from "./pages/MatrimonyViewProfilePage";
 import PartnerPreferencesPage from "./pages/PartnerPreferencesPage";
 import MessagesPage from "./pages/MessagesPage";
+import TermsPage from "./pages/TermsPage";
+import PrivacyPage from "./pages/PrivacyPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -83,6 +85,8 @@ const App = () => (
             <Route path="/admin/roles" element={<AdminRolesPage />} />
             <Route path="/admin/config" element={<AdminConfigPage />} />
             <Route path="/admin/reports" element={<AdminReportsPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

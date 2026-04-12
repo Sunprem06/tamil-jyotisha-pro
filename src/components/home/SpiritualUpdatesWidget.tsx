@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Flame, Sparkles, ShieldAlert, ChevronLeft, ChevronRight } from "lucide-react";
+import { Flame, Sparkles, ShieldAlert, ChevronLeft, ChevronRight, CalendarDays, CalendarRange, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface SpiritualUpdate {
   id: string;
@@ -17,6 +18,9 @@ const typeConfig: Record<string, { icon: typeof Flame; label: string; color: str
   guidance: { icon: Sparkles, label: "வழிகாட்டுதல்", color: "from-amber-500/20 to-orange-500/20 border-amber-500/30" },
   do_this: { icon: Flame, label: "இதைச் செய்யுங்கள்", color: "from-emerald-500/20 to-teal-500/20 border-emerald-500/30" },
   avoid_this: { icon: ShieldAlert, label: "இதைத் தவிர்க்கவும்", color: "from-red-500/20 to-rose-500/20 border-red-500/30" },
+  weekly_palan: { icon: CalendarDays, label: "வார பலன்", color: "from-blue-500/20 to-indigo-500/20 border-blue-500/30" },
+  monthly_palan: { icon: CalendarRange, label: "மாத பலன்", color: "from-purple-500/20 to-violet-500/20 border-purple-500/30" },
+  yearly_palan: { icon: Star, label: "வருட பலன்", color: "from-yellow-500/20 to-amber-500/20 border-yellow-500/30" },
 };
 
 export function SpiritualUpdatesWidget() {
@@ -27,22 +31,26 @@ export function SpiritualUpdatesWidget() {
   useEffect(() => {
     async function fetchUpdates() {
       try {
-        const now = new Date();
-        const dayOfYear = Math.floor(
-          (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000
-        );
+        // Fetch latest of each type
         const { data } = await supabase
           .from("spiritual_updates")
           .select("*")
           .eq("is_active", true)
-          .order("created_at", { ascending: true });
+          .order("created_at", { ascending: false })
+          .limit(50);
 
         if (data && data.length > 0) {
-          const guidance = data.filter((u) => u.update_type === "guidance");
-          const doThis = data.filter((u) => u.update_type === "do_this");
-          const avoidThis = data.filter((u) => u.update_type === "avoid_this");
-          const pick = (arr: any[]) => arr.length > 0 ? arr[dayOfYear % arr.length] : null;
-          setUpdates([pick(guidance), pick(doThis), pick(avoidThis)].filter(Boolean));
+          // Pick one of each type (latest)
+          const seen = new Set<string>();
+          const picked: SpiritualUpdate[] = [];
+          for (const u of data) {
+            if (!seen.has(u.update_type)) {
+              seen.add(u.update_type);
+              picked.push(u);
+            }
+            if (picked.length >= 6) break;
+          }
+          setUpdates(picked);
         }
       } catch (err) {
         console.error("Failed to fetch spiritual updates:", err);
@@ -80,7 +88,7 @@ export function SpiritualUpdatesWidget() {
               <span className="text-gradient-sacred font-tamil">ஆன்மீக தினசரி அப்டேட்</span>
             </h2>
             <p className="text-muted-foreground font-tamil text-sm">
-              Daily Spiritual Updates
+              AI-Powered Spiritual Updates • தினசரி | வாரம் | மாதம் | வருடம்
             </p>
           </div>
 
@@ -93,25 +101,22 @@ export function SpiritualUpdatesWidget() {
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-tamil">
                 {config.label}
               </span>
+              <Sparkles className="h-3 w-3 text-muted-foreground ml-auto" />
             </div>
 
-            {/* Title */}
             <h3 className="text-xl md:text-2xl font-bold font-tamil mb-3 text-foreground">
               {update.title}
             </h3>
 
-            {/* Message */}
             <p className="text-muted-foreground font-tamil leading-relaxed mb-5">
               {update.message}
             </p>
 
-            {/* Action - highlighted */}
             <div className="bg-background/60 backdrop-blur-sm rounded-xl p-4 mb-4 border border-border/50">
               <p className="text-xs text-muted-foreground font-tamil mb-1">செய்ய வேண்டியது:</p>
               <p className="font-semibold text-primary font-tamil">{update.action}</p>
             </div>
 
-            {/* Benefit */}
             <p className="text-sm text-muted-foreground font-tamil">
               ✨ {update.benefit}
             </p>
@@ -146,6 +151,15 @@ export function SpiritualUpdatesWidget() {
                 </Button>
               </div>
             )}
+          </div>
+
+          <div className="text-center mt-4">
+            <Link to="/spiritual-updates">
+              <Button variant="outline" size="sm" className="font-tamil gap-2">
+                <Sparkles className="h-3 w-3" />
+                அனைத்து பலன்களையும் காண
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

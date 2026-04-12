@@ -1186,7 +1186,13 @@ export type Database = {
         | "family"
         | "health"
         | "spiritual"
-      spiritual_update_type: "guidance" | "do_this" | "avoid_this"
+      spiritual_update_type:
+        | "guidance"
+        | "do_this"
+        | "avoid_this"
+        | "weekly_palan"
+        | "monthly_palan"
+        | "yearly_palan"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1324,7 +1330,14 @@ export const Constants = {
         "astrologer",
       ],
       spiritual_category: ["general", "money", "family", "health", "spiritual"],
-      spiritual_update_type: ["guidance", "do_this", "avoid_this"],
+      spiritual_update_type: [
+        "guidance",
+        "do_this",
+        "avoid_this",
+        "weekly_palan",
+        "monthly_palan",
+        "yearly_palan",
+      ],
     },
   },
 } as const

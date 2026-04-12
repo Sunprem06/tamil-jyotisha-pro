@@ -72,11 +72,15 @@ export default function PoruthamPage() {
                   </div>
                 </div>
                 <div>
+                  <Label className="font-tamil">பிறந்த இடம் (Place)</Label>
+                  <PlaceAutocomplete
+                    value={boyPlace}
+                    onChange={(place, lat, lng) => { setBoyPlace(place); setBoyLat(lat); setBoyLng(lng); }}
+                    placeholder="சென்னை"
+                  />
+                </div>
+                <div>
                   <Label className="font-tamil">நட்சத்திரம்</Label>
-                  <Select value={String(boyNakshatra)} onValueChange={v => setBoyNakshatra(Number(v))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {NAKSHATRA_DATA.map((n, i) => (
                         <SelectItem key={i} value={String(i)}>{n.ta} ({n.en})</SelectItem>
                       ))}
                     </SelectContent>
@@ -114,8 +118,15 @@ export default function PoruthamPage() {
                   </div>
                 </div>
                 <div>
+                  <Label className="font-tamil">பிறந்த இடம் (Place)</Label>
+                  <PlaceAutocomplete
+                    value={girlPlace}
+                    onChange={(place, lat, lng) => { setGirlPlace(place); setGirlLat(lat); setGirlLng(lng); }}
+                    placeholder="சென்னை"
+                  />
+                </div>
+                <div>
                   <Label className="font-tamil">நட்சத்திரம்</Label>
-                  <Select value={String(girlNakshatra)} onValueChange={v => setGirlNakshatra(Number(v))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       {NAKSHATRA_DATA.map((n, i) => (

@@ -283,6 +283,7 @@ export function Header() {
               </div>
             )}
 
+            {navLinks.slice(1).map((link) => (
               <Link
                 key={link.href}
                 to={link.href}

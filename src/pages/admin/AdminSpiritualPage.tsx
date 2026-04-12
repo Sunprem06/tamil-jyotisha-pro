@@ -74,7 +74,11 @@ export default function AdminSpiritualPage() {
       } else {
         const { error } = await supabase
           .from("spiritual_updates")
-          .insert(form as any);
+          .insert({
+            ...form,
+            category: form.category as any,
+            update_type: form.update_type as any,
+          });
         if (error) throw error;
         toast.success("சேர்க்கப்பட்டது");
       }

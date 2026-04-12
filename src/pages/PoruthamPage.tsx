@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { calculatePorutham } from "@/lib/astrology/matching";
@@ -10,11 +11,22 @@ import type { MatchingResult } from "@/lib/astrology/types";
 import { Heart, Check, X } from "lucide-react";
 
 export default function PoruthamPage() {
+  const [boyName, setBoyName] = useState("");
+  const [girlName, setGirlName] = useState("");
+  const [boyDob, setBoyDob] = useState("");
+  const [boyTob, setBoyTob] = useState("06:00");
+  const [girlDob, setGirlDob] = useState("");
+  const [girlTob, setGirlTob] = useState("06:00");
   const [boyNakshatra, setBoyNakshatra] = useState<number>(0);
   const [boyRasi, setBoyRasi] = useState<number>(0);
   const [girlNakshatra, setGirlNakshatra] = useState<number>(0);
   const [girlRasi, setGirlRasi] = useState<number>(0);
   const [result, setResult] = useState<MatchingResult | null>(null);
+
+  const getAmPm = (time: string) => {
+    const h = parseInt(time.split(':')[0] || '0');
+    return h >= 12 ? 'PM' : 'AM';
+  };
 
   const handleMatch = () => {
     setResult(calculatePorutham(boyNakshatra, boyRasi, girlNakshatra, girlRasi));

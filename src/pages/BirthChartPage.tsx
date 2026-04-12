@@ -64,8 +64,14 @@ export default function BirthChartPage() {
               </div>
               <div>
                 <Label className="font-tamil">பிறந்த நேரம் (Time of Birth)</Label>
-                <Input type="time" value={birthData.timeOfBirth}
-                  onChange={e => setBirthData({...birthData, timeOfBirth: e.target.value})} />
+                <div className="flex gap-2">
+                  <Input type="time" value={birthData.timeOfBirth}
+                    onChange={e => setBirthData({...birthData, timeOfBirth: e.target.value})} className="flex-1" />
+                  <span className="flex items-center text-sm text-muted-foreground px-2 bg-muted rounded-md">
+                    {(() => { const h = parseInt(birthData.timeOfBirth.split(':')[0] || '0'); return h >= 12 ? 'PM' : 'AM'; })()}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">24-hour format — AM/PM shown automatically</p>
               </div>
               <div>
                 <Label className="font-tamil">பிறந்த இடம் (Place)</Label>

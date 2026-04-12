@@ -181,6 +181,75 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_rasi_palan: {
+        Row: {
+          created_at: string | null
+          dhanusu: string | null
+          id: number
+          kanni: string | null
+          kataka: string | null
+          kumbam: string | null
+          makaram: string | null
+          meenam: string | null
+          mesha: string | null
+          mithuna: string | null
+          nalla_neram: string | null
+          palan_date: string
+          rahu_kalam: string | null
+          rishabha: string | null
+          samvatsara_year: string | null
+          simha: string | null
+          tamil_month: string | null
+          thulam: string | null
+          viruchigam: string | null
+          yamagandam: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dhanusu?: string | null
+          id?: number
+          kanni?: string | null
+          kataka?: string | null
+          kumbam?: string | null
+          makaram?: string | null
+          meenam?: string | null
+          mesha?: string | null
+          mithuna?: string | null
+          nalla_neram?: string | null
+          palan_date: string
+          rahu_kalam?: string | null
+          rishabha?: string | null
+          samvatsara_year?: string | null
+          simha?: string | null
+          tamil_month?: string | null
+          thulam?: string | null
+          viruchigam?: string | null
+          yamagandam?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dhanusu?: string | null
+          id?: number
+          kanni?: string | null
+          kataka?: string | null
+          kumbam?: string | null
+          makaram?: string | null
+          meenam?: string | null
+          mesha?: string | null
+          mithuna?: string | null
+          nalla_neram?: string | null
+          palan_date?: string
+          rahu_kalam?: string | null
+          rishabha?: string | null
+          samvatsara_year?: string | null
+          simha?: string | null
+          tamil_month?: string | null
+          thulam?: string | null
+          viruchigam?: string | null
+          yamagandam?: string | null
+        }
+        Relationships: []
+      }
       deities: {
         Row: {
           color_association: string | null

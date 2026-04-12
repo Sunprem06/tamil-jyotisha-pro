@@ -1,11 +1,13 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { BackButton } from "@/components/BackButton";
 
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       <main className="flex-1 container py-12 max-w-3xl prose prose-headings:font-tamil">
+        <BackButton />
         <h1 className="text-3xl font-bold font-tamil">தனியுரிமைக் கொள்கை</h1>
         <p className="text-muted-foreground">Privacy Policy — Last updated: April 2026</p>
 

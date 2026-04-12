@@ -8,6 +8,7 @@ import { generateHoroscope } from "@/lib/astrology/engine";
 import { calculateVimshottariDasha, getCurrentDasha } from "@/lib/astrology/dasha";
 import { PLANET_DATA } from "@/lib/astrology/constants";
 import type { BirthData, DashaPeriod } from "@/lib/astrology/types";
+import { BackButton } from "@/components/BackButton";
 
 export default function DashaPage() {
   const [birthData, setBirthData] = useState<BirthData>({
@@ -41,6 +42,7 @@ export default function DashaPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-display mb-2 text-center">
             <span className="text-gradient-sacred font-tamil">விம்சோத்தரி தசா</span>
           </h1>

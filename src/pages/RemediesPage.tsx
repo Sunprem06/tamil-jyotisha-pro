@@ -2,6 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { TEMPLES_DATA, PLANET_DATA } from "@/lib/astrology/constants";
 import { MapPin, BookOpen, Calendar, Gem } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 const remedies = [
   {
@@ -84,6 +85,7 @@ export default function RemediesPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-5xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-display mb-2 text-center">
             <span className="text-gradient-sacred font-tamil">பரிகாரங்கள்</span>
           </h1>

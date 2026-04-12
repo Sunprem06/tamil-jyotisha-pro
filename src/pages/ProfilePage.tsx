@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { User, Users, Plus, Trash2, Save } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 interface FamilyMember {
   id: string;
@@ -92,6 +93,7 @@ export default function ProfilePage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-tamil text-gradient-sacred mb-8 text-center">
             சுயவிவரம் (Profile)
           </h1>

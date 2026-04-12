@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Star, ExternalLink, BookOpen, Navigation } from "lucide-react";
 import { useTempleDetail } from "@/hooks/useUniversalTempleSearch";
+import { BackButton } from "@/components/BackButton";
 
 export default function TempleDetailPage() {
   const { id } = useParams();
@@ -44,6 +45,7 @@ export default function TempleDetailPage() {
         {/* Temple Header */}
         <section className="bg-gradient-to-b from-primary/10 to-background py-10">
           <div className="container max-w-4xl">
+          <BackButton />
             <h1 className="text-3xl md:text-4xl font-bold font-tamil text-foreground">{temple.name_tamil}</h1>
             <p className="text-lg text-muted-foreground mt-1">{temple.name_english}</p>
 

@@ -9,6 +9,7 @@ import { calculatePorutham } from "@/lib/astrology/matching";
 import { NAKSHATRA_DATA, RASI_NAMES } from "@/lib/astrology/constants";
 import type { MatchingResult } from "@/lib/astrology/types";
 import { Heart, Check, X } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 export default function PoruthamPage() {
   const [boyName, setBoyName] = useState("");
@@ -37,6 +38,7 @@ export default function PoruthamPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-display mb-2 text-center">
             <span className="text-gradient-sacred font-tamil">திருமண பொருத்தம்</span>
           </h1>

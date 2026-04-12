@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { rasiData } from "@/data/rasiData";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 export default function RasiPage() {
   const { rasiId } = useParams();
@@ -16,6 +17,7 @@ export default function RasiPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-3xl">
+          <BackButton />
           <Link to="/rasi"><Button variant="ghost" size="sm" className="mb-4 gap-1"><ArrowLeft className="h-4 w-4" /> <span className="font-tamil">அனைத்து ராசிகள்</span></Button></Link>
           <div className="rasi-card text-center mb-8">
             <div className={`mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br ${rasi.color} text-5xl shadow-glow`}>

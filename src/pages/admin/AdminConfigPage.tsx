@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { Save } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 interface Config {
   id: string;
@@ -58,6 +59,7 @@ export default function AdminConfigPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
+          <BackButton />
         <div>
           <h1 className="text-2xl font-bold">System Configuration</h1>
           <p className="text-muted-foreground">All business rules are configurable — no hardcoded values</p>

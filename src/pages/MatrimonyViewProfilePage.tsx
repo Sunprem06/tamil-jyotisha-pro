@@ -13,6 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { ContactUnlockButton } from "@/components/matrimony/ContactUnlockButton";
 import { User, MapPin, GraduationCap, Briefcase, Heart, ArrowLeft, Star, Shield, Flag, MessageSquare } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 export default function MatrimonyViewProfilePage() {
   const { userId } = useParams();
@@ -106,6 +107,7 @@ export default function MatrimonyViewProfilePage() {
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <BackButton />
         </main>
         <Footer />
       </div>

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import { CreditCard, TrendingUp, Users } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 export default function AdminPaymentsPage() {
   const [subs, setSubs] = useState<any[]>([]);
@@ -30,6 +31,7 @@ export default function AdminPaymentsPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
+          <BackButton />
         <h1 className="text-2xl font-bold">Payments & Revenue</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

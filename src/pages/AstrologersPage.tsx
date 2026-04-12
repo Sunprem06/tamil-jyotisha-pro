@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Star } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 const astrologers = [
   { name: "Dr. ராமசாமி", speciality: "ஜாதக கணிப்பு", experience: "35+ ஆண்டுகள்", rating: 4.9 },
@@ -15,6 +16,7 @@ export default function AstrologersPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-display mb-8 text-center">
             <span className="text-gradient-sacred font-tamil">ஜோதிடர்கள்</span>
           </h1>

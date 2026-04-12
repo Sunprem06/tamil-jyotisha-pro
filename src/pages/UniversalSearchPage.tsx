@@ -8,6 +8,7 @@ import { Search, MapPin, Clock, Star, ChevronDown, ChevronUp, ExternalLink } fro
 import { useUniversalTempleSearch } from "@/hooks/useUniversalTempleSearch";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { BackButton } from "@/components/BackButton";
 
 const deityColors: Record<string, string> = {
   "முருகன்": "bg-red-100 text-red-800 border-red-200",
@@ -110,6 +111,7 @@ export default function UniversalSearchPage() {
         {/* Hero Search */}
         <section className="bg-gradient-to-b from-primary/5 to-background py-10">
           <div className="container max-w-3xl text-center">
+          <BackButton />
             <h1 className="text-3xl md:text-4xl font-bold font-tamil text-foreground mb-2">
               தேவதை & கோவில் தேடல்
             </h1>

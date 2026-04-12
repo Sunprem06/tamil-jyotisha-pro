@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { BackButton } from "@/components/BackButton";
 
 export default function AdminReportsPage() {
   const [reports, setReports] = useState<any[]>([]);
@@ -32,6 +33,7 @@ export default function AdminReportsPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
+          <BackButton />
         <div>
           <h1 className="text-2xl font-bold">User Reports</h1>
           <p className="text-muted-foreground">{reports.filter(r => r.status === "pending").length} pending</p>

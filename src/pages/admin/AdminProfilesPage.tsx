@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Check, X, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { BackButton } from "@/components/BackButton";
 
 export default function AdminProfilesPage() {
   const [profiles, setProfiles] = useState<any[]>([]);
@@ -37,6 +38,7 @@ export default function AdminProfilesPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
+          <BackButton />
         <div>
           <h1 className="text-2xl font-bold">Profile Moderation</h1>
           <p className="text-muted-foreground">{profiles.filter(p => p.profile_status === "pending").length} pending review</p>

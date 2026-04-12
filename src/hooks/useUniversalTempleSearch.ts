@@ -84,7 +84,7 @@ export function useUniversalTempleSearch() {
         .select("*, sthala_varalaru(*)");
 
       if (deityName) {
-        templeQuery = templeQuery.eq("deity_name_tamil", deityName);
+        templeQuery = templeQuery.ilike("deity_name_tamil", `%${deityName}%`);
       }
 
       if (q.trim()) {
@@ -187,10 +187,13 @@ export function useDeityProfile(deityName: string | undefined) {
         setDeity(d);
         setLoading(false);
         if (d) {
+          // Use ILIKE to find all temples matching the deity name variants
           supabase
             .from("temples")
             .select("*, sthala_varalaru(*)")
-            .eq("deity_id", d.id)
+            .or(`deity_name_tamil.ilike.%${d.name_tamil}%,deity_name_english.ilike.%${d.name_english}%,deity_id.eq.${d.id}`)
+            .order("is_arupadai_veedu", { ascending: false })
+            .order("name_tamil")
             .then(({ data: templeData }) => {
               setTemples((templeData as unknown as Temple[]) || []);
             });

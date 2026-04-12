@@ -11,6 +11,7 @@ import { Search, Heart, MapPin, GraduationCap, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { ContactUnlockButton } from "@/components/matrimony/ContactUnlockButton";
+import { BackButton } from "@/components/BackButton";
 
 export default function MatrimonySearchPage() {
   const { user } = useAuth();
@@ -47,6 +48,7 @@ export default function MatrimonySearchPage() {
       <Header />
       <main className="flex-1 container py-8 space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <BackButton />
           <div>
             <h1 className="text-2xl font-bold font-tamil">திருமண பொருத்தம் தேடல்</h1>
             <p className="text-muted-foreground">Find your perfect match</p>

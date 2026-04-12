@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { BackButton } from "@/components/BackButton";
 
 const ALL_ROLES = ["super_admin", "admin", "moderator", "support_agent", "analyst", "user", "astrologer"];
 
@@ -48,6 +49,7 @@ export default function AdminRolesPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
+          <BackButton />
         <div>
           <h1 className="text-2xl font-bold">Roles & Permissions</h1>
           <p className="text-muted-foreground">Configurable permission matrix — {isSuperAdmin ? "click to toggle" : "read-only"}</p>

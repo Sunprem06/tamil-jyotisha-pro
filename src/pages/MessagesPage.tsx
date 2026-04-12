@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, MessageSquare, User } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 interface Conversation {
   userId: string;
@@ -153,6 +154,7 @@ export default function MessagesPage() {
       <main className="flex-1 container py-6">
         <h1 className="text-2xl font-bold font-tamil mb-4">செய்திகள் (Messages)</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[600px]">
+          <BackButton />
           {/* Conversation List */}
           <Card className="md:col-span-1">
             <CardHeader className="pb-2"><CardTitle className="text-sm">Conversations</CardTitle></CardHeader>

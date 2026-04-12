@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
+import { BackButton } from "@/components/BackButton";
 
 export default function AdminAnalyticsPage() {
   const [stats, setStats] = useState({
@@ -31,6 +32,7 @@ export default function AdminAnalyticsPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
+          <BackButton />
         <h1 className="text-2xl font-bold">Analytics</h1>
 
         {loading ? (

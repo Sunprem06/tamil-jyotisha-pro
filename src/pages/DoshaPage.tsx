@@ -8,6 +8,7 @@ import { generateHoroscope } from "@/lib/astrology/engine";
 import { detectDoshas, detectYogas } from "@/lib/astrology/dosha";
 import type { BirthData, DoshaResult, YogaResult } from "@/lib/astrology/types";
 import { Shield, AlertTriangle, Star } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 export default function DoshaPage() {
   const [birthData, setBirthData] = useState<BirthData>({
@@ -39,6 +40,7 @@ export default function DoshaPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-display mb-2 text-center">
             <span className="text-gradient-sacred font-tamil">தோஷ & யோக பரிசோதனை</span>
           </h1>

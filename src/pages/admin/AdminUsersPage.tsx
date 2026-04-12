@@ -10,6 +10,7 @@ import { Search, Eye, Ban, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useToast } from "@/hooks/use-toast";
+import { BackButton } from "@/components/BackButton";
 
 interface UserRow {
   id: string;
@@ -80,6 +81,7 @@ export default function AdminUsersPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
+          <BackButton />
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">User Management</h1>

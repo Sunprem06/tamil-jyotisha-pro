@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Settings2, Save } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 export default function PartnerPreferencesPage() {
   const { user } = useAuth();
@@ -119,6 +120,7 @@ export default function PartnerPreferencesPage() {
       <Header />
       <main className="flex-1 container py-8 max-w-3xl space-y-6">
         <div className="text-center">
+          <BackButton />
           <h1 className="text-2xl font-bold font-tamil">துணை விருப்பங்கள்</h1>
           <p className="text-muted-foreground">Partner Preferences</p>
         </div>

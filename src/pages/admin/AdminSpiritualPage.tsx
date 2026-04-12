@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Pencil, Trash2, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { BackButton } from "@/components/BackButton";
 
 interface SpiritualUpdate {
   id: string;
@@ -137,6 +138,7 @@ export default function AdminSpiritualPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
+          <BackButton />
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold font-tamil">ஆன்மீக அப்டேட்கள்</h1>

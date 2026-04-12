@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, Globe } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 export default function ContactPage() {
   return (
@@ -12,6 +13,7 @@ export default function ContactPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-3xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-display mb-2 text-center">
             <span className="text-gradient-sacred font-tamil">தொடர்பு கொள்ள</span>
           </h1>

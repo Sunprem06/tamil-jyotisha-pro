@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { BackButton } from "@/components/BackButton";
 
 export default function AdminFraudPage() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -34,6 +35,7 @@ export default function AdminFraudPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
+          <BackButton />
         <div>
           <h1 className="text-2xl font-bold">Fraud Detection</h1>
           <p className="text-muted-foreground">{logs.filter(l => !l.resolved).length} unresolved alerts</p>

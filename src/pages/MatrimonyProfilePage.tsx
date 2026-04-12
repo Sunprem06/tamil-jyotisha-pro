@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { PhotoUpload } from "@/components/matrimony/PhotoUpload";
+import { BackButton } from "@/components/BackButton";
 
 export default function MatrimonyProfilePage() {
   const { user } = useAuth();
@@ -114,6 +115,7 @@ export default function MatrimonyProfilePage() {
       <main className="flex-1 container py-8">
         <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-6">
           <div>
+          <BackButton />
             <h1 className="text-2xl font-bold font-tamil">திருமண சுயவிவரம்</h1>
             <p className="text-muted-foreground">Matrimony Profile</p>
           </div>

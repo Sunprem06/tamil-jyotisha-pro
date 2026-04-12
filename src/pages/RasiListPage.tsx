@@ -2,6 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Link } from "react-router-dom";
 import { rasiData } from "@/data/rasiData";
+import { BackButton } from "@/components/BackButton";
 
 export default function RasiListPage() {
   return (
@@ -9,6 +10,7 @@ export default function RasiListPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-display mb-8 text-center">
             <span className="text-gradient-sacred font-tamil">12 ராசிபலன்</span>
           </h1>

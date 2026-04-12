@@ -3,6 +3,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { getCurrentPanchangamBasic } from "@/lib/astrology/engine";
 import { RASI_NAMES } from "@/lib/astrology/constants";
+import { BackButton } from "@/components/BackButton";
 
 const transitEffects: Record<string, Record<number, string>> = {
   Saturn: {
@@ -43,6 +44,7 @@ export default function TransitPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-display mb-2 text-center">
             <span className="text-gradient-sacred font-tamil">கோசார பலன்</span>
           </h1>

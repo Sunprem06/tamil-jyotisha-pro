@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { FileText, Trash2, Eye } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 interface SavedChart {
   id: string;
@@ -45,6 +46,7 @@ export default function SavedChartsPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-tamil text-gradient-sacred mb-8 text-center">
             சேமிக்கப்பட்ட ஜாதகங்கள்
           </h1>

@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { BackButton } from "@/components/BackButton";
 
 export default function MuhurthamPage() {
   const auspiciousDates = [
@@ -16,6 +17,7 @@ export default function MuhurthamPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-3xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-display mb-2 text-center">
             <span className="text-gradient-sacred font-tamil">சுப முகூர்த்தம்</span>
           </h1>

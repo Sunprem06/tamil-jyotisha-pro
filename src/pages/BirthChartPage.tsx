@@ -12,6 +12,7 @@ import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
 import { generateHoroscope, calculateNavamsa } from "@/lib/astrology/engine";
 import { RASI_NAMES, NAKSHATRA_DATA } from "@/lib/astrology/constants";
 import type { BirthData, HoroscopeChart, NavamsaChart } from "@/lib/astrology/types";
+import { BackButton } from "@/components/BackButton";
 
 export default function BirthChartPage() {
   const [birthData, setBirthData] = useState<BirthData>({
@@ -46,6 +47,7 @@ export default function BirthChartPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-6xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-display mb-2 text-center">
             <span className="text-gradient-sacred font-tamil">ஜாதக கணிப்பு</span>
           </h1>

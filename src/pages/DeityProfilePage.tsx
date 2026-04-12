@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Star } from "lucide-react";
 import { useDeityProfile } from "@/hooks/useUniversalTempleSearch";
+import { BackButton } from "@/components/BackButton";
 
 function InfoItem({ label, value }: { label: string; value: string | null | undefined }) {
   if (!value) return null;
@@ -51,6 +52,7 @@ export default function DeityProfilePage() {
         {/* Deity Header */}
         <section className="bg-gradient-to-b from-primary/10 to-background py-10">
           <div className="container max-w-4xl text-center">
+          <BackButton />
             <div className="h-20 w-20 mx-auto rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-primary-foreground text-4xl font-tamil font-bold mb-4 shadow-lg">
               {deity.name_tamil.charAt(0)}
             </div>

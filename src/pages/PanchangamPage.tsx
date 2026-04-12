@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { getCurrentPanchangamBasic } from "@/lib/astrology/engine";
 import { NAKSHATRA_DATA, TITHI_NAMES, YOGA_NAMES, TAMIL_DAYS, RASI_NAMES } from "@/lib/astrology/constants";
 import { Sunrise, Sunset, AlertTriangle } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 export default function PanchangamPage() {
   const panchangam = useMemo(() => getCurrentPanchangamBasic(new Date(), 13.0827, 80.2707), []);
@@ -14,6 +15,7 @@ export default function PanchangamPage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
+          <BackButton />
           <h1 className="text-3xl font-bold font-display mb-2 text-center">
             <span className="text-gradient-sacred font-tamil">இன்றைய பஞ்சாங்கம்</span>
           </h1>

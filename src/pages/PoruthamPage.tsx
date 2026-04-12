@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { calculatePorutham } from "@/lib/astrology/matching";
@@ -10,11 +11,22 @@ import type { MatchingResult } from "@/lib/astrology/types";
 import { Heart, Check, X } from "lucide-react";
 
 export default function PoruthamPage() {
+  const [boyName, setBoyName] = useState("");
+  const [girlName, setGirlName] = useState("");
+  const [boyDob, setBoyDob] = useState("");
+  const [boyTob, setBoyTob] = useState("06:00");
+  const [girlDob, setGirlDob] = useState("");
+  const [girlTob, setGirlTob] = useState("06:00");
   const [boyNakshatra, setBoyNakshatra] = useState<number>(0);
   const [boyRasi, setBoyRasi] = useState<number>(0);
   const [girlNakshatra, setGirlNakshatra] = useState<number>(0);
   const [girlRasi, setGirlRasi] = useState<number>(0);
   const [result, setResult] = useState<MatchingResult | null>(null);
+
+  const getAmPm = (time: string) => {
+    const h = parseInt(time.split(':')[0] || '0');
+    return h >= 12 ? 'PM' : 'AM';
+  };
 
   const handleMatch = () => {
     setResult(calculatePorutham(boyNakshatra, boyRasi, girlNakshatra, girlRasi));
@@ -32,9 +44,24 @@ export default function PoruthamPage() {
 
           <div className="rasi-card max-w-3xl mx-auto mb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Boy */}
+              {/* Groom */}
               <div className="space-y-4">
                 <h3 className="font-bold font-tamil text-lg text-center">மாப்பிள்ளை (Groom)</h3>
+                <div>
+                  <Label className="font-tamil">பெயர் (Name)</Label>
+                  <Input value={boyName} onChange={e => setBoyName(e.target.value)} placeholder="மாப்பிள்ளை பெயர்" />
+                </div>
+                <div>
+                  <Label className="font-tamil">பிறந்த தேதி (Date of Birth)</Label>
+                  <Input type="date" value={boyDob} onChange={e => setBoyDob(e.target.value)} />
+                </div>
+                <div>
+                  <Label className="font-tamil">பிறந்த நேரம் (Time of Birth)</Label>
+                  <div className="flex gap-2">
+                    <Input type="time" value={boyTob} onChange={e => setBoyTob(e.target.value)} className="flex-1" />
+                    <span className="flex items-center text-sm text-muted-foreground px-2 bg-muted rounded-md">{getAmPm(boyTob)}</span>
+                  </div>
+                </div>
                 <div>
                   <Label className="font-tamil">நட்சத்திரம்</Label>
                   <Select value={String(boyNakshatra)} onValueChange={v => setBoyNakshatra(Number(v))}>
@@ -59,9 +86,24 @@ export default function PoruthamPage() {
                 </div>
               </div>
 
-              {/* Girl */}
+              {/* Bride */}
               <div className="space-y-4">
                 <h3 className="font-bold font-tamil text-lg text-center">மணப்பெண் (Bride)</h3>
+                <div>
+                  <Label className="font-tamil">பெயர் (Name)</Label>
+                  <Input value={girlName} onChange={e => setGirlName(e.target.value)} placeholder="மணப்பெண் பெயர்" />
+                </div>
+                <div>
+                  <Label className="font-tamil">பிறந்த தேதி (Date of Birth)</Label>
+                  <Input type="date" value={girlDob} onChange={e => setGirlDob(e.target.value)} />
+                </div>
+                <div>
+                  <Label className="font-tamil">பிறந்த நேரம் (Time of Birth)</Label>
+                  <div className="flex gap-2">
+                    <Input type="time" value={girlTob} onChange={e => setGirlTob(e.target.value)} className="flex-1" />
+                    <span className="flex items-center text-sm text-muted-foreground px-2 bg-muted rounded-md">{getAmPm(girlTob)}</span>
+                  </div>
+                </div>
                 <div>
                   <Label className="font-tamil">நட்சத்திரம்</Label>
                   <Select value={String(girlNakshatra)} onValueChange={v => setGirlNakshatra(Number(v))}>
@@ -94,6 +136,14 @@ export default function PoruthamPage() {
 
           {result && (
             <div className="animate-fade-up space-y-6">
+              {/* Names display */}
+              {(boyName || girlName) && (
+                <div className="text-center font-tamil text-lg">
+                  <span className="font-bold">{boyName || "மாப்பிள்ளை"}</span>
+                  <span className="mx-2 text-primary">❤</span>
+                  <span className="font-bold">{girlName || "மணப்பெண்"}</span>
+                </div>
+              )}
               {/* Score */}
               <div className="rasi-card text-center">
                 <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-sacred mb-4">

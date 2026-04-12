@@ -601,6 +601,60 @@ export type Database = {
         }
         Relationships: []
       }
+      rasi_predictions: {
+        Row: {
+          career: string | null
+          created_at: string
+          finance: string | null
+          generated_date: string
+          health: string | null
+          id: string
+          is_active: boolean
+          love: string | null
+          lucky_color: string | null
+          lucky_number: string | null
+          prediction: string
+          prediction_type: string
+          rasi_id: string
+          rasi_name: string
+          updated_at: string
+        }
+        Insert: {
+          career?: string | null
+          created_at?: string
+          finance?: string | null
+          generated_date?: string
+          health?: string | null
+          id?: string
+          is_active?: boolean
+          love?: string | null
+          lucky_color?: string | null
+          lucky_number?: string | null
+          prediction: string
+          prediction_type?: string
+          rasi_id: string
+          rasi_name: string
+          updated_at?: string
+        }
+        Update: {
+          career?: string | null
+          created_at?: string
+          finance?: string | null
+          generated_date?: string
+          health?: string | null
+          id?: string
+          is_active?: boolean
+          love?: string | null
+          lucky_color?: string | null
+          lucky_number?: string | null
+          prediction?: string
+          prediction_type?: string
+          rasi_id?: string
+          rasi_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       reports: {
         Row: {
           created_at: string

@@ -1,13 +1,25 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogIn, LogOut, User, Shield, MessageSquare } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Menu, X, LogIn, LogOut, User, Shield, MessageSquare, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
+const TEMPLE_CATEGORIES = [
+  { href: "/dashboard", label: "🛕 கோவில் முகப்பு", labelEn: "Temple Dashboard" },
+  { href: "/deity/Vinayagar", label: "🐘 விநாயகர்", labelEn: "Vinayagar" },
+  { href: "/deity/Shiva", label: "🕉 சிவன்", labelEn: "Shiva" },
+  { href: "/deity/Parvathi", label: "🔱 பார்வதி / அம்மன்", labelEn: "Parvathi / Amman" },
+  { href: "/deity/Vishnu", label: "🔵 விஷ்ணு / பெருமாள்", labelEn: "Vishnu" },
+  { href: "/deity/Lakshmi", label: "🪷 மகாலட்சுமி", labelEn: "Mahalakshmi" },
+  { href: "/deity/Murugan", label: "🦚 முருகன்", labelEn: "Murugan" },
+  { href: "/deity/Saraswathi", label: "📚 சரஸ்வதி", labelEn: "Saraswathi" },
+  { href: "/deity/Ayyanar", label: "🐴 அய்யனார் / ஐயப்பன்", labelEn: "Ayyanar" },
+  { href: "/deity-search", label: "🔍 அனைத்தும் தேடு", labelEn: "Search All" },
+];
+
 const navLinks = [
   { href: "/", label: "முகப்பு", labelEn: "Home" },
-  { href: "/dashboard", label: "கோவில்", labelEn: "Temples" },
   { href: "/rasi", label: "ராசிபலன்", labelEn: "Horoscope" },
   { href: "/birth-chart", label: "ஜாதகம்", labelEn: "Birth Chart" },
   { href: "/panchangam", label: "பஞ்சாங்கம்", labelEn: "Panchangam" },
@@ -17,12 +29,14 @@ const navLinks = [
   { href: "/transit", label: "கோசாரம்", labelEn: "Transit" },
   { href: "/remedies", label: "பரிகாரம்", labelEn: "Remedies" },
   { href: "/matrimony/search", label: "திருமணம்", labelEn: "Matrimony" },
-  { href: "/deity-search", label: "தேடல்", labelEn: "Search" },
 ];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [templeOpen, setTempleOpen] = useState(false);
+  const [mobileTempleOpen, setMobileTempleOpen] = useState(false);
+  const templeRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { user, signOut } = useAuth();
 
@@ -33,6 +47,19 @@ export function Header() {
       setIsAdmin(data?.some(r => adminRoles.includes(r.role)) ?? false);
     });
   }, [user]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (templeRef.current && !templeRef.current.contains(e.target as Node)) {
+        setTempleOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const isTempleActive = location.pathname.startsWith("/dashboard") || location.pathname.startsWith("/deity") || location.pathname.startsWith("/temple");
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -49,7 +76,52 @@ export function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-1">
-          {navLinks.map((link) => (
+          {navLinks.slice(0, 1).map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className={`px-3 py-2 rounded-lg text-sm font-tamil transition-colors ${
+                location.pathname === link.href
+                  ? "bg-primary/10 text-primary font-semibold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          {/* Temple Dropdown */}
+          <div ref={templeRef} className="relative">
+            <button
+              onClick={() => setTempleOpen(!templeOpen)}
+              className={`px-3 py-2 rounded-lg text-sm font-tamil transition-colors flex items-center gap-1 ${
+                isTempleActive
+                  ? "bg-primary/10 text-primary font-semibold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              கோவில் <ChevronDown className={`h-3.5 w-3.5 transition-transform ${templeOpen ? "rotate-180" : ""}`} />
+            </button>
+            {templeOpen && (
+              <div className="absolute top-full left-0 mt-1 w-64 bg-background border border-border rounded-lg shadow-lg z-50 py-1">
+                {TEMPLE_CATEGORIES.map((cat) => (
+                  <Link
+                    key={cat.href}
+                    to={cat.href}
+                    onClick={() => setTempleOpen(false)}
+                    className={`block px-4 py-2.5 text-sm font-tamil transition-colors hover:bg-muted ${
+                      location.pathname === cat.href ? "bg-primary/10 text-primary font-semibold" : "text-foreground"
+                    }`}
+                  >
+                    {cat.label}
+                    <span className="text-xs text-muted-foreground ml-2">({cat.labelEn})</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {navLinks.slice(1).map((link) => (
             <Link
               key={link.href}
               to={link.href}
@@ -71,9 +143,6 @@ export function Header() {
                 <Button variant="ghost" size="sm" className="font-tamil">
                   <User className="h-4 w-4 mr-1" /> சுயவிவரம்
                 </Button>
-              </Link>
-              <Link to="/saved-charts">
-                <Button variant="ghost" size="sm" className="font-tamil">ஜாதகங்கள்</Button>
               </Link>
               <Link to="/passport">
                 <Button variant="ghost" size="sm" className="font-tamil">📖 யாத்திரை</Button>
@@ -111,9 +180,46 @@ export function Header() {
 
       {/* Mobile Nav */}
       {isOpen && (
-        <div className="lg:hidden border-t border-border bg-background">
+        <div className="lg:hidden border-t border-border bg-background max-h-[80vh] overflow-y-auto">
           <nav className="container py-4 flex flex-col gap-1">
-            {navLinks.map((link) => (
+            <Link
+              to="/"
+              onClick={() => setIsOpen(false)}
+              className={`px-4 py-3 rounded-lg text-sm font-tamil transition-colors ${
+                location.pathname === "/" ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              முகப்பு <span className="text-xs text-muted-foreground ml-1">(Home)</span>
+            </Link>
+
+            {/* Mobile Temple Accordion */}
+            <button
+              onClick={() => setMobileTempleOpen(!mobileTempleOpen)}
+              className={`px-4 py-3 rounded-lg text-sm font-tamil transition-colors flex items-center justify-between ${
+                isTempleActive ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              <span>கோவில் <span className="text-xs text-muted-foreground ml-1">(Temples)</span></span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${mobileTempleOpen ? "rotate-180" : ""}`} />
+            </button>
+            {mobileTempleOpen && (
+              <div className="ml-4 flex flex-col gap-0.5 border-l-2 border-primary/20 pl-3">
+                {TEMPLE_CATEGORIES.map((cat) => (
+                  <Link
+                    key={cat.href}
+                    to={cat.href}
+                    onClick={() => { setIsOpen(false); setMobileTempleOpen(false); }}
+                    className={`px-3 py-2 rounded-lg text-sm font-tamil transition-colors ${
+                      location.pathname === cat.href ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {cat.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {navLinks.slice(1).map((link) => (
               <Link
                 key={link.href}
                 to={link.href}

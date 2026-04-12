@@ -2,7 +2,7 @@ import { Link, useLocation, Navigate } from "react-router-dom";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import {
   LayoutDashboard, Users, Shield, Settings, AlertTriangle,
-  CreditCard, MessageSquare, FileText, BarChart3, LogOut
+  CreditCard, MessageSquare, FileText, BarChart3, LogOut, Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,6 +17,7 @@ const sidebarLinks = [
   { href: "/admin/roles", label: "Roles & Permissions", icon: Shield, permission: "users.change_role" },
   { href: "/admin/config", label: "Configuration", icon: Settings, permission: "config.read" },
   { href: "/admin/reports", label: "Reports", icon: MessageSquare, permission: "profiles.moderate" },
+  { href: "/admin/spiritual", label: "Spiritual Updates", icon: Sparkles, permission: null },
 ];
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {

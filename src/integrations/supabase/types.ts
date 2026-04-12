@@ -597,6 +597,48 @@ export type Database = {
           },
         ]
       }
+      spiritual_updates: {
+        Row: {
+          action: string
+          benefit: string
+          category: Database["public"]["Enums"]["spiritual_category"]
+          created_at: string
+          id: string
+          is_active: boolean
+          language: string
+          message: string
+          title: string
+          update_type: Database["public"]["Enums"]["spiritual_update_type"]
+          updated_at: string
+        }
+        Insert: {
+          action: string
+          benefit: string
+          category?: Database["public"]["Enums"]["spiritual_category"]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          language?: string
+          message: string
+          title: string
+          update_type?: Database["public"]["Enums"]["spiritual_update_type"]
+          updated_at?: string
+        }
+        Update: {
+          action?: string
+          benefit?: string
+          category?: Database["public"]["Enums"]["spiritual_category"]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          language?: string
+          message?: string
+          title?: string
+          update_type?: Database["public"]["Enums"]["spiritual_update_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           amount: number
@@ -770,6 +812,13 @@ export type Database = {
         | "support_agent"
         | "analyst"
         | "astrologer"
+      spiritual_category:
+        | "general"
+        | "money"
+        | "family"
+        | "health"
+        | "spiritual"
+      spiritual_update_type: "guidance" | "do_this" | "avoid_this"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -906,6 +955,8 @@ export const Constants = {
         "analyst",
         "astrologer",
       ],
+      spiritual_category: ["general", "money", "family", "health", "spiritual"],
+      spiritual_update_type: ["guidance", "do_this", "avoid_this"],
     },
   },
 } as const

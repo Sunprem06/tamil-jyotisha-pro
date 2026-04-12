@@ -4,6 +4,7 @@ import { HeroSection } from "@/components/home/HeroSection";
 import { HoroscopeTypeSelector } from "@/components/home/HoroscopeTypeSelector";
 import { RasiGrid } from "@/components/home/RasiGrid";
 import { PanchangamWidget } from "@/components/home/PanchangamWidget";
+import { SpiritualUpdatesWidget } from "@/components/home/SpiritualUpdatesWidget";
 import { FeaturesSection } from "@/components/home/FeaturesSection";
 
 const Index = () => {
@@ -13,6 +14,7 @@ const Index = () => {
       <main className="flex-1">
         <HeroSection />
         <HoroscopeTypeSelector />
+        <SpiritualUpdatesWidget />
         <RasiGrid />
         <PanchangamWidget />
         <FeaturesSection />

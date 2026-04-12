@@ -33,6 +33,7 @@ import AdminAnalyticsPage from "./pages/admin/AdminAnalyticsPage";
 import AdminRolesPage from "./pages/admin/AdminRolesPage";
 import AdminConfigPage from "./pages/admin/AdminConfigPage";
 import AdminReportsPage from "./pages/admin/AdminReportsPage";
+import AdminSpiritualPage from "./pages/admin/AdminSpiritualPage";
 import MatrimonyProfilePage from "./pages/MatrimonyProfilePage";
 import MatrimonySearchPage from "./pages/MatrimonySearchPage";
 import MatrimonyViewProfilePage from "./pages/MatrimonyViewProfilePage";
@@ -85,6 +86,7 @@ const App = () => (
             <Route path="/admin/roles" element={<AdminRolesPage />} />
             <Route path="/admin/config" element={<AdminConfigPage />} />
             <Route path="/admin/reports" element={<AdminReportsPage />} />
+            <Route path="/admin/spiritual" element={<AdminSpiritualPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="*" element={<NotFound />} />

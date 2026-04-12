@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const navLinks = [
   { href: "/", label: "முகப்பு", labelEn: "Home" },
+  { href: "/dashboard", label: "கோவில்", labelEn: "Temples" },
   { href: "/rasi", label: "ராசிபலன்", labelEn: "Horoscope" },
   { href: "/birth-chart", label: "ஜாதகம்", labelEn: "Birth Chart" },
   { href: "/panchangam", label: "பஞ்சாங்கம்", labelEn: "Panchangam" },
@@ -73,6 +74,9 @@ export function Header() {
               </Link>
               <Link to="/saved-charts">
                 <Button variant="ghost" size="sm" className="font-tamil">ஜாதகங்கள்</Button>
+              </Link>
+              <Link to="/passport">
+                <Button variant="ghost" size="sm" className="font-tamil">📖 யாத்திரை</Button>
               </Link>
               <Link to="/messages">
                 <Button variant="ghost" size="sm">

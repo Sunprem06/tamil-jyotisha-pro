@@ -45,6 +45,8 @@ import NotFound from "./pages/NotFound";
 import UniversalSearchPage from "./pages/UniversalSearchPage";
 import DeityProfilePage from "./pages/DeityProfilePage";
 import TempleDetailPage from "./pages/TempleDetailPage";
+import DashboardPage from "./pages/DashboardPage";
+import PassportPage from "./pages/PassportPage";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +59,8 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/passport" element={<PassportPage />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />

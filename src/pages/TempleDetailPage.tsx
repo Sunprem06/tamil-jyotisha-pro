@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Star, ExternalLink, BookOpen, Navigation } from "lucide-react";
 import { useTempleDetail } from "@/hooks/useUniversalTempleSearch";
 import { BackButton } from "@/components/BackButton";
+import { VisitWishlistButtons } from "@/components/temple/VisitWishlistButtons";
 
 export default function TempleDetailPage() {
   const { id } = useParams();
@@ -48,6 +49,11 @@ export default function TempleDetailPage() {
           <BackButton />
             <h1 className="text-3xl md:text-4xl font-bold font-tamil text-foreground">{temple.name_tamil}</h1>
             <p className="text-lg text-muted-foreground mt-1">{temple.name_english}</p>
+
+            {/* Visit & Wishlist Buttons */}
+            <div className="mt-4">
+              <VisitWishlistButtons templeId={temple.id} templeNameTamil={temple.name_tamil} />
+            </div>
 
             {/* Deity Info Strip */}
             <div className="flex flex-wrap items-center gap-3 mt-4">

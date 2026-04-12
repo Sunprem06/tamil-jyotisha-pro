@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { User, Users, Plus, Trash2, Save } from "lucide-react";
 import { BackButton } from "@/components/BackButton";
+import { PlaceAutocomplete } from "@/components/PlaceAutocomplete";
 
 interface FamilyMember {
   id: string;
@@ -98,7 +99,6 @@ export default function ProfilePage() {
             சுயவிவரம் (Profile)
           </h1>
 
-          {/* Profile Section */}
           <div className="rasi-card mb-8">
             <h2 className="text-xl font-bold font-tamil mb-4 flex items-center gap-2">
               <User className="h-5 w-5" /> உங்கள் விவரங்கள்
@@ -118,7 +118,6 @@ export default function ProfilePage() {
             </Button>
           </div>
 
-          {/* Family Members */}
           <div className="rasi-card">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold font-tamil flex items-center gap-2">
@@ -149,16 +148,19 @@ export default function ProfilePage() {
                     <Input type="time" value={newMember.time_of_birth} onChange={(e) => setNewMember({ ...newMember, time_of_birth: e.target.value })} />
                   </div>
                   <div>
-                    <Label className="text-xs">Place</Label>
-                    <Input value={newMember.place} onChange={(e) => setNewMember({ ...newMember, place: e.target.value })} />
+                    <Label className="text-xs font-tamil">பிறந்த இடம் (Place)</Label>
+                    <PlaceAutocomplete
+                      value={newMember.place}
+                      onChange={(place, lat, lng) => setNewMember({ ...newMember, place, latitude: lat, longitude: lng })}
+                    />
                   </div>
                   <div>
                     <Label className="text-xs">Latitude</Label>
-                    <Input type="number" step="0.0001" value={newMember.latitude} onChange={(e) => setNewMember({ ...newMember, latitude: parseFloat(e.target.value) || 0 })} />
+                    <Input type="number" step="0.0001" value={newMember.latitude} readOnly className="bg-muted/50" />
                   </div>
                   <div>
                     <Label className="text-xs">Longitude</Label>
-                    <Input type="number" step="0.0001" value={newMember.longitude} onChange={(e) => setNewMember({ ...newMember, longitude: parseFloat(e.target.value) || 0 })} />
+                    <Input type="number" step="0.0001" value={newMember.longitude} readOnly className="bg-muted/50" />
                   </div>
                 </div>
                 <Button variant="sacred" className="mt-3 font-tamil" onClick={addFamilyMember}>

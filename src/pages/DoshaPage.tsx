@@ -49,6 +49,16 @@ export default function DoshaPage() {
           <div className="rasi-card max-w-2xl mx-auto mb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
+                <Label className="font-tamil">பெயர் (Name)</Label>
+                <Input type="text" placeholder="உங்கள் பெயர்" value={birthData.name}
+                  onChange={e => setBirthData({...birthData, name: e.target.value})} />
+              </div>
+              <div>
+                <Label className="font-tamil">பிறந்த இடம் (Place)</Label>
+                <Input type="text" placeholder="சென்னை" value={birthData.place}
+                  onChange={e => setBirthData({...birthData, place: e.target.value})} />
+              </div>
+              <div>
                 <Label className="font-tamil">பிறந்த தேதி</Label>
                 <Input type="date" value={birthData.dateOfBirth.toISOString().split('T')[0]}
                   onChange={e => setBirthData({...birthData, dateOfBirth: new Date(e.target.value)})} />

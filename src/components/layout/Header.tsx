@@ -18,16 +18,19 @@ const TEMPLE_CATEGORIES = [
   { href: "/deity-search", label: "🔍 அனைத்தும் தேடு", labelEn: "Search All" },
 ];
 
+const JATHAGAM_ITEMS = [
+  { href: "/birth-chart", label: "📜 ஜாதகம்", labelEn: "Birth Chart" },
+  { href: "/porutham", label: "💑 பொருத்தம்", labelEn: "Matching" },
+  { href: "/dasha", label: "⏳ தசா", labelEn: "Dasha" },
+  { href: "/dosha", label: "⚠️ தோஷம்", labelEn: "Dosha" },
+  { href: "/transit", label: "🪐 கோசாரம்", labelEn: "Transit" },
+  { href: "/remedies", label: "🙏 பரிகாரம்", labelEn: "Remedies" },
+];
+
 const navLinks = [
   { href: "/", label: "முகப்பு", labelEn: "Home" },
   { href: "/rasi", label: "ராசிபலன்", labelEn: "Horoscope" },
-  { href: "/birth-chart", label: "ஜாதகம்", labelEn: "Birth Chart" },
   { href: "/panchangam", label: "பஞ்சாங்கம்", labelEn: "Panchangam" },
-  { href: "/porutham", label: "பொருத்தம்", labelEn: "Matching" },
-  { href: "/dasha", label: "தசா", labelEn: "Dasha" },
-  { href: "/dosha", label: "தோஷம்", labelEn: "Dosha" },
-  { href: "/transit", label: "கோசாரம்", labelEn: "Transit" },
-  { href: "/remedies", label: "பரிகாரம்", labelEn: "Remedies" },
   { href: "/matrimony/search", label: "திருமணம்", labelEn: "Matrimony" },
 ];
 

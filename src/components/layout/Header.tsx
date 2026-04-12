@@ -31,6 +31,7 @@ const navLinks = [
   { href: "/", label: "முகப்பு", labelEn: "Home" },
   { href: "/rasi", label: "ராசிபலன்", labelEn: "Horoscope" },
   { href: "/panchangam", label: "பஞ்சாங்கம்", labelEn: "Panchangam" },
+  { href: "/calendar", label: "நாள்காட்டி", labelEn: "Calendar" },
   { href: "/matrimony/search", label: "திருமணம்", labelEn: "Matrimony" },
 ];
 

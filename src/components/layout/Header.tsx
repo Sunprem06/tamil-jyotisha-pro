@@ -75,6 +75,10 @@ export function Header() {
               <Link to="/saved-charts">
                 <Button variant="ghost" size="sm" className="font-tamil">ஜாதகங்கள்</Button>
               </Link>
+              <Link to="/passport">
+                <Button variant="ghost" size="sm" className="font-tamil">📖 யாத்திரை</Button>
+              </Link>
+              </Link>
               <Link to="/messages">
                 <Button variant="ghost" size="sm">
                   <MessageSquare className="h-4 w-4 mr-1" /> செய்திகள்

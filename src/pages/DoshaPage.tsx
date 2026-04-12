@@ -9,6 +9,7 @@ import { detectDoshas, detectYogas } from "@/lib/astrology/dosha";
 import type { BirthData, DoshaResult, YogaResult } from "@/lib/astrology/types";
 import { Shield, AlertTriangle, Star } from "lucide-react";
 import { BackButton } from "@/components/BackButton";
+import { PlaceAutocomplete } from "@/components/PlaceAutocomplete";
 
 export default function DoshaPage() {
   const [birthData, setBirthData] = useState<BirthData>({
@@ -55,8 +56,11 @@ export default function DoshaPage() {
               </div>
               <div>
                 <Label className="font-tamil">பிறந்த இடம் (Place)</Label>
-                <Input type="text" placeholder="சென்னை" value={birthData.place}
-                  onChange={e => setBirthData({...birthData, place: e.target.value})} />
+                <PlaceAutocomplete
+                  value={birthData.place}
+                  onChange={(place, lat, lng) => setBirthData({...birthData, place, latitude: lat, longitude: lng})}
+                  placeholder="சென்னை"
+                />
               </div>
               <div>
                 <Label className="font-tamil">பிறந்த தேதி</Label>
@@ -70,13 +74,11 @@ export default function DoshaPage() {
               </div>
               <div>
                 <Label>Latitude</Label>
-                <Input type="number" step="0.0001" value={birthData.latitude}
-                  onChange={e => setBirthData({...birthData, latitude: parseFloat(e.target.value) || 0})} />
+                <Input type="number" step="0.0001" value={birthData.latitude} readOnly className="bg-muted/50" />
               </div>
               <div>
                 <Label>Longitude</Label>
-                <Input type="number" step="0.0001" value={birthData.longitude}
-                  onChange={e => setBirthData({...birthData, longitude: parseFloat(e.target.value) || 0})} />
+                <Input type="number" step="0.0001" value={birthData.longitude} readOnly className="bg-muted/50" />
               </div>
             </div>
             <Button variant="sacred" className="w-full mt-6 font-tamil" onClick={handleAnalyze}>

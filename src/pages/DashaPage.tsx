@@ -9,6 +9,7 @@ import { calculateVimshottariDasha, getCurrentDasha } from "@/lib/astrology/dash
 import { PLANET_DATA } from "@/lib/astrology/constants";
 import type { BirthData, DashaPeriod } from "@/lib/astrology/types";
 import { BackButton } from "@/components/BackButton";
+import { PlaceAutocomplete } from "@/components/PlaceAutocomplete";
 
 export default function DashaPage() {
   const [birthData, setBirthData] = useState<BirthData>({
@@ -57,8 +58,11 @@ export default function DashaPage() {
               </div>
               <div>
                 <Label className="font-tamil">பிறந்த இடம் (Place)</Label>
-                <Input type="text" placeholder="சென்னை" value={birthData.place}
-                  onChange={e => setBirthData({...birthData, place: e.target.value})} />
+                <PlaceAutocomplete
+                  value={birthData.place}
+                  onChange={(place, lat, lng) => setBirthData({...birthData, place, latitude: lat, longitude: lng})}
+                  placeholder="சென்னை"
+                />
               </div>
               <div>
                 <Label className="font-tamil">பிறந்த தேதி</Label>
@@ -72,13 +76,11 @@ export default function DashaPage() {
               </div>
               <div>
                 <Label>Latitude</Label>
-                <Input type="number" step="0.0001" value={birthData.latitude}
-                  onChange={e => setBirthData({...birthData, latitude: parseFloat(e.target.value) || 0})} />
+                <Input type="number" step="0.0001" value={birthData.latitude} readOnly className="bg-muted/50" />
               </div>
               <div>
                 <Label>Longitude</Label>
-                <Input type="number" step="0.0001" value={birthData.longitude}
-                  onChange={e => setBirthData({...birthData, longitude: parseFloat(e.target.value) || 0})} />
+                <Input type="number" step="0.0001" value={birthData.longitude} readOnly className="bg-muted/50" />
               </div>
             </div>
             <Button variant="sacred" className="w-full mt-6 font-tamil" onClick={handleCalculate}>
@@ -114,7 +116,6 @@ export default function DashaPage() {
             <div className="space-y-3 animate-fade-up">
               <h3 className="text-xl font-bold font-tamil">தசா காலநிலை (Dasha Timeline)</h3>
               
-              {/* Timeline visualization */}
               <div className="rasi-card overflow-x-auto">
                 <div className="flex gap-1 min-w-[600px] h-12 items-stretch rounded-lg overflow-hidden">
                   {dashas.map((d) => {
@@ -135,7 +136,6 @@ export default function DashaPage() {
                 </div>
               </div>
 
-              {/* Dasha list */}
               {dashas.map((d, i) => (
                 <div key={d.planet} className="rasi-card cursor-pointer" onClick={() => setExpandedDasha(expandedDasha === i ? null : i)}>
                   <div className="flex items-center justify-between">

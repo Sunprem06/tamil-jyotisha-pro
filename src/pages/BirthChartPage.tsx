@@ -13,6 +13,7 @@ import { generateHoroscope, calculateNavamsa } from "@/lib/astrology/engine";
 import { RASI_NAMES, NAKSHATRA_DATA } from "@/lib/astrology/constants";
 import type { BirthData, HoroscopeChart, NavamsaChart } from "@/lib/astrology/types";
 import { BackButton } from "@/components/BackButton";
+import { PlaceAutocomplete } from "@/components/PlaceAutocomplete";
 
 export default function BirthChartPage() {
   const [birthData, setBirthData] = useState<BirthData>({
@@ -77,17 +78,19 @@ export default function BirthChartPage() {
               </div>
               <div>
                 <Label className="font-tamil">பிறந்த இடம் (Place)</Label>
-                <Input value={birthData.place} onChange={e => setBirthData({...birthData, place: e.target.value})} placeholder="Chennai" />
+                <PlaceAutocomplete
+                  value={birthData.place}
+                  onChange={(place, lat, lng) => setBirthData({...birthData, place, latitude: lat, longitude: lng})}
+                  placeholder="Chennai"
+                />
               </div>
               <div>
                 <Label>Latitude</Label>
-                <Input type="number" step="0.0001" value={birthData.latitude}
-                  onChange={e => setBirthData({...birthData, latitude: parseFloat(e.target.value) || 0})} />
+                <Input type="number" step="0.0001" value={birthData.latitude} readOnly className="bg-muted/50" />
               </div>
               <div>
                 <Label>Longitude</Label>
-                <Input type="number" step="0.0001" value={birthData.longitude}
-                  onChange={e => setBirthData({...birthData, longitude: parseFloat(e.target.value) || 0})} />
+                <Input type="number" step="0.0001" value={birthData.longitude} readOnly className="bg-muted/50" />
               </div>
             </div>
             <Button variant="sacred" className="w-full mt-6 font-tamil" onClick={handleGenerate}>
@@ -121,7 +124,6 @@ export default function BirthChartPage() {
                 )}
               </div>
 
-              {/* Planet positions table */}
               <div className="rasi-card overflow-x-auto">
                 <h3 className="text-xl font-bold font-tamil mb-4">கிரக நிலைகள் (Planet Positions)</h3>
                 <table className="w-full text-sm">

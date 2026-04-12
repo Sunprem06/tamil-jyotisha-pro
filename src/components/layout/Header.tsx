@@ -127,6 +127,37 @@ export function Header() {
             )}
           </div>
 
+          {/* Jathagam Dropdown */}
+          <div ref={jathagamRef} className="relative">
+            <button
+              onClick={() => setJathagamOpen(!jathagamOpen)}
+              className={`px-3 py-2 rounded-lg text-sm font-tamil transition-colors flex items-center gap-1 ${
+                isJathagamActive
+                  ? "bg-primary/10 text-primary font-semibold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              ஜாதகம் <ChevronDown className={`h-3.5 w-3.5 transition-transform ${jathagamOpen ? "rotate-180" : ""}`} />
+            </button>
+            {jathagamOpen && (
+              <div className="absolute top-full left-0 mt-1 w-64 bg-background border border-border rounded-lg shadow-lg z-50 py-1">
+                {JATHAGAM_ITEMS.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={() => setJathagamOpen(false)}
+                    className={`block px-4 py-2.5 text-sm font-tamil transition-colors hover:bg-muted ${
+                      location.pathname === item.href ? "bg-primary/10 text-primary font-semibold" : "text-foreground"
+                    }`}
+                  >
+                    {item.label}
+                    <span className="text-xs text-muted-foreground ml-2">({item.labelEn})</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
           {navLinks.slice(1).map((link) => (
             <Link
               key={link.href}

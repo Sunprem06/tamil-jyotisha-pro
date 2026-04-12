@@ -67,7 +67,7 @@ export default function AdminSpiritualPage() {
       if (editing) {
         const { error } = await supabase
           .from("spiritual_updates")
-          .update(form)
+          .update({ ...form, category: form.category as any, update_type: form.update_type as any })
           .eq("id", editing);
         if (error) throw error;
         toast.success("புதுப்பிக்கப்பட்டது");

@@ -256,7 +256,33 @@ export function Header() {
               </div>
             )}
 
-            {navLinks.slice(1).map((link) => (
+            {/* Mobile Jathagam Accordion */}
+            <button
+              onClick={() => setMobileJathagamOpen(!mobileJathagamOpen)}
+              className={`px-4 py-3 rounded-lg text-sm font-tamil transition-colors flex items-center justify-between ${
+                isJathagamActive ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              <span>ஜாதகம் <span className="text-xs text-muted-foreground ml-1">(Astrology)</span></span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${mobileJathagamOpen ? "rotate-180" : ""}`} />
+            </button>
+            {mobileJathagamOpen && (
+              <div className="ml-4 flex flex-col gap-0.5 border-l-2 border-primary/20 pl-3">
+                {JATHAGAM_ITEMS.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={() => { setIsOpen(false); setMobileJathagamOpen(false); }}
+                    className={`px-3 py-2 rounded-lg text-sm font-tamil transition-colors ${
+                      location.pathname === item.href ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+
               <Link
                 key={link.href}
                 to={link.href}

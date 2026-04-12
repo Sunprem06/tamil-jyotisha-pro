@@ -18,16 +18,19 @@ const TEMPLE_CATEGORIES = [
   { href: "/deity-search", label: "🔍 அனைத்தும் தேடு", labelEn: "Search All" },
 ];
 
+const JATHAGAM_ITEMS = [
+  { href: "/birth-chart", label: "📜 ஜாதகம்", labelEn: "Birth Chart" },
+  { href: "/porutham", label: "💑 பொருத்தம்", labelEn: "Matching" },
+  { href: "/dasha", label: "⏳ தசா", labelEn: "Dasha" },
+  { href: "/dosha", label: "⚠️ தோஷம்", labelEn: "Dosha" },
+  { href: "/transit", label: "🪐 கோசாரம்", labelEn: "Transit" },
+  { href: "/remedies", label: "🙏 பரிகாரம்", labelEn: "Remedies" },
+];
+
 const navLinks = [
   { href: "/", label: "முகப்பு", labelEn: "Home" },
   { href: "/rasi", label: "ராசிபலன்", labelEn: "Horoscope" },
-  { href: "/birth-chart", label: "ஜாதகம்", labelEn: "Birth Chart" },
   { href: "/panchangam", label: "பஞ்சாங்கம்", labelEn: "Panchangam" },
-  { href: "/porutham", label: "பொருத்தம்", labelEn: "Matching" },
-  { href: "/dasha", label: "தசா", labelEn: "Dasha" },
-  { href: "/dosha", label: "தோஷம்", labelEn: "Dosha" },
-  { href: "/transit", label: "கோசாரம்", labelEn: "Transit" },
-  { href: "/remedies", label: "பரிகாரம்", labelEn: "Remedies" },
   { href: "/matrimony/search", label: "திருமணம்", labelEn: "Matrimony" },
 ];
 
@@ -35,8 +38,11 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [templeOpen, setTempleOpen] = useState(false);
+  const [jathagamOpen, setJathagamOpen] = useState(false);
   const [mobileTempleOpen, setMobileTempleOpen] = useState(false);
+  const [mobileJathagamOpen, setMobileJathagamOpen] = useState(false);
   const templeRef = useRef<HTMLDivElement>(null);
+  const jathagamRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { user, signOut } = useAuth();
 
@@ -48,18 +54,18 @@ export function Header() {
     });
   }, [user]);
 
-  // Close dropdown on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (templeRef.current && !templeRef.current.contains(e.target as Node)) {
-        setTempleOpen(false);
-      }
+      if (templeRef.current && !templeRef.current.contains(e.target as Node)) setTempleOpen(false);
+      if (jathagamRef.current && !jathagamRef.current.contains(e.target as Node)) setJathagamOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   const isTempleActive = location.pathname.startsWith("/dashboard") || location.pathname.startsWith("/deity") || location.pathname.startsWith("/temple");
+  const isJathagamActive = ["/birth-chart", "/porutham", "/dasha", "/dosha", "/transit", "/remedies"].some(p => location.pathname.startsWith(p));
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -115,6 +121,37 @@ export function Header() {
                   >
                     {cat.label}
                     <span className="text-xs text-muted-foreground ml-2">({cat.labelEn})</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Jathagam Dropdown */}
+          <div ref={jathagamRef} className="relative">
+            <button
+              onClick={() => setJathagamOpen(!jathagamOpen)}
+              className={`px-3 py-2 rounded-lg text-sm font-tamil transition-colors flex items-center gap-1 ${
+                isJathagamActive
+                  ? "bg-primary/10 text-primary font-semibold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              ஜாதகம் <ChevronDown className={`h-3.5 w-3.5 transition-transform ${jathagamOpen ? "rotate-180" : ""}`} />
+            </button>
+            {jathagamOpen && (
+              <div className="absolute top-full left-0 mt-1 w-64 bg-background border border-border rounded-lg shadow-lg z-50 py-1">
+                {JATHAGAM_ITEMS.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={() => setJathagamOpen(false)}
+                    className={`block px-4 py-2.5 text-sm font-tamil transition-colors hover:bg-muted ${
+                      location.pathname === item.href ? "bg-primary/10 text-primary font-semibold" : "text-foreground"
+                    }`}
+                  >
+                    {item.label}
+                    <span className="text-xs text-muted-foreground ml-2">({item.labelEn})</span>
                   </Link>
                 ))}
               </div>
@@ -214,6 +251,33 @@ export function Header() {
                     }`}
                   >
                     {cat.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {/* Mobile Jathagam Accordion */}
+            <button
+              onClick={() => setMobileJathagamOpen(!mobileJathagamOpen)}
+              className={`px-4 py-3 rounded-lg text-sm font-tamil transition-colors flex items-center justify-between ${
+                isJathagamActive ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              <span>ஜாதகம் <span className="text-xs text-muted-foreground ml-1">(Astrology)</span></span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${mobileJathagamOpen ? "rotate-180" : ""}`} />
+            </button>
+            {mobileJathagamOpen && (
+              <div className="ml-4 flex flex-col gap-0.5 border-l-2 border-primary/20 pl-3">
+                {JATHAGAM_ITEMS.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={() => { setIsOpen(false); setMobileJathagamOpen(false); }}
+                    className={`px-3 py-2 rounded-lg text-sm font-tamil transition-colors ${
+                      location.pathname === item.href ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {item.label}
                   </Link>
                 ))}
               </div>

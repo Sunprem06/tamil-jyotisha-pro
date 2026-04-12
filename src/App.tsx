@@ -52,6 +52,7 @@ import RefundPolicyPage from "./pages/RefundPolicyPage";
 import TamilCalendarPage from "./pages/TamilCalendarPage";
 import NayanmarsPage from "./pages/NayanmarsPage";
 import AlwarsPage from "./pages/AlwarsPage";
+import SpiritualUpdatesPage from "./pages/SpiritualUpdatesPage";
 
 const queryClient = new QueryClient();
 
@@ -112,7 +113,7 @@ const App = () => (
             <Route path="/calendar" element={<E><TamilCalendarPage /></E>} />
             <Route path="/nayanmars" element={<E><NayanmarsPage /></E>} />
             <Route path="/alwars" element={<E><AlwarsPage /></E>} />
-            <Route path="*" element={<E><NotFound /></E>} />
+            <Route path="/spiritual-updates" element={<E><SpiritualUpdatesPage /></E>} />
             <Route path="*" element={<E><NotFound /></E>} />
           </Routes>
         </AuthProvider>

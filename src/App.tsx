@@ -42,6 +42,9 @@ import MessagesPage from "./pages/MessagesPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import NotFound from "./pages/NotFound";
+import UniversalSearchPage from "./pages/UniversalSearchPage";
+import DeityProfilePage from "./pages/DeityProfilePage";
+import TempleDetailPage from "./pages/TempleDetailPage";
 
 const queryClient = new QueryClient();
 
@@ -87,6 +90,9 @@ const App = () => (
             <Route path="/admin/config" element={<AdminConfigPage />} />
             <Route path="/admin/reports" element={<AdminReportsPage />} />
             <Route path="/admin/spiritual" element={<AdminSpiritualPage />} />
+            <Route path="/deity-search" element={<UniversalSearchPage />} />
+            <Route path="/deity/:deityName" element={<DeityProfilePage />} />
+            <Route path="/temple/:id" element={<TempleDetailPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="*" element={<NotFound />} />

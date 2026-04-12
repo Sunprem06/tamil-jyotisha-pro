@@ -46,6 +46,7 @@ interface Temple {
   is_arupadai_veedu: boolean;
   arupadai_number: number | null;
   is_divya_desam: boolean;
+  divya_desam_number: number | null;
   is_shakti_peetham: boolean;
   sthala_varalaru: SthalaVaralaru[];
 }

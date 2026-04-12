@@ -18,10 +18,10 @@ export function HeroSection() {
         </div>
 
         <h1 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-bold font-display text-foreground animate-fade-up">
-          <span className="text-gradient-sacred">தமிழ் ஜோதிடம்</span>
+          <span className="text-gradient-sacred">ஆன்மீகத் துணை</span>
         </h1>
         <p className="mb-2 text-xl md:text-2xl font-display text-muted-foreground animate-fade-up" style={{ animationDelay: "0.1s" }}>
-          Tamil Jothidam
+          Anmeega Thunai
         </p>
         <p className="mb-8 max-w-2xl mx-auto text-lg text-muted-foreground font-tamil animate-fade-up" style={{ animationDelay: "0.2s" }}>
           வேத ஜோதிடத்தின் பழமையான ஞானத்துடன் உங்கள் எதிர்காலத்தை கண்டறியுங்கள்.

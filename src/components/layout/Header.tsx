@@ -79,8 +79,8 @@ export function Header() {
             <span className="text-primary-foreground text-lg">ௐ</span>
           </div>
           <div>
-            <h1 className="text-lg font-bold font-tamil text-gradient-sacred leading-tight">தமிழ் ஜோதிடம்</h1>
-            <p className="text-xs text-muted-foreground">Tamil Jothidam</p>
+            <h1 className="text-lg font-bold font-tamil text-gradient-sacred leading-tight">ஆன்மீகத் துணை</h1>
+            <p className="text-xs text-muted-foreground">Anmeega Thunai</p>
           </div>
         </Link>
 

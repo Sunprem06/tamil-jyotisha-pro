@@ -11,8 +11,8 @@ export function Footer() {
                 <span className="text-primary-foreground text-lg">ௐ</span>
               </div>
               <div>
-                <h3 className="font-bold font-tamil">தமிழ் ஜோதிடம்</h3>
-                <p className="text-xs opacity-80">Tamil Jothidam</p>
+                <h3 className="font-bold font-tamil">ஆன்மீகத் துணை</h3>
+                <p className="text-xs opacity-80">Anmeega Thunai</p>
               </div>
             </div>
             <p className="text-sm opacity-80 font-tamil">

@@ -50,6 +50,8 @@ import DashboardPage from "./pages/DashboardPage";
 import PassportPage from "./pages/PassportPage";
 import RefundPolicyPage from "./pages/RefundPolicyPage";
 import TamilCalendarPage from "./pages/TamilCalendarPage";
+import NayanmarsPage from "./pages/NayanmarsPage";
+import AlwarsPage from "./pages/AlwarsPage";
 
 const queryClient = new QueryClient();
 
@@ -108,6 +110,8 @@ const App = () => (
             <Route path="/privacy" element={<E><PrivacyPage /></E>} />
             <Route path="/refund-policy" element={<E><RefundPolicyPage /></E>} />
             <Route path="/calendar" element={<E><TamilCalendarPage /></E>} />
+            <Route path="/nayanmars" element={<E><NayanmarsPage /></E>} />
+            <Route path="/alwars" element={<E><AlwarsPage /></E>} />
             <Route path="*" element={<E><NotFound /></E>} />
             <Route path="*" element={<E><NotFound /></E>} />
           </Routes>

@@ -84,7 +84,7 @@ export function useUniversalTempleSearch() {
         .select("*, sthala_varalaru(*)");
 
       if (deityName) {
-        templeQuery = templeQuery.eq("deity_name_tamil", deityName);
+        templeQuery = templeQuery.ilike("deity_name_tamil", `%${deityName}%`);
       }
 
       if (q.trim()) {

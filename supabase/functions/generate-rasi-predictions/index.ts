@@ -39,88 +39,86 @@ Deno.serve(async (req) => {
     const tamilDays = ["ஞாயிறு", "திங்கள்", "செவ்வாய்", "புதன்", "வியாழன்", "வெள்ளி", "சனி"];
     const dayName = tamilDays[new Date().getDay()];
 
-    const results = [];
+    // Generate ALL 12 rasi predictions in a single AI call
+    const prompt = `You are an expert Tamil astrologer. Generate ${prediction_type} horoscope predictions for ALL 12 rasis for ${today} (${dayName}).
 
-    for (const rasi of RASI_LIST) {
-      const prompt = `You are an expert Tamil astrologer. Generate a ${prediction_type} horoscope prediction for ${rasi.tamil} (${rasi.name}) rasi.
+Return ONLY valid JSON array with exactly 12 objects, one per rasi in this order:
+மேஷம் (Aries), ரிஷபம் (Taurus), மிதுனம் (Gemini), கடகம் (Cancer), சிம்மம் (Leo), கன்னி (Virgo), துலாம் (Libra), விருச்சிகம் (Scorpio), தனுசு (Sagittarius), மகரம் (Capricorn), கும்பம் (Aquarius), மீனம் (Pisces)
 
-Today is ${today}, ${dayName}.
-Ruling planet: ${rasi.ruling}, Element: ${rasi.element}.
-
-Generate a UNIQUE, SPECIFIC prediction in Tamil. Return ONLY valid JSON:
+Each object must have:
 {
-  "prediction": "3-4 lines of specific Tamil prediction for today including career, relationships, health aspects",
+  "prediction": "3-4 lines of specific Tamil prediction covering career, relationships, health",
   "career": "1 line career prediction in Tamil",
-  "health": "1 line health prediction in Tamil", 
+  "health": "1 line health prediction in Tamil",
   "love": "1 line love/relationship prediction in Tamil",
   "finance": "1 line finance prediction in Tamil",
   "lucky_number": "a number 1-99",
   "lucky_color": "color name in Tamil"
 }
 
-IMPORTANT: Each rasi must get a DIFFERENT, UNIQUE prediction. Be specific, not generic. Use pure Tamil.`;
+CRITICAL: Each rasi MUST have a completely DIFFERENT prediction. Use pure, simple Tamil. Be specific with dates, numbers, and practical advice. No generic content.`;
 
-      const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${lovableApiKey}`,
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.9,
-        }),
-      });
+    const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${lovableApiKey}`,
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.9,
+      }),
+    });
 
-      if (!aiResponse.ok) {
-        console.error(`AI error for ${rasi.id}:`, await aiResponse.text());
-        continue;
-      }
-
-      const aiData = await aiResponse.json();
-      let content = aiData.choices?.[0]?.message?.content || "";
-      
-      // Clean markdown wrapping
-      content = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
-      
-      let parsed;
-      try {
-        parsed = JSON.parse(content);
-      } catch {
-        console.error(`Parse error for ${rasi.id}:`, content);
-        continue;
-      }
-
-      // Deactivate old predictions of same type/rasi
-      await supabase
-        .from("rasi_predictions")
-        .update({ is_active: false })
-        .eq("rasi_id", rasi.id)
-        .eq("prediction_type", prediction_type);
-
-      // Insert new prediction
-      const { error } = await supabase.from("rasi_predictions").insert({
-        rasi_id: rasi.id,
-        rasi_name: rasi.tamil,
-        prediction_type,
-        prediction: parsed.prediction || "",
-        career: parsed.career || null,
-        health: parsed.health || null,
-        love: parsed.love || null,
-        finance: parsed.finance || null,
-        lucky_number: parsed.lucky_number || null,
-        lucky_color: parsed.lucky_color || null,
-        generated_date: today,
-        is_active: true,
-      });
-
-      if (error) console.error(`DB error for ${rasi.id}:`, error);
-      else results.push(rasi.id);
+    if (!aiResponse.ok) {
+      const errText = await aiResponse.text();
+      throw new Error(`AI error: ${errText}`);
     }
 
+    const aiData = await aiResponse.json();
+    let content = aiData.choices?.[0]?.message?.content || "";
+    content = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
+
+    let predictions: any[];
+    try {
+      predictions = JSON.parse(content);
+    } catch {
+      throw new Error("Failed to parse AI response");
+    }
+
+    if (!Array.isArray(predictions) || predictions.length < 12) {
+      throw new Error(`Expected 12 predictions, got ${predictions?.length || 0}`);
+    }
+
+    // Deactivate old predictions
+    await supabase
+      .from("rasi_predictions")
+      .update({ is_active: false })
+      .eq("prediction_type", prediction_type)
+      .eq("is_active", true);
+
+    // Insert all 12 predictions
+    const inserts = RASI_LIST.map((rasi, i) => ({
+      rasi_id: rasi.id,
+      rasi_name: rasi.tamil,
+      prediction_type,
+      prediction: predictions[i]?.prediction || "",
+      career: predictions[i]?.career || null,
+      health: predictions[i]?.health || null,
+      love: predictions[i]?.love || null,
+      finance: predictions[i]?.finance || null,
+      lucky_number: predictions[i]?.lucky_number || null,
+      lucky_color: predictions[i]?.lucky_color || null,
+      generated_date: today,
+      is_active: true,
+    }));
+
+    const { error } = await supabase.from("rasi_predictions").insert(inserts);
+    if (error) throw error;
+
     return new Response(
-      JSON.stringify({ success: true, generated: results.length, type: prediction_type }),
+      JSON.stringify({ success: true, generated: 12, type: prediction_type }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {

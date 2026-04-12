@@ -846,29 +846,41 @@ export type Database = {
         Row: {
           address: string | null
           arupadai_number: number | null
+          ashtavinayak_number: number | null
           auspicious_day: string | null
           auspicious_star: string | null
           blessing_for: string | null
           built_by: string | null
+          country: string | null
           created_at: string | null
           deity_id: number | null
           deity_name_english: string
           deity_name_tamil: string
           district: string
           divya_desam_number: number | null
+          dynasty: string | null
           entry_fee: string | null
           festival_month: string | null
           google_maps_url: string | null
+          heritage_period: string | null
           historical_period: string | null
           id: number
           image_url: string | null
           is_arupadai_veedu: boolean | null
+          is_ashtavinayak: boolean | null
+          is_char_dham: boolean | null
           is_divya_desam: boolean | null
+          is_heritage: boolean | null
+          is_jyotirlinga: boolean | null
           is_navagraha: boolean | null
           is_nayanar_related: boolean | null
           is_pancha_bhuta_stala: boolean | null
+          is_shakti_peetha: boolean | null
           is_shakti_peetham: boolean | null
           is_thevaram_paadal: boolean | null
+          is_unesco: boolean | null
+          is_world_temple: boolean | null
+          jyotirlinga_number: number | null
           latitude: number | null
           location: string
           longitude: number | null
@@ -879,6 +891,7 @@ export type Database = {
           navagraha_planet: string | null
           phone: string | null
           problem_solved: string | null
+          shakti_peetha_number: number | null
           significance: string | null
           special_puja: string | null
           state: string
@@ -888,29 +901,41 @@ export type Database = {
         Insert: {
           address?: string | null
           arupadai_number?: number | null
+          ashtavinayak_number?: number | null
           auspicious_day?: string | null
           auspicious_star?: string | null
           blessing_for?: string | null
           built_by?: string | null
+          country?: string | null
           created_at?: string | null
           deity_id?: number | null
           deity_name_english: string
           deity_name_tamil: string
           district: string
           divya_desam_number?: number | null
+          dynasty?: string | null
           entry_fee?: string | null
           festival_month?: string | null
           google_maps_url?: string | null
+          heritage_period?: string | null
           historical_period?: string | null
           id?: number
           image_url?: string | null
           is_arupadai_veedu?: boolean | null
+          is_ashtavinayak?: boolean | null
+          is_char_dham?: boolean | null
           is_divya_desam?: boolean | null
+          is_heritage?: boolean | null
+          is_jyotirlinga?: boolean | null
           is_navagraha?: boolean | null
           is_nayanar_related?: boolean | null
           is_pancha_bhuta_stala?: boolean | null
+          is_shakti_peetha?: boolean | null
           is_shakti_peetham?: boolean | null
           is_thevaram_paadal?: boolean | null
+          is_unesco?: boolean | null
+          is_world_temple?: boolean | null
+          jyotirlinga_number?: number | null
           latitude?: number | null
           location: string
           longitude?: number | null
@@ -921,6 +946,7 @@ export type Database = {
           navagraha_planet?: string | null
           phone?: string | null
           problem_solved?: string | null
+          shakti_peetha_number?: number | null
           significance?: string | null
           special_puja?: string | null
           state?: string
@@ -930,29 +956,41 @@ export type Database = {
         Update: {
           address?: string | null
           arupadai_number?: number | null
+          ashtavinayak_number?: number | null
           auspicious_day?: string | null
           auspicious_star?: string | null
           blessing_for?: string | null
           built_by?: string | null
+          country?: string | null
           created_at?: string | null
           deity_id?: number | null
           deity_name_english?: string
           deity_name_tamil?: string
           district?: string
           divya_desam_number?: number | null
+          dynasty?: string | null
           entry_fee?: string | null
           festival_month?: string | null
           google_maps_url?: string | null
+          heritage_period?: string | null
           historical_period?: string | null
           id?: number
           image_url?: string | null
           is_arupadai_veedu?: boolean | null
+          is_ashtavinayak?: boolean | null
+          is_char_dham?: boolean | null
           is_divya_desam?: boolean | null
+          is_heritage?: boolean | null
+          is_jyotirlinga?: boolean | null
           is_navagraha?: boolean | null
           is_nayanar_related?: boolean | null
           is_pancha_bhuta_stala?: boolean | null
+          is_shakti_peetha?: boolean | null
           is_shakti_peetham?: boolean | null
           is_thevaram_paadal?: boolean | null
+          is_unesco?: boolean | null
+          is_world_temple?: boolean | null
+          jyotirlinga_number?: number | null
           latitude?: number | null
           location?: string
           longitude?: number | null
@@ -963,6 +1001,7 @@ export type Database = {
           navagraha_planet?: string | null
           phone?: string | null
           problem_solved?: string | null
+          shakti_peetha_number?: number | null
           significance?: string | null
           special_puja?: string | null
           state?: string

@@ -10,14 +10,21 @@ import { NAKSHATRA_DATA, RASI_NAMES } from "@/lib/astrology/constants";
 import type { MatchingResult } from "@/lib/astrology/types";
 import { Heart, Check, X } from "lucide-react";
 import { BackButton } from "@/components/BackButton";
+import { PlaceAutocomplete } from "@/components/PlaceAutocomplete";
 
 export default function PoruthamPage() {
   const [boyName, setBoyName] = useState("");
   const [girlName, setGirlName] = useState("");
   const [boyDob, setBoyDob] = useState("");
   const [boyTob, setBoyTob] = useState("06:00");
+  const [boyPlace, setBoyPlace] = useState("Chennai");
+  const [boyLat, setBoyLat] = useState(13.0827);
+  const [boyLng, setBoyLng] = useState(80.2707);
   const [girlDob, setGirlDob] = useState("");
   const [girlTob, setGirlTob] = useState("06:00");
+  const [girlPlace, setGirlPlace] = useState("Chennai");
+  const [girlLat, setGirlLat] = useState(13.0827);
+  const [girlLng, setGirlLng] = useState(80.2707);
   const [boyNakshatra, setBoyNakshatra] = useState<number>(0);
   const [boyRasi, setBoyRasi] = useState<number>(0);
   const [girlNakshatra, setGirlNakshatra] = useState<number>(0);

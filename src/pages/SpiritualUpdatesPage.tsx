@@ -52,7 +52,7 @@ export default function SpiritualUpdatesPage() {
         .limit(50);
 
       if (category !== "all") {
-        query = query.eq("category", category);
+        query = query.eq("category", category as any);
       }
 
       const { data } = await query;

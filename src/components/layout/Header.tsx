@@ -35,7 +35,7 @@ const navLinks = [
   { href: "/panchangam", label: "பஞ்சாங்கம்", labelEn: "Panchangam" },
   { href: "/calendar", label: "நாள்காட்டி", labelEn: "Calendar" },
   { href: "/matrimony/search", label: "திருமணம்", labelEn: "Matrimony" },
-  { href: "/admin/spiritual", label: "ஆன்மீக அப்டேட்", labelEn: "Spiritual Updates" },
+  { href: "/spiritual-updates", label: "ஆன்மீக அப்டேட்", labelEn: "Spiritual Updates" },
 ];
 
 export function Header() {

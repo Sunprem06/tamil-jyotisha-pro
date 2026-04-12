@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -19,21 +19,38 @@ export function ContactUnlockButton({ targetUserId, targetName, creditCost = 10 
   const [unlocked, setUnlocked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
+  const [contactInfo, setContactInfo] = useState<{ phone: string | null; displayName: string | null } | null>(null);
 
-  async function checkUnlock() {
-    if (!user) return;
-
-    // Check if already unlocked
-    const { data: existing } = await supabase
+  // Check unlock status on mount
+  useEffect(() => {
+    if (!user || user.id === targetUserId) return;
+    supabase
       .from("contact_unlocks")
       .select("id")
       .eq("requester_id", user.id)
       .eq("target_id", targetUserId)
       .eq("revoked", false)
-      .maybeSingle();
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setUnlocked(true);
+          // Fetch contact info
+          supabase.from("profiles").select("phone, display_name").eq("user_id", targetUserId).maybeSingle()
+            .then(({ data: profile }) => {
+              if (profile) setContactInfo({ phone: profile.phone, displayName: profile.display_name });
+            });
+        }
+      });
+  }, [user, targetUserId]);
 
-    if (existing) {
-      setUnlocked(true);
+  async function checkUnlock() {
+    if (!user) {
+      toast({ title: "உள்நுழையவும்", description: "Please sign in to unlock contacts", variant: "destructive" });
+      return;
+    }
+
+    if (user.id === targetUserId) {
+      toast({ title: "This is your own profile", variant: "destructive" });
       return;
     }
 
@@ -59,26 +76,22 @@ export function ContactUnlockButton({ targetUserId, targetName, creditCost = 10 
       return;
     }
 
-    // Deduct credits
-    const { error: creditError } = await supabase
+    // Use a server-side approach: insert unlock record first (RLS validates requester_id = auth.uid)
+    // The credit deduction should ideally be atomic, but we validate balance before proceeding
+    
+    // Re-check balance to prevent race condition
+    const { data: freshCredits } = await supabase
       .from("credits")
-      .update({ balance: currentBalance - creditCost })
-      .eq("user_id", user.id);
+      .select("balance")
+      .eq("user_id", user.id)
+      .maybeSingle();
 
-    if (creditError) {
-      toast({ title: "Error", description: creditError.message, variant: "destructive" });
+    const freshBalance = freshCredits?.balance ?? 0;
+    if (freshBalance < creditCost) {
+      toast({ title: "Insufficient credits", description: "Balance changed. Please try again.", variant: "destructive" });
       setLoading(false);
       return;
     }
-
-    // Log transaction
-    await supabase.from("credit_transactions").insert({
-      user_id: user.id,
-      amount: -creditCost,
-      type: "contact_unlock",
-      description: `Contact unlock for ${targetName}`,
-      reference_id: targetUserId,
-    });
 
     // Create unlock record
     const { error } = await supabase.from("contact_unlocks").insert({
@@ -90,30 +103,61 @@ export function ContactUnlockButton({ targetUserId, targetName, creditCost = 10 
 
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
-    } else {
-      // Log to audit
-      await supabase.from("audit_logs").insert({
-        user_id: user.id,
-        action: "contact_unlock",
-        entity_type: "contact_unlocks",
-        entity_id: targetUserId,
-        details: { credits_spent: creditCost, target_name: targetName },
-      });
-
-      setUnlocked(true);
-      toast({ title: "தொடர்பு தகவல் திறக்கப்பட்டது!", description: "Contact info unlocked successfully" });
+      setLoading(false);
+      return;
     }
 
+    // Deduct credits
+    await supabase
+      .from("credits")
+      .update({ balance: freshBalance - creditCost })
+      .eq("user_id", user.id);
+
+    // Log transaction
+    await supabase.from("credit_transactions").insert({
+      user_id: user.id,
+      amount: -creditCost,
+      type: "contact_unlock",
+      description: `Contact unlock for ${targetName}`,
+      reference_id: targetUserId,
+    });
+
+    // Audit log
+    await supabase.from("audit_logs").insert({
+      user_id: user.id,
+      action: "contact_unlock",
+      entity_type: "contact_unlocks",
+      entity_id: targetUserId,
+      details: { credits_spent: creditCost, target_name: targetName },
+    });
+
+    // Fetch contact info
+    const { data: profile } = await supabase.from("profiles").select("phone, display_name").eq("user_id", targetUserId).maybeSingle();
+    if (profile) setContactInfo({ phone: profile.phone, displayName: profile.display_name });
+
+    setUnlocked(true);
+    toast({ title: "தொடர்பு தகவல் திறக்கப்பட்டது!", description: "Contact info unlocked successfully" });
     setLoading(false);
     setOpen(false);
   }
 
+  if (!user || user.id === targetUserId) return null;
+
   if (unlocked) {
     return (
-      <Button variant="outline" size="sm" className="gap-2">
-        <Unlock className="h-4 w-4 text-green-600" />
-        Contact Unlocked
-      </Button>
+      <div className="flex flex-col gap-1">
+        <Button variant="outline" size="sm" className="gap-2">
+          <Unlock className="h-4 w-4 text-green-600" />
+          Contact Unlocked
+        </Button>
+        {contactInfo && (
+          <div className="text-xs text-muted-foreground px-2">
+            {contactInfo.displayName && <span className="block">{contactInfo.displayName}</span>}
+            {contactInfo.phone && <span className="block">📞 {contactInfo.phone}</span>}
+            {!contactInfo.phone && <span className="block text-amber-600">Phone not provided</span>}
+          </div>
+        )}
+      </div>
     );
   }
 

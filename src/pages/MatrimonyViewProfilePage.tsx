@@ -1,21 +1,31 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { ContactUnlockButton } from "@/components/matrimony/ContactUnlockButton";
-import { User, MapPin, GraduationCap, Briefcase, Heart, ArrowLeft, Star, Shield } from "lucide-react";
+import { User, MapPin, GraduationCap, Briefcase, Heart, ArrowLeft, Star, Shield, Flag, MessageSquare } from "lucide-react";
 
 export default function MatrimonyViewProfilePage() {
   const { userId } = useParams();
   const { user } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [matchScore, setMatchScore] = useState<any>(null);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportDetails, setReportDetails] = useState("");
+  const [reporting, setReporting] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
@@ -33,7 +43,7 @@ export default function MatrimonyViewProfilePage() {
     setLoading(false);
 
     // Auto-match if both users have profiles
-    if (data && user) {
+    if (data && user && user.id !== userId) {
       const { data: myProfile } = await supabase
         .from("matrimony_profiles")
         .select("date_of_birth")
@@ -51,6 +61,38 @@ export default function MatrimonyViewProfilePage() {
         } catch { /* matching optional */ }
       }
     }
+  }
+
+  async function handleReport() {
+    if (!user || !userId || !reportReason) return;
+    setReporting(true);
+    const { error } = await supabase.from("reports").insert({
+      reporter_id: user.id,
+      reported_user_id: userId,
+      reason: reportReason,
+      details: reportDetails || null,
+    });
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "புகார் அளிக்கப்பட்டது", description: "Report submitted. We will review it shortly." });
+    }
+    setReporting(false);
+    setReportOpen(false);
+    setReportReason("");
+    setReportDetails("");
+  }
+
+  async function handleSendMessage() {
+    if (!user || !userId) return;
+    // Send an initial message
+    await supabase.from("messages").insert({
+      sender_id: user.id,
+      receiver_id: userId,
+      content: `வணக்கம்! உங்கள் சுயவிவரம் பார்த்தேன். (Hello! I saw your profile.)`,
+    });
+    toast({ title: "Message sent!" });
+    navigate("/messages");
   }
 
   const age = (dob: string) => {
@@ -147,13 +189,16 @@ export default function MatrimonyViewProfilePage() {
                   )}
                 </div>
 
-                <div className="flex gap-3 pt-2">
+                <div className="flex gap-3 pt-2 flex-wrap">
                   {user && user.id !== profile.user_id && (
                     <>
                       <ContactUnlockButton targetUserId={profile.user_id} targetName={`${age(profile.date_of_birth)} yrs, ${profile.city ?? "Unknown"}`} />
-                      <Link to="/messages">
-                        <Button variant="outline" size="sm">Send Message</Button>
-                      </Link>
+                      <Button variant="outline" size="sm" onClick={handleSendMessage}>
+                        <MessageSquare className="h-4 w-4 mr-1" /> Send Message
+                      </Button>
+                      <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setReportOpen(true)}>
+                        <Flag className="h-4 w-4 mr-1" /> Report
+                      </Button>
                     </>
                   )}
                 </div>
@@ -238,6 +283,42 @@ export default function MatrimonyViewProfilePage() {
         )}
       </main>
       <Footer />
+
+      {/* Report Dialog */}
+      <Dialog open={reportOpen} onOpenChange={setReportOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="font-tamil">புகார் அளிக்கவும்</DialogTitle>
+            <DialogDescription>Report this profile for inappropriate content or behavior</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <Select value={reportReason} onValueChange={setReportReason}>
+              <SelectTrigger><SelectValue placeholder="Select reason" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="fake_profile">Fake Profile / போலி சுயவிவரம்</SelectItem>
+                <SelectItem value="harassment">Harassment / தொந்தரவு</SelectItem>
+                <SelectItem value="inappropriate_content">Inappropriate Content / பொருத்தமற்ற உள்ளடக்கம்</SelectItem>
+                <SelectItem value="scam">Scam / மோசடி</SelectItem>
+                <SelectItem value="offensive_language">Offensive Language / அவதூறு</SelectItem>
+                <SelectItem value="other">Other / பிற</SelectItem>
+              </SelectContent>
+            </Select>
+            <Textarea
+              value={reportDetails}
+              onChange={e => setReportDetails(e.target.value)}
+              placeholder="Additional details (optional)..."
+              rows={3}
+              maxLength={500}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setReportOpen(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleReport} disabled={reporting || !reportReason}>
+              {reporting ? "Submitting..." : "Submit Report"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

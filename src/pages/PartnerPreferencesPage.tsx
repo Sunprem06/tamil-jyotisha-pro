@@ -62,6 +62,19 @@ export default function PartnerPreferencesPage() {
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
+
+    // Validate
+    if (form.age_min < 18 || form.age_max > 70 || form.age_min > form.age_max) {
+      toast({ title: "Invalid age range", variant: "destructive" });
+      setSaving(false);
+      return;
+    }
+    if (form.height_min > form.height_max) {
+      toast({ title: "Invalid height range", variant: "destructive" });
+      setSaving(false);
+      return;
+    }
+
     const payload = {
       user_id: user.id,
       age_min: form.age_min,
@@ -117,7 +130,6 @@ export default function PartnerPreferencesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Age Range */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="font-tamil">குறைந்தபட்ச வயது</Label>
@@ -131,7 +143,6 @@ export default function PartnerPreferencesPage() {
               </div>
             </div>
 
-            {/* Height Range */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="font-tamil">குறைந்தபட்ச உயரம் (cm)</Label>
@@ -145,7 +156,6 @@ export default function PartnerPreferencesPage() {
               </div>
             </div>
 
-            {/* Income */}
             <div>
               <Label className="font-tamil">குறைந்தபட்ச ஆண்டு வருமானம்</Label>
               <Select value={form.annual_income_min} onValueChange={v => setForm({ ...form, annual_income_min: v })}>
@@ -166,6 +176,7 @@ export default function PartnerPreferencesPage() {
               <div className="flex flex-wrap gap-2">
                 {educationOptions.map(e => (
                   <Button key={e} variant={form.education.includes(e) ? "default" : "outline"} size="sm"
+                    type="button"
                     onClick={() => setForm({ ...form, education: toggleArray(form.education, e) })}>
                     {e}
                   </Button>
@@ -177,6 +188,7 @@ export default function PartnerPreferencesPage() {
               <div className="flex flex-wrap gap-2">
                 {occupationOptions.map(o => (
                   <Button key={o} variant={form.occupation.includes(o) ? "default" : "outline"} size="sm"
+                    type="button"
                     onClick={() => setForm({ ...form, occupation: toggleArray(form.occupation, o) })}>
                     {o}
                   </Button>
@@ -208,7 +220,7 @@ export default function PartnerPreferencesPage() {
           </CardContent>
         </Card>
 
-        <Button variant="sacred" className="w-full font-tamil gap-2" onClick={handleSave} disabled={saving}>
+        <Button className="w-full font-tamil gap-2" onClick={handleSave} disabled={saving}>
           <Save className="h-5 w-5" /> {saving ? "சேமிக்கிறது..." : "விருப்பங்களை சேமிக்க"}
         </Button>
       </main>

@@ -17,6 +17,7 @@ const TEMPLE_CATEGORIES = [
   { href: "/deity/Ayyanar", label: "🐴 அய்யனார் / ஐயப்பன்", labelEn: "Ayyanar" },
   { href: "/nayanmars", label: "🙏 63 நாயன்மார்கள்", labelEn: "63 Nayanmars" },
   { href: "/alwars", label: "🪷 12 ஆழ்வார்கள்", labelEn: "12 Alwars" },
+  { href: "/temple-map", label: "🗺️ வரைபடம்", labelEn: "Temple Map" },
   { href: "/deity-search", label: "🔍 அனைத்தும் தேடு", labelEn: "Search All" },
 ];
 

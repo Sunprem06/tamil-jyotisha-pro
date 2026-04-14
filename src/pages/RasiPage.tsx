@@ -8,28 +8,14 @@ import { ArrowLeft, Sparkles, Heart, Briefcase, Activity, Wallet, RefreshCw } fr
 import { BackButton } from "@/components/BackButton";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TamilLoader } from "@/components/TamilLoader";
 import { toast } from "sonner";
 
-type DailyPalanRow = {
-  palan_date: string;
-  nalla_neram: string | null;
-  rahu_kalam: string | null;
-  yamagandam: string | null;
-  [key: string]: string | null;
-};
+type DailyPalanRow = Tables<"daily_rasi_palan">;
 
-type RasiPredictionRow = {
-  prediction: string;
-  career: string | null;
-  finance: string | null;
-  love: string | null;
-  health: string | null;
-  lucky_number: string | null;
-  lucky_color: string | null;
-  generated_date: string;
-};
+type RasiPredictionRow = Tables<"rasi_predictions">;
 
 type PredictionView = {
   prediction: string;
@@ -68,7 +54,8 @@ export default function RasiPage() {
   const { rasiId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const rasi = rasiData.find(r => r.id === rasiId);
-  const initialType = isPredictionType(searchParams.get("type")) ? searchParams.get("type")! : "daily";
+  const urlType = searchParams.get("type");
+  const initialType: PredictionType = isPredictionType(urlType) ? urlType : "daily";
   const [activeType, setActiveType] = useState<PredictionType>(initialType);
   const [generating, setGenerating] = useState(false);
 
@@ -96,7 +83,7 @@ export default function RasiPage() {
         .maybeSingle();
 
       if (error) throw error;
-      return data as DailyPalanRow | null;
+      return (data ?? null) as DailyPalanRow | null;
     },
     enabled: !!rasi && activeType === "daily",
   });
@@ -141,6 +128,7 @@ export default function RasiPage() {
   }, [activeType, dailyPalanQuery.data, predictionQuery.data, rasi]);
 
   const isLoading = activeType === "daily" ? dailyPalanQuery.isLoading : predictionQuery.isLoading;
+  const predictionDate = prediction?.generated_date ?? todayStr;
 
   const refetchPrediction = async () => {
     if (activeType === "daily") {
@@ -195,7 +183,7 @@ export default function RasiPage() {
             <div className="flex justify-center gap-4 mt-4 text-sm flex-wrap">
               <span className="bg-muted px-3 py-1 rounded-full font-tamil">{rasi.element}</span>
               <span className="bg-muted px-3 py-1 rounded-full">Ruling: {rasi.ruling}</span>
-              <span className="bg-muted px-3 py-1 rounded-full">{rasi.dates}</span>
+              <span className="bg-muted px-3 py-1 rounded-full font-tamil">{typeLabels[activeType]}: {new Date(predictionDate).toLocaleDateString('ta-IN')}</span>
             </div>
           </div>
 
@@ -263,10 +251,10 @@ export default function RasiPage() {
 
               {activeType !== "daily" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {prediction.career && <PredictionCard icon={<Briefcase className="h-5 w-5 text-blue-500" />} label="தொழில்" text={prediction.career} />}
-                  {prediction.finance && <PredictionCard icon={<Wallet className="h-5 w-5 text-green-500" />} label="நிதி" text={prediction.finance} />}
-                  {prediction.love && <PredictionCard icon={<Heart className="h-5 w-5 text-pink-500" />} label="காதல் / குடும்பம்" text={prediction.love} />}
-                  {prediction.health && <PredictionCard icon={<Activity className="h-5 w-5 text-red-500" />} label="ஆரோக்கியம்" text={prediction.health} />}
+                  {prediction.career && <PredictionCard icon={<Briefcase className="h-5 w-5 text-primary" />} label="தொழில்" text={prediction.career} />}
+                  {prediction.finance && <PredictionCard icon={<Wallet className="h-5 w-5 text-primary" />} label="நிதி" text={prediction.finance} />}
+                  {prediction.love && <PredictionCard icon={<Heart className="h-5 w-5 text-primary" />} label="காதல் / குடும்பம்" text={prediction.love} />}
+                  {prediction.health && <PredictionCard icon={<Activity className="h-5 w-5 text-primary" />} label="ஆரோக்கியம்" text={prediction.health} />}
                 </div>
               )}
             </div>

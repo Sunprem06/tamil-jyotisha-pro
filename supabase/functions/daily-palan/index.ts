@@ -64,14 +64,17 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    const today = new Date();
-    const dateStr = today.toISOString().split('T')[0];
-    const dayOfWeek = today.getDay();
+    // Generate for today (IST timezone)
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istDate = new Date(now.getTime() + istOffset);
+    const dateStr = istDate.toISOString().split('T')[0];
+    const dayOfWeek = istDate.getDay();
 
     const rasiData: Record<string, string> = {};
     for (const rasi of RASI_NAMES) {
       const templates = RASI_TEMPLATES[rasi];
-      const daySeed = today.getDate() + today.getMonth() * 31;
+      const daySeed = istDate.getDate() + istDate.getMonth() * 31;
       rasiData[rasi] = templates[daySeed % templates.length];
     }
 

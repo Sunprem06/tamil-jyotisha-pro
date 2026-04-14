@@ -10,6 +10,20 @@ export interface Rasi {
   dailyPalanKey: string;
 }
 
+export type DailyPalanKey =
+  | "mesha"
+  | "rishabha"
+  | "mithuna"
+  | "kataka"
+  | "simha"
+  | "kanni"
+  | "thulam"
+  | "viruchigam"
+  | "dhanusu"
+  | "makaram"
+  | "kumbam"
+  | "meenam";
+
 export const predictionTypes = ["daily", "weekly", "monthly", "yearly"] as const;
 
 export type PredictionType = (typeof predictionTypes)[number];

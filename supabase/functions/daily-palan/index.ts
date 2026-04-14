@@ -74,7 +74,7 @@ serve(async (req) => {
     const rasiData: Record<string, string> = {};
     for (const rasi of RASI_NAMES) {
       const templates = RASI_TEMPLATES[rasi];
-      const daySeed = today.getDate() + today.getMonth() * 31;
+      const daySeed = istDate.getDate() + istDate.getMonth() * 31;
       rasiData[rasi] = templates[daySeed % templates.length];
     }
 

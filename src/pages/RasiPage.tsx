@@ -30,16 +30,19 @@ export default function RasiPage() {
   const [activeType, setActiveType] = useState("daily");
   const [generating, setGenerating] = useState(false);
 
+  const todayStr = new Date().toISOString().split('T')[0];
+
   const { data: prediction, isLoading, refetch } = useQuery({
-    queryKey: ["rasi-prediction", rasiId, activeType],
+    queryKey: ["rasi-prediction", rasiId, activeType, todayStr],
     queryFn: async () => {
+      // First try today's prediction
       const { data, error } = await supabase
         .from("rasi_predictions")
         .select("*")
         .eq("rasi_id", rasiId!)
         .eq("prediction_type", activeType)
         .eq("is_active", true)
-        .order("created_at", { ascending: false })
+        .order("generated_date", { ascending: false })
         .limit(1)
         .maybeSingle();
       if (error) throw error;

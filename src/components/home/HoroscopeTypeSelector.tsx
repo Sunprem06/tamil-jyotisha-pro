@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const types = [
-  { label: "தினசரி", labelEn: "Daily", href: "/rasi" },
-  { label: "வாராந்திர", labelEn: "Weekly", href: "/rasi" },
-  { label: "மாதாந்திர", labelEn: "Monthly", href: "/rasi" },
-  { label: "ஆண்டு", labelEn: "Yearly", href: "/rasi" },
+  { label: "தினசரி", labelEn: "Daily", href: "/rasi?type=daily" },
+  { label: "வாராந்திர", labelEn: "Weekly", href: "/rasi?type=weekly" },
+  { label: "மாதாந்திர", labelEn: "Monthly", href: "/rasi?type=monthly" },
+  { label: "ஆண்டு", labelEn: "Yearly", href: "/rasi?type=yearly" },
 ];
 
 export function HoroscopeTypeSelector() {

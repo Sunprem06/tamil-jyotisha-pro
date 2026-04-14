@@ -53,7 +53,7 @@ import TamilCalendarPage from "./pages/TamilCalendarPage";
 import NayanmarsPage from "./pages/NayanmarsPage";
 import AlwarsPage from "./pages/AlwarsPage";
 import SpiritualUpdatesPage from "./pages/SpiritualUpdatesPage";
-
+import TempleMapPage from "./pages/TempleMapPage";
 const queryClient = new QueryClient();
 
 const E = ({ children }: { children: React.ReactNode }) => (
@@ -114,6 +114,7 @@ const App = () => (
             <Route path="/nayanmars" element={<E><NayanmarsPage /></E>} />
             <Route path="/alwars" element={<E><AlwarsPage /></E>} />
             <Route path="/spiritual-updates" element={<E><SpiritualUpdatesPage /></E>} />
+            <Route path="/temple-map" element={<E><TempleMapPage /></E>} />
             <Route path="*" element={<E><NotFound /></E>} />
           </Routes>
         </AuthProvider>

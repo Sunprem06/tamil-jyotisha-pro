@@ -9,8 +9,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
-import { generateHoroscope, calculateNavamsa } from "@/lib/astrology/engine";
-import { RASI_NAMES, NAKSHATRA_DATA } from "@/lib/astrology/constants";
+import { generateHoroscope, calculateNavamsa, getCurrentPanchangamBasic } from "@/lib/astrology/engine";
+import {
+  RASI_NAMES,
+  NAKSHATRA_DATA,
+  TAMIL_DAYS,
+  TAMIL_MONTHS,
+  TITHI_NAMES,
+  YOGA_NAMES,
+  NAKSHATRA_GANA,
+  NAKSHATRA_YONI,
+  NAKSHATRA_RAJJU,
+} from "@/lib/astrology/constants";
+import {
+  getRahuKalam,
+  getYamagandam,
+  getKuligai,
+  getSunriseTime,
+  getSunsetTime,
+} from "@/lib/astrology/panchangam";
 import { detectDoshas, detectYogas } from "@/lib/astrology/dosha";
 import { calculateVimshottariDasha, getCurrentDasha } from "@/lib/astrology/dasha";
 import type { BirthData, HoroscopeChart, NavamsaChart, DoshaResult, YogaResult, DashaPeriod } from "@/lib/astrology/types";

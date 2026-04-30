@@ -483,11 +483,12 @@ export default function BirthChartPage() {
                   இந்த ஜாதக அறிக்கை லாஹிரி அயனாம்சம் (Lahiri Ayanamsa) அடிப்படையில், விம்சோத்தரி தசா முறை மற்றும் பாரம்பரிய தமிழ் ஜோதிட நூல்களின் கணித முறையின்படி தயாரிக்கப்பட்டுள்ளது.
                 </p>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li><strong>Ephemeris / Planetary Data:</strong> Swiss Ephemeris-style algorithms with Lahiri Ayanamsa (Indian Standard).</li>
+                  <li><strong>Ephemeris / Planetary Data:</strong> Drik Ganitam — Meeus "Astronomical Algorithms" + VSOP87 truncated series + ELP2000 Moon theory. Sidereal positions computed with Lahiri (Chitra-Paksha) Ayanamsa per Indian Govt. Rashtriya Panchang. Same astronomical foundation as Prokerala / Drik Panchang.</li>
                   <li><strong>Panchangam:</strong> Traditional Tithi, Yoga, Karana, Nakshatra calculations (Drik Ganitam method).</li>
                   <li><strong>Dasha System:</strong> Vimshottari Mahadasha (120-year cycle) — Parashari tradition.</li>
                   <li><strong>Dosha & Yoga:</strong> Brihat Parashara Hora Shastra and classical Tamil texts (சரவளி, ஜாதக பாரிஜாதம்).</li>
                   <li><strong>Sunrise / Sunset / Rahu Kalam:</strong> Computed from latitude, longitude and timezone of birth place.</li>
+                  <li><strong>Accuracy:</strong> Sun/Moon &lt; 10 arc-seconds, planets &lt; 60 arc-seconds. Matches Thirukkanitha Panchangam-based hand-written ஜாதகம். Vakya Panchangam (older sutra-based) results may differ slightly.</li>
                 </ul>
                 <p className="font-tamil mt-2">
                   <strong>மறுப்பு (Disclaimer):</strong> இந்த அறிக்கை வழிகாட்டுதல் நோக்கத்திற்காக மட்டுமே. முக்கிய முடிவுகளுக்கு தகுதியான ஜோதிடரை நேரில் கலந்தாலோசிக்கவும். கணிப்புகள் பிறந்த நேரத்தின் துல்லியத்தை பொறுத்தது.

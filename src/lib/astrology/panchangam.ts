@@ -12,15 +12,25 @@ function formatTime(h: number): string {
   return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
 }
 
-function getSunTimes(date: Date, lat: number = 13.0827): { sunrise: number; sunset: number } {
+function getSunTimes(
+  date: Date,
+  lat: number = 13.0827,
+  lng: number = 80.2707,
+  tz: number = 5.5,
+): { sunrise: number; sunset: number } {
   const dayOfYear = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000);
   const declination = -23.45 * Math.cos((360 / 365) * (dayOfYear + 10) * Math.PI / 180);
   const latRad = lat * Math.PI / 180;
   const decRad = declination * Math.PI / 180;
-  const hourAngle = Math.acos(-Math.tan(latRad) * Math.tan(decRad)) * 180 / Math.PI;
+  const arg = -Math.tan(latRad) * Math.tan(decRad);
+  // Polar regions guard
+  const clamped = Math.max(-1, Math.min(1, arg));
+  const hourAngle = Math.acos(clamped) * 180 / Math.PI;
+  // Local clock noon offset from solar noon (longitude vs timezone meridian)
+  const noonOffset = tz - lng / 15;
   return {
-    sunrise: 12 - hourAngle / 15,
-    sunset: 12 + hourAngle / 15,
+    sunrise: 12 + noonOffset - hourAngle / 15,
+    sunset: 12 + noonOffset + hourAngle / 15,
   };
 }
 

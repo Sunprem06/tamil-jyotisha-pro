@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { PhotoUpload } from "@/components/matrimony/PhotoUpload";
 import { BackButton } from "@/components/BackButton";
+import { BirthDateSelect } from "@/components/forms/BirthDateSelect";
 
 export default function MatrimonyProfilePage() {
   const { user } = useAuth();
@@ -105,7 +106,11 @@ export default function MatrimonyProfilePage() {
   const Field = ({ label, name, placeholder, type = "text" }: { label: string; name: string; placeholder?: string; type?: string }) => (
     <div className="space-y-1.5">
       <Label>{label}</Label>
-      <Input type={type} value={(form as any)[name]} onChange={e => set(name, e.target.value)} placeholder={placeholder} />
+      {type === "date" ? (
+        <BirthDateSelect value={(form as any)[name]} onChange={value => set(name, value)} />
+      ) : (
+        <Input type={type} value={(form as any)[name]} onChange={e => set(name, e.target.value)} placeholder={placeholder} />
+      )}
     </div>
   );
 

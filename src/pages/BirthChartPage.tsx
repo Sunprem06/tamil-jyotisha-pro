@@ -14,6 +14,7 @@ import { RASI_NAMES, NAKSHATRA_DATA } from "@/lib/astrology/constants";
 import type { BirthData, HoroscopeChart, NavamsaChart } from "@/lib/astrology/types";
 import { BackButton } from "@/components/BackButton";
 import { PlaceAutocomplete } from "@/components/PlaceAutocomplete";
+import { BirthDateSelect, formatDateForInput, parseInputDate } from "@/components/forms/BirthDateSelect";
 
 export default function BirthChartPage() {
   const [birthData, setBirthData] = useState<BirthData>({
@@ -62,10 +63,10 @@ export default function BirthChartPage() {
               </div>
               <div>
                 <Label className="font-tamil">பிறந்த தேதி (Date of Birth)</Label>
-                <Input type="date" value={birthData.dateOfBirth.toISOString().split('T')[0]}
-                  min="1900-01-01"
-                  max={new Date().toISOString().split('T')[0]}
-                  onChange={e => setBirthData({...birthData, dateOfBirth: new Date(e.target.value)})} />
+                <BirthDateSelect
+                  value={formatDateForInput(birthData.dateOfBirth)}
+                  onChange={value => setBirthData({...birthData, dateOfBirth: parseInputDate(value)})}
+                />
               </div>
               <div>
                 <Label className="font-tamil">பிறந்த நேரம் (Time of Birth)</Label>

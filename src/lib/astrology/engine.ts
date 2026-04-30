@@ -276,7 +276,7 @@ export function getCurrentPanchangamBasic(date: Date, lat: number, lng: number) 
   const gulikiEnd = gulikiStart + dayDuration;
   
   return {
-    tithiIndex: tithiIndex % 15,
+    tithiIndex: tithiIndex % 30,
     nakshatraIndex,
     yogaIndex,
     karanaIndex,

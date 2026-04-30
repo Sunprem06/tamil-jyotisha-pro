@@ -4,6 +4,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@media print {
+  header, footer, nav, .print\:hidden { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .rasi-card { break-inside: avoid; box-shadow: none !important; border: 1px solid #ccc !important; }
+  main { padding: 0 !important; }
+  .container { max-width: 100% !important; }
+  a { color: #000 !important; text-decoration: none !important; }
+  @page { margin: 12mm; }
+}
+
 @layer base {
   :root {
     --background: 45 30% 97%;

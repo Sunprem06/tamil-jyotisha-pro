@@ -234,11 +234,11 @@ export default function BirthChartPage() {
                 const gana = moonNakIdx >= 0 ? NAKSHATRA_GANA[moonNakIdx] : "-";
                 const yoni = moonNakIdx >= 0 ? NAKSHATRA_YONI[moonNakIdx] : null;
                 const rajju = moonNakIdx >= 0 ? NAKSHATRA_RAJJU[moonNakIdx] : "-";
-                const rahu = getRahuKalam(birthData.dateOfBirth, birthData.latitude);
-                const yama = getYamagandam(birthData.dateOfBirth, birthData.latitude);
-                const guli = getKuligai(birthData.dateOfBirth, birthData.latitude);
-                const sunrise = getSunriseTime(birthData.dateOfBirth, birthData.latitude);
-                const sunset = getSunsetTime(birthData.dateOfBirth, birthData.latitude);
+                const rahu = getRahuKalam(birthData.dateOfBirth, birthData.latitude, birthData.longitude, birthData.timezone);
+                const yama = getYamagandam(birthData.dateOfBirth, birthData.latitude, birthData.longitude, birthData.timezone);
+                const guli = getKuligai(birthData.dateOfBirth, birthData.latitude, birthData.longitude, birthData.timezone);
+                const sunrise = getSunriseTime(birthData.dateOfBirth, birthData.latitude, birthData.longitude, birthData.timezone);
+                const sunset = getSunsetTime(birthData.dateOfBirth, birthData.latitude, birthData.longitude, birthData.timezone);
                 const sun = chart.planets.find(p => p.planet === "Sun");
 
                 const rows: Array<[string, string, string]> = [

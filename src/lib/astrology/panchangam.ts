@@ -34,24 +34,24 @@ function getSunTimes(
   };
 }
 
-export function getRahuKalam(date: Date, lat?: number): TimeSlot {
-  const { sunrise, sunset } = getSunTimes(date, lat);
+export function getRahuKalam(date: Date, lat?: number, lng?: number, tz?: number): TimeSlot {
+  const { sunrise, sunset } = getSunTimes(date, lat, lng, tz);
   const slots = [8, 2, 7, 5, 6, 4, 3]; // Sun-Sat
   const duration = (sunset - sunrise) / 8;
   const start = sunrise + (slots[date.getDay()] - 1) * duration;
   return { start: formatTime(start), end: formatTime(start + duration) };
 }
 
-export function getYamagandam(date: Date, lat?: number): TimeSlot {
-  const { sunrise, sunset } = getSunTimes(date, lat);
+export function getYamagandam(date: Date, lat?: number, lng?: number, tz?: number): TimeSlot {
+  const { sunrise, sunset } = getSunTimes(date, lat, lng, tz);
   const slots = [5, 4, 3, 2, 1, 7, 6];
   const duration = (sunset - sunrise) / 8;
   const start = sunrise + (slots[date.getDay()] - 1) * duration;
   return { start: formatTime(start), end: formatTime(start + duration) };
 }
 
-export function getKuligai(date: Date, lat?: number): TimeSlot {
-  const { sunrise, sunset } = getSunTimes(date, lat);
+export function getKuligai(date: Date, lat?: number, lng?: number, tz?: number): TimeSlot {
+  const { sunrise, sunset } = getSunTimes(date, lat, lng, tz);
   const slots = [7, 6, 5, 4, 3, 2, 1];
   const duration = (sunset - sunrise) / 8;
   const start = sunrise + (slots[date.getDay()] - 1) * duration;
@@ -195,10 +195,10 @@ export function getManaiyadiSasthiram(date: Date): { direction_tamil: string; pa
   return predictions[day];
 }
 
-export function getSunriseTime(date: Date, lat?: number): string {
-  return formatTime(getSunTimes(date, lat).sunrise);
+export function getSunriseTime(date: Date, lat?: number, lng?: number, tz?: number): string {
+  return formatTime(getSunTimes(date, lat, lng, tz).sunrise);
 }
 
-export function getSunsetTime(date: Date, lat?: number): string {
-  return formatTime(getSunTimes(date, lat).sunset);
+export function getSunsetTime(date: Date, lat?: number, lng?: number, tz?: number): string {
+  return formatTime(getSunTimes(date, lat, lng, tz).sunset);
 }

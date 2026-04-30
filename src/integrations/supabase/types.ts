@@ -181,6 +181,54 @@ export type Database = {
         }
         Relationships: []
       }
+      credit_requests: {
+        Row: {
+          admin_note: string | null
+          amount_inr: number
+          created_at: string
+          id: string
+          payment_method: string
+          payment_reference: string | null
+          requested_credits: number
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          user_note: string | null
+        }
+        Insert: {
+          admin_note?: string | null
+          amount_inr: number
+          created_at?: string
+          id?: string
+          payment_method?: string
+          payment_reference?: string | null
+          requested_credits: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          user_note?: string | null
+        }
+        Update: {
+          admin_note?: string | null
+          amount_inr?: number
+          created_at?: string
+          id?: string
+          payment_method?: string
+          payment_reference?: string | null
+          requested_credits?: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          user_note?: string | null
+        }
+        Relationships: []
+      }
       credit_transactions: {
         Row: {
           amount: number
@@ -453,6 +501,48 @@ export type Database = {
           resolved_by?: string | null
           severity?: string
           signal_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      match_runs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          inputs_snapshot: Json
+          matches_count: number
+          results_summary: Json
+          started_at: string
+          status: string
+          total_candidates: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          inputs_snapshot?: Json
+          matches_count?: number
+          results_summary?: Json
+          started_at?: string
+          status?: string
+          total_candidates?: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          inputs_snapshot?: Json
+          matches_count?: number
+          results_summary?: Json
+          started_at?: string
+          status?: string
+          total_candidates?: number
           user_id?: string
         }
         Relationships: []

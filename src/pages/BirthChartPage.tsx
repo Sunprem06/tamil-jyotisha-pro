@@ -3,7 +3,7 @@ import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Save } from "lucide-react";
+import { Save, Printer } from "lucide-react";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +49,29 @@ export default function BirthChartPage() {
   const { toast } = useToast();
 
   const handleGenerate = () => {
+    // Validation
+    if (!birthData.name.trim()) {
+      toast({ title: "பெயர் தேவை", description: "Please enter a name", variant: "destructive" });
+      return;
+    }
+    if (!birthData.place.trim() || !Number.isFinite(birthData.latitude) || !Number.isFinite(birthData.longitude)) {
+      toast({ title: "இடம் தேவை", description: "Please select a valid place of birth", variant: "destructive" });
+      return;
+    }
+    if (!/^\d{2}:\d{2}$/.test(birthData.timeOfBirth)) {
+      toast({ title: "நேரம் தவறு", description: "Please enter a valid time (HH:MM)", variant: "destructive" });
+      return;
+    }
+    const today = new Date();
+    if (birthData.dateOfBirth.getTime() > today.getTime()) {
+      toast({ title: "தேதி தவறு", description: "Birth date cannot be in the future", variant: "destructive" });
+      return;
+    }
+    // Compose full birth datetime so panchangam reflects birth time
+    const [bh, bm] = birthData.timeOfBirth.split(":").map(Number);
+    const dobWithTime = new Date(birthData.dateOfBirth);
+    dobWithTime.setHours(bh || 0, bm || 0, 0, 0);
+
     const horoscope = generateHoroscope(birthData);
     setChart(horoscope);
     setNavamsa(calculateNavamsa(horoscope.planets));
@@ -58,7 +81,7 @@ export default function BirthChartPage() {
     if (moon) {
       const nakSpan = 360 / 27;
       const degInNak = moon.longitude % nakSpan;
-      setDashas(calculateVimshottariDasha(moon.nakshatra, degInNak, birthData.dateOfBirth));
+      setDashas(calculateVimshottariDasha(moon.nakshatra, degInNak, dobWithTime));
     }
   };
 
@@ -133,11 +156,16 @@ export default function BirthChartPage() {
 
           {chart && (
             <div className="flex justify-center mb-6">
-              {user && (
-                <Button variant="outline" className="font-tamil" onClick={handleSave}>
-                  <Save className="h-4 w-4 mr-2" /> ஜாதகம் சேமிக்க (Save Chart)
+              <div className="flex flex-wrap gap-3 print:hidden">
+                {user && (
+                  <Button variant="outline" className="font-tamil" onClick={handleSave}>
+                    <Save className="h-4 w-4 mr-2" /> ஜாதகம் சேமிக்க (Save Chart)
+                  </Button>
+                )}
+                <Button variant="sacred" className="font-tamil" onClick={() => window.print()}>
+                  <Printer className="h-4 w-4 mr-2" /> அச்சிடு / PDF (Print Report)
                 </Button>
-              )}
+              </div>
             </div>
           )}
 

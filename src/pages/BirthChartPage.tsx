@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
 import { generateHoroscope, calculateNavamsa, getCurrentPanchangamBasic } from "@/lib/astrology/engine";
+import { generateSwissHoroscope } from "@/lib/astrology/swissChart";
 import {
   RASI_NAMES,
   NAKSHATRA_DATA,
@@ -45,6 +46,8 @@ export default function BirthChartPage() {
   const [doshas, setDoshas] = useState<DoshaResult[]>([]);
   const [yogas, setYogas] = useState<YogaResult[]>([]);
   const [dashas, setDashas] = useState<DashaPeriod[]>([]);
+  const [engineMeta, setEngineMeta] = useState<{ ayanamsa: number; engine: string; jd: number } | null>(null);
+  const [generating, setGenerating] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
   const [isPremium, setIsPremium] = useState(false);
@@ -107,7 +110,7 @@ export default function BirthChartPage() {
     }
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     // Validation
     if (!birthData.name.trim()) {
       toast({ title: "பெயர் தேவை", description: "Please enter a name", variant: "destructive" });
@@ -131,16 +134,32 @@ export default function BirthChartPage() {
     const dobWithTime = new Date(birthData.dateOfBirth);
     dobWithTime.setHours(bh || 0, bm || 0, 0, 0);
 
-    const horoscope = generateHoroscope(birthData);
-    setChart(horoscope);
-    setNavamsa(calculateNavamsa(horoscope.planets));
-    setDoshas(detectDoshas(horoscope.planets, horoscope.lagna));
-    setYogas(detectYogas(horoscope.planets, horoscope.lagna));
-    const moon = horoscope.planets.find(p => p.planet === "Moon");
-    if (moon) {
-      const nakSpan = 360 / 27;
-      const degInNak = moon.longitude % nakSpan;
-      setDashas(calculateVimshottariDasha(moon.nakshatra, degInNak, dobWithTime));
+    setGenerating(true);
+    try {
+      let horoscope: HoroscopeChart;
+      let meta: { ayanamsa: number; engine: string; jd: number } | null = null;
+      try {
+        const swiss = await generateSwissHoroscope(birthData);
+        horoscope = swiss.chart;
+        meta = swiss.meta;
+      } catch (err: any) {
+        console.warn("Swiss engine failed, falling back to local:", err?.message);
+        toast({ title: "துல்லிய இயந்திரம் கிடைக்கவில்லை", description: "Falling back to local engine. Accuracy may differ.", variant: "destructive" });
+        horoscope = generateHoroscope(birthData);
+      }
+      setChart(horoscope);
+      setEngineMeta(meta);
+      setNavamsa(calculateNavamsa(horoscope.planets));
+      setDoshas(detectDoshas(horoscope.planets, horoscope.lagna));
+      setYogas(detectYogas(horoscope.planets, horoscope.lagna));
+      const moon = horoscope.planets.find(p => p.planet === "Moon");
+      if (moon) {
+        const nakSpan = 360 / 27;
+        const degInNak = moon.longitude % nakSpan;
+        setDashas(calculateVimshottariDasha(moon.nakshatra, degInNak, dobWithTime));
+      }
+    } finally {
+      setGenerating(false);
     }
   };
 
@@ -208,8 +227,8 @@ export default function BirthChartPage() {
                 <Input type="number" step="0.0001" value={birthData.longitude} readOnly className="bg-muted/50" />
               </div>
             </div>
-            <Button variant="sacred" className="w-full mt-6 font-tamil" onClick={handleGenerate}>
-              ஜாதகம் கணிக்க (Generate Chart)
+            <Button variant="sacred" className="w-full mt-6 font-tamil" onClick={handleGenerate} disabled={generating}>
+              {generating ? "கணிக்கிறது..." : "ஜாதகம் கணிக்க (Generate Chart)"}
             </Button>
           </div>
 
@@ -247,6 +266,14 @@ export default function BirthChartPage() {
                 <p className="font-tamil mt-1">{birthData.name || "—"} • {birthData.dateOfBirth.toLocaleDateString("en-GB")} • {birthData.timeOfBirth} • {birthData.place}</p>
                 <p className="text-xs mt-1">Generated on {new Date().toLocaleString("en-GB")}</p>
               </div>
+
+              {engineMeta && (
+                <div className="text-center text-xs text-muted-foreground -mt-4">
+                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                    🛰️ Drik Ganitam (Meeus/VSOP87) • Lahiri Ayanamsa {engineMeta.ayanamsa.toFixed(4)}° • JD {engineMeta.jd.toFixed(4)}
+                  </span>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <SouthIndianChart lagna={chart.lagna} planets={chart.planets} title="ராசி சக்கரம்" />

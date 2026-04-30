@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Save, Printer } from "lucide-react";
+import { Save, Printer, Download, Lock } from "lucide-react";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,6 +47,65 @@ export default function BirthChartPage() {
   const [dashas, setDashas] = useState<DashaPeriod[]>([]);
   const { user } = useAuth();
   const { toast } = useToast();
+  const [isPremium, setIsPremium] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!user) { setIsPremium(false); return; }
+    (async () => {
+      const { data } = await supabase
+        .from("subscriptions")
+        .select("status")
+        .eq("user_id", user.id)
+        .eq("status", "active")
+        .maybeSingle();
+      setIsPremium(!!data);
+    })();
+  }, [user]);
+
+  const handleDownloadPDF = async () => {
+    if (!reportRef.current) return;
+    if (!user) {
+      toast({ title: "உள்நுழைய வேண்டும்", description: "Please sign in to download PDF", variant: "destructive" });
+      return;
+    }
+    if (!isPremium) {
+      toast({ title: "Premium தேவை", description: "PDF download is available for premium / paid users only", variant: "destructive" });
+      return;
+    }
+    setDownloading(true);
+    try {
+      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
+      const canvas = await html2canvas(reportRef.current, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      const fname = `birth-chart-${(birthData.name || "report").replace(/\s+/g, "_")}.pdf`;
+      pdf.save(fname);
+      toast({ title: "பதிவிறக்கம் முடிந்தது", description: "PDF downloaded successfully" });
+    } catch (e: any) {
+      toast({ title: "பிழை", description: e?.message || "PDF generation failed", variant: "destructive" });
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   const handleGenerate = () => {
     // Validation
@@ -165,12 +224,23 @@ export default function BirthChartPage() {
                 <Button variant="sacred" className="font-tamil" onClick={() => window.print()}>
                   <Printer className="h-4 w-4 mr-2" /> அச்சிடு / PDF (Print Report)
                 </Button>
+                <Button
+                  variant="sacred"
+                  className="font-tamil"
+                  onClick={handleDownloadPDF}
+                  disabled={downloading}
+                  title={isPremium ? "Download PDF" : "Premium / Paid users only"}
+                >
+                  {isPremium ? <Download className="h-4 w-4 mr-2" /> : <Lock className="h-4 w-4 mr-2" />}
+                  {downloading ? "தயாராகிறது..." : "PDF பதிவிறக்கம் (Download PDF)"}
+                  {!isPremium && <span className="ml-2 text-xs opacity-80">Premium</span>}
+                </Button>
               </div>
             </div>
           )}
 
           {chart && (
-            <div className="animate-fade-up space-y-8">
+            <div ref={reportRef} className="animate-fade-up space-y-8 bg-background p-2">
               {/* Print-only report header */}
               <div className="hidden print:block text-center border-b pb-4 mb-2">
                 <h2 className="text-2xl font-bold font-tamil">ஜாதக அறிக்கை — Birth Chart Report</h2>
@@ -378,6 +448,25 @@ export default function BirthChartPage() {
                   </div>
                 </div>
               )}
+
+              {/* Source Disclaimer */}
+              <div className="rasi-card text-xs text-muted-foreground space-y-2 border-dashed">
+                <h4 className="font-bold font-tamil text-sm text-foreground">ஆதார குறிப்பு / Sources & Disclaimer</h4>
+                <p className="font-tamil">
+                  இந்த ஜாதக அறிக்கை லாஹிரி அயனாம்சம் (Lahiri Ayanamsa) அடிப்படையில், விம்சோத்தரி தசா முறை மற்றும் பாரம்பரிய தமிழ் ஜோதிட நூல்களின் கணித முறையின்படி தயாரிக்கப்பட்டுள்ளது.
+                </p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li><strong>Ephemeris / Planetary Data:</strong> Swiss Ephemeris-style algorithms with Lahiri Ayanamsa (Indian Standard).</li>
+                  <li><strong>Panchangam:</strong> Traditional Tithi, Yoga, Karana, Nakshatra calculations (Drik Ganitam method).</li>
+                  <li><strong>Dasha System:</strong> Vimshottari Mahadasha (120-year cycle) — Parashari tradition.</li>
+                  <li><strong>Dosha & Yoga:</strong> Brihat Parashara Hora Shastra and classical Tamil texts (சரவளி, ஜாதக பாரிஜாதம்).</li>
+                  <li><strong>Sunrise / Sunset / Rahu Kalam:</strong> Computed from latitude, longitude and timezone of birth place.</li>
+                </ul>
+                <p className="font-tamil mt-2">
+                  <strong>மறுப்பு (Disclaimer):</strong> இந்த அறிக்கை வழிகாட்டுதல் நோக்கத்திற்காக மட்டுமே. முக்கிய முடிவுகளுக்கு தகுதியான ஜோதிடரை நேரில் கலந்தாலோசிக்கவும். கணிப்புகள் பிறந்த நேரத்தின் துல்லியத்தை பொறுத்தது.
+                </p>
+                <p>© {new Date().getFullYear()} ஆன்மீகத் துணை — MHTS. Generated on {new Date().toLocaleString("en-GB")}.</p>
+              </div>
             </div>
           )}
         </div>

@@ -11,7 +11,9 @@ import { Label } from "@/components/ui/label";
 import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
 import { generateHoroscope, calculateNavamsa } from "@/lib/astrology/engine";
 import { RASI_NAMES, NAKSHATRA_DATA } from "@/lib/astrology/constants";
-import type { BirthData, HoroscopeChart, NavamsaChart } from "@/lib/astrology/types";
+import { detectDoshas, detectYogas } from "@/lib/astrology/dosha";
+import { calculateVimshottariDasha, getCurrentDasha } from "@/lib/astrology/dasha";
+import type { BirthData, HoroscopeChart, NavamsaChart, DoshaResult, YogaResult, DashaPeriod } from "@/lib/astrology/types";
 import { BackButton } from "@/components/BackButton";
 import { PlaceAutocomplete } from "@/components/PlaceAutocomplete";
 import { BirthDateSelect, formatDateForInput, parseInputDate } from "@/components/forms/BirthDateSelect";
@@ -23,6 +25,9 @@ export default function BirthChartPage() {
   });
   const [chart, setChart] = useState<HoroscopeChart | null>(null);
   const [navamsa, setNavamsa] = useState<NavamsaChart | null>(null);
+  const [doshas, setDoshas] = useState<DoshaResult[]>([]);
+  const [yogas, setYogas] = useState<YogaResult[]>([]);
+  const [dashas, setDashas] = useState<DashaPeriod[]>([]);
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -30,6 +35,14 @@ export default function BirthChartPage() {
     const horoscope = generateHoroscope(birthData);
     setChart(horoscope);
     setNavamsa(calculateNavamsa(horoscope.planets));
+    setDoshas(detectDoshas(horoscope.planets, horoscope.lagna));
+    setYogas(detectYogas(horoscope.planets, horoscope.lagna));
+    const moon = horoscope.planets.find(p => p.planet === "Moon");
+    if (moon) {
+      const nakSpan = 360 / 27;
+      const degInNak = moon.longitude % nakSpan;
+      setDashas(calculateVimshottariDasha(moon.nakshatra, degInNak, birthData.dateOfBirth));
+    }
   };
 
   const handleSave = async () => {

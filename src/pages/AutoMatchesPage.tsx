@@ -105,26 +105,7 @@ export default function AutoMatchesPage() {
 
   useEffect(() => { loadAll(); /* eslint-disable-next-line */ }, [user]);
 
-  // Animated progress while edge function runs
-  useEffect(() => {
-    if (!generating) return;
-    setProgress(5);
-    const steps = [
-      { p: 15, l: "உங்கள் ஜாதக விவரம் ஏற்றப்படுகிறது..." },
-      { p: 35, l: "எதிர்பாலின சுயவிவரங்கள் சேகரிக்கப்படுகின்றன..." },
-      { p: 55, l: "10 பொருத்தம் (Porutham) கணக்கிடப்படுகிறது..." },
-      { p: 78, l: "பங்காளி விருப்பம் ஒப்பிடப்படுகிறது..." },
-      { p: 92, l: "முடிவுகள் தரவரிசைப்படுத்தப்படுகின்றன..." },
-    ];
-    let i = 0;
-    const id = setInterval(() => {
-      if (i >= steps.length) return;
-      setProgress(steps[i].p);
-      setProgressLabel(steps[i].l);
-      i++;
-    }, 700);
-    return () => clearInterval(id);
-  }, [generating]);
+  // Real progress comes from SSE in runAutoMatch (no client-side simulator).
 
   const runAutoMatch = async () => {
     setGenerating(true);

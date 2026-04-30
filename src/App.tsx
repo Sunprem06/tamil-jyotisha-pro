@@ -40,6 +40,9 @@ import MatrimonySearchPage from "./pages/MatrimonySearchPage";
 import MatrimonyViewProfilePage from "./pages/MatrimonyViewProfilePage";
 import PartnerPreferencesPage from "./pages/PartnerPreferencesPage";
 import AutoMatchesPage from "./pages/AutoMatchesPage";
+import MatchHistoryPage from "./pages/MatchHistoryPage";
+import BuyCreditsPage from "./pages/BuyCreditsPage";
+import AdminCreditRequestsPage from "./pages/admin/AdminCreditRequestsPage";
 import MessagesPage from "./pages/MessagesPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
@@ -94,6 +97,8 @@ const App = () => (
             <Route path="/matrimony/preferences" element={<ProtectedRoute><E><PartnerPreferencesPage /></E></ProtectedRoute>} />
             <Route path="/matrimony/search" element={<E><MatrimonySearchPage /></E>} />
             <Route path="/matrimony/auto-matches" element={<ProtectedRoute><E><AutoMatchesPage /></E></ProtectedRoute>} />
+            <Route path="/matrimony/match-history" element={<ProtectedRoute><E><MatchHistoryPage /></E></ProtectedRoute>} />
+            <Route path="/matrimony/buy-credits" element={<ProtectedRoute><E><BuyCreditsPage /></E></ProtectedRoute>} />
             <Route path="/matrimony/profile/:userId" element={<E><MatrimonyViewProfilePage /></E>} />
             <Route path="/messages" element={<ProtectedRoute><E><MessagesPage /></E></ProtectedRoute>} />
             <Route path="/admin" element={<E><AdminDashboardPage /></E>} />
@@ -106,6 +111,7 @@ const App = () => (
             <Route path="/admin/config" element={<E><AdminConfigPage /></E>} />
             <Route path="/admin/reports" element={<E><AdminReportsPage /></E>} />
             <Route path="/admin/spiritual" element={<E><AdminSpiritualPage /></E>} />
+            <Route path="/admin/credit-requests" element={<E><AdminCreditRequestsPage /></E>} />
             <Route path="/deity-search" element={<E><UniversalSearchPage /></E>} />
             <Route path="/deity/:deityName" element={<E><DeityProfilePage /></E>} />
             <Route path="/temple/:id" element={<E><TempleDetailPage /></E>} />

@@ -62,7 +62,7 @@ export default function PoruthamPage() {
                 </div>
                 <div>
                   <Label className="font-tamil">பிறந்த தேதி (Date of Birth)</Label>
-                  <Input type="date" value={boyDob} onChange={e => setBoyDob(e.target.value)} />
+                  <Input type="date" value={boyDob} min="1900-01-01" max={new Date().toISOString().split('T')[0]} onChange={e => setBoyDob(e.target.value)} />
                 </div>
                 <div>
                   <Label className="font-tamil">பிறந்த நேரம் (Time of Birth)</Label>
@@ -112,7 +112,7 @@ export default function PoruthamPage() {
                 </div>
                 <div>
                   <Label className="font-tamil">பிறந்த தேதி (Date of Birth)</Label>
-                  <Input type="date" value={girlDob} onChange={e => setGirlDob(e.target.value)} />
+                  <Input type="date" value={girlDob} min="1900-01-01" max={new Date().toISOString().split('T')[0]} onChange={e => setGirlDob(e.target.value)} />
                 </div>
                 <div>
                   <Label className="font-tamil">பிறந்த நேரம் (Time of Birth)</Label>

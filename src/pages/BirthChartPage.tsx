@@ -171,6 +171,13 @@ export default function BirthChartPage() {
 
           {chart && (
             <div className="animate-fade-up space-y-8">
+              {/* Print-only report header */}
+              <div className="hidden print:block text-center border-b pb-4 mb-2">
+                <h2 className="text-2xl font-bold font-tamil">ஜாதக அறிக்கை — Birth Chart Report</h2>
+                <p className="font-tamil mt-1">{birthData.name || "—"} • {birthData.dateOfBirth.toLocaleDateString("en-GB")} • {birthData.timeOfBirth} • {birthData.place}</p>
+                <p className="text-xs mt-1">Generated on {new Date().toLocaleString("en-GB")}</p>
+              </div>
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <SouthIndianChart lagna={chart.lagna} planets={chart.planets} title="ராசி சக்கரம்" />
                 {navamsa && (

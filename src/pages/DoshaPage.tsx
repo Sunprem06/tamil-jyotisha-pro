@@ -10,6 +10,7 @@ import type { BirthData, DoshaResult, YogaResult } from "@/lib/astrology/types";
 import { Shield, AlertTriangle, Star } from "lucide-react";
 import { BackButton } from "@/components/BackButton";
 import { PlaceAutocomplete } from "@/components/PlaceAutocomplete";
+import { BirthDateSelect, formatDateForInput, parseInputDate } from "@/components/forms/BirthDateSelect";
 
 export default function DoshaPage() {
   const [birthData, setBirthData] = useState<BirthData>({
@@ -64,10 +65,10 @@ export default function DoshaPage() {
               </div>
               <div>
                 <Label className="font-tamil">பிறந்த தேதி</Label>
-                <Input type="date" value={birthData.dateOfBirth.toISOString().split('T')[0]}
-                  min="1900-01-01"
-                  max={new Date().toISOString().split('T')[0]}
-                  onChange={e => setBirthData({...birthData, dateOfBirth: new Date(e.target.value)})} />
+                <BirthDateSelect
+                  value={formatDateForInput(birthData.dateOfBirth)}
+                  onChange={value => setBirthData({...birthData, dateOfBirth: parseInputDate(value)})}
+                />
               </div>
               <div>
                 <Label className="font-tamil">பிறந்த நேரம்</Label>

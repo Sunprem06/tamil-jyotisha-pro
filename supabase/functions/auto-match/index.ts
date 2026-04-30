@@ -110,20 +110,38 @@ function comparePreferences(pref: any, candidate: any) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
-  try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-      { global: { headers: { Authorization: authHeader } } }
-    );
+  // Decide mode: SSE if client asks for it (?stream=1 or Accept: text/event-stream)
+  const url = new URL(req.url);
+  const wantsStream =
+    url.searchParams.get("stream") === "1" ||
+    (req.headers.get("accept") || "").includes("text/event-stream");
 
-    const { data: { user }, error: userErr } = await supabase.auth.getUser(authHeader.replace("Bearer ", ""));
-    if (userErr || !user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    { global: { headers: { Authorization: authHeader } } }
+  );
 
-    // Load admin config
+  const { data: { user }, error: userErr } = await supabase.auth.getUser(
+    authHeader.replace("Bearer ", "")
+  );
+  if (userErr || !user) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  // -------- core compute, callable in both SSE and plain JSON modes --------
+  async function compute(emit: (e: { stage: string; pct: number; msg: string; data?: any }) => void) {
+    emit({ stage: "init", pct: 5, msg: "தொடங்குகிறது..." });
+
     const { data: cfgRows } = await supabase
       .from("system_configurations")
       .select("key,value")
@@ -134,51 +152,74 @@ Deno.serve(async (req) => {
     const minPrefPct = Number(cfg["matrimony.preference_min_match_pct"] ?? 40);
     const maxCandidates = Number(cfg["matrimony.auto_match_max_candidates"] ?? 100);
 
-    // Self profile
+    emit({ stage: "profile", pct: 15, msg: "உங்கள் ஜாதக விவரம் ஏற்றப்படுகிறது..." });
     const { data: self } = await supabase
-      .from("matrimony_profiles")
-      .select("*")
-      .eq("user_id", user.id)
-      .maybeSingle();
-    if (!self) return new Response(JSON.stringify({ error: "Profile not found. Please complete your matrimony profile first." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      .from("matrimony_profiles").select("*").eq("user_id", user.id).maybeSingle();
+    if (!self) throw new Error("Profile not found. Please complete your matrimony profile first.");
 
     const { data: prefs } = await supabase
-      .from("partner_preferences")
-      .select("*")
-      .eq("user_id", user.id)
-      .maybeSingle();
+      .from("partner_preferences").select("*").eq("user_id", user.id).maybeSingle();
 
+    // Open a match_run row (history snapshot)
+    const { data: runRow } = await supabase
+      .from("match_runs")
+      .insert({
+        user_id: user.id,
+        status: "running",
+        inputs_snapshot: {
+          profile: {
+            date_of_birth: self.date_of_birth, gender: self.gender,
+            mother_tongue: self.mother_tongue, religion: self.religion,
+            caste: self.caste, education: self.education, occupation: self.occupation,
+            city: self.city, state: self.state, country: self.country,
+            height_cm: self.height_cm,
+          },
+          preferences: prefs ?? null,
+          thresholds: { minPorutham, minPrefPct, maxCandidates },
+        },
+      })
+      .select("id").single();
+    const runId = runRow?.id as string | undefined;
+
+    emit({ stage: "candidates", pct: 30, msg: "எதிர்பாலின சுயவிவரங்கள் சேகரிக்கப்படுகின்றன...", data: { runId } });
     const oppGender = self.gender === "male" ? "female" : "male";
-
-    // Candidates
     const { data: candidates } = await supabase
-      .from("matrimony_profiles")
-      .select("*")
-      .eq("gender", oppGender)
-      .eq("visibility", "public")
-      .neq("user_id", user.id)
-      .limit(maxCandidates);
+      .from("matrimony_profiles").select("*")
+      .eq("gender", oppGender).eq("visibility", "public")
+      .neq("user_id", user.id).limit(maxCandidates);
+
+    const total = candidates?.length ?? 0;
+    emit({ stage: "porutham", pct: 45, msg: `10 பொருத்தம் கணக்கிடப்படுகிறது... (${total} சுயவிவரங்கள்)` });
 
     const matches: any[] = [];
+    let processed = 0;
     for (const c of candidates ?? []) {
       const por = calcPorutham({ dob: self.date_of_birth }, { dob: c.date_of_birth });
-      if (por.score < minPorutham) continue;
-      const pref = comparePreferences(prefs, c);
-      if (pref.score < minPrefPct) continue;
-      const combined = Math.round(por.score * 5 + pref.score * 0.5); // weighted
-      matches.push({
-        requester_id: user.id,
-        candidate_id: c.user_id,
-        porutham_score: por.score,
-        porutham_max: por.max,
-        porutham_breakdown: por.breakdown,
-        preference_match: pref.result,
-        preference_score: pref.score,
-        combined_score: combined,
-      });
+      if (por.score >= minPorutham) {
+        const pref = comparePreferences(prefs, c);
+        if (pref.score >= minPrefPct) {
+          const combined = Math.round(por.score * 5 + pref.score * 0.5);
+          matches.push({
+            requester_id: user.id,
+            candidate_id: c.user_id,
+            porutham_score: por.score,
+            porutham_max: por.max,
+            porutham_breakdown: por.breakdown,
+            preference_match: pref.result,
+            preference_score: pref.score,
+            combined_score: combined,
+          });
+        }
+      }
+      processed++;
+      // Emit progress between 45 → 85 proportionally; throttle to every 5 candidates
+      if (total && (processed % 5 === 0 || processed === total)) {
+        const pct = 45 + Math.round((processed / total) * 40);
+        emit({ stage: "porutham", pct, msg: `பொருத்தம் கணக்கீடு ${processed}/${total}` });
+      }
     }
 
-    // Upsert (preserve unlock state via on conflict do update on score fields only)
+    emit({ stage: "rank", pct: 90, msg: "முடிவுகள் தரவரிசைப்படுத்தப்படுகின்றன..." });
     if (matches.length) {
       const { error: upErr } = await supabase
         .from("auto_matches")
@@ -186,14 +227,75 @@ Deno.serve(async (req) => {
       if (upErr) console.error("upsert err", upErr);
     }
 
-    return new Response(JSON.stringify({ count: matches.length }), {
+    // Top-N snapshot for history
+    const top = [...matches]
+      .sort((a, b) => b.combined_score - a.combined_score)
+      .slice(0, 20)
+      .map((m) => ({
+        candidate_id: m.candidate_id,
+        porutham_score: m.porutham_score,
+        preference_score: m.preference_score,
+        combined_score: m.combined_score,
+      }));
+
+    if (runId) {
+      await supabase.from("match_runs").update({
+        status: "success",
+        completed_at: new Date().toISOString(),
+        total_candidates: total,
+        matches_count: matches.length,
+        results_summary: { top },
+      }).eq("id", runId);
+    }
+
+    emit({
+      stage: "done", pct: 100, msg: "முடிந்தது!",
+      data: { count: matches.length, total_candidates: total, runId },
+    });
+
+    return { count: matches.length, runId, total_candidates: total };
+  }
+
+  // -------- SSE branch --------
+  if (wantsStream) {
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        const send = (event: string, payload: any) => {
+          controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(payload)}\n\n`));
+        };
+        try {
+          await compute((e) => send("progress", e));
+          send("complete", { ok: true });
+        } catch (err) {
+          console.error(err);
+          send("error", { message: (err as Error).message });
+        } finally {
+          controller.close();
+        }
+      },
+    });
+    return new Response(stream, {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache, no-transform",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
+      },
+    });
+  }
+
+  // -------- Plain JSON branch (back-compat) --------
+  try {
+    const result = await compute(() => {});
+    return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error(e);
     return new Response(JSON.stringify({ error: (e as Error).message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });

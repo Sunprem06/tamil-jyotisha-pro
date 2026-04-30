@@ -2,7 +2,7 @@ import { Link, useLocation, Navigate } from "react-router-dom";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import {
   LayoutDashboard, Users, Shield, Settings, AlertTriangle,
-  CreditCard, MessageSquare, FileText, BarChart3, LogOut, Sparkles
+  CreditCard, MessageSquare, FileText, BarChart3, LogOut, Sparkles, Coins
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,6 +13,7 @@ const sidebarLinks = [
   { href: "/admin/profiles", label: "Profiles", icon: FileText, permission: "profiles.moderate" },
   { href: "/admin/fraud", label: "Fraud Detection", icon: AlertTriangle, permission: "fraud.read" },
   { href: "/admin/payments", label: "Payments", icon: CreditCard, permission: "payments.read" },
+  { href: "/admin/credit-requests", label: "Credit Requests", icon: Coins, permission: "payments.read" },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3, permission: "analytics.read" },
   { href: "/admin/roles", label: "Roles & Permissions", icon: Shield, permission: "users.change_role" },
   { href: "/admin/config", label: "Configuration", icon: Settings, permission: "config.read" },

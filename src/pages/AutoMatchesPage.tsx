@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Lock, Sparkles, CheckCircle2, XCircle, RefreshCw, Coins, Eye, Filter } from "lucide-react";
+import { Lock, Sparkles, CheckCircle2, XCircle, RefreshCw, Coins, Eye, Filter, History } from "lucide-react";
 
 interface AutoMatch {
   id: string;
@@ -105,37 +105,67 @@ export default function AutoMatchesPage() {
 
   useEffect(() => { loadAll(); /* eslint-disable-next-line */ }, [user]);
 
-  // Animated progress while edge function runs
-  useEffect(() => {
-    if (!generating) return;
-    setProgress(5);
-    const steps = [
-      { p: 15, l: "உங்கள் ஜாதக விவரம் ஏற்றப்படுகிறது..." },
-      { p: 35, l: "எதிர்பாலின சுயவிவரங்கள் சேகரிக்கப்படுகின்றன..." },
-      { p: 55, l: "10 பொருத்தம் (Porutham) கணக்கிடப்படுகிறது..." },
-      { p: 78, l: "பங்காளி விருப்பம் ஒப்பிடப்படுகிறது..." },
-      { p: 92, l: "முடிவுகள் தரவரிசைப்படுத்தப்படுகின்றன..." },
-    ];
-    let i = 0;
-    const id = setInterval(() => {
-      if (i >= steps.length) return;
-      setProgress(steps[i].p);
-      setProgressLabel(steps[i].l);
-      i++;
-    }, 700);
-    return () => clearInterval(id);
-  }, [generating]);
+  // Real progress comes from SSE in runAutoMatch (no client-side simulator).
 
   const runAutoMatch = async () => {
     setGenerating(true);
     setProgress(5);
     setProgressLabel("தொடங்குகிறது...");
     try {
-      const { data, error } = await supabase.functions.invoke("auto-match");
-      if (error) throw error;
+      // Get the user's session to authenticate the SSE request
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/auto-match?stream=1`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+          "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          "Accept": "text/event-stream",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      });
+      if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+      let lastCount = 0;
+      let streamErr: string | null = null;
+
+      // Parse SSE: events separated by \n\n; each has "event:" and "data:" lines
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const events = buf.split("\n\n");
+        buf = events.pop() ?? "";
+        for (const block of events) {
+          const lines = block.split("\n");
+          let evType = "message"; let dataStr = "";
+          for (const ln of lines) {
+            if (ln.startsWith("event:")) evType = ln.slice(6).trim();
+            else if (ln.startsWith("data:")) dataStr += ln.slice(5).trim();
+          }
+          if (!dataStr) continue;
+          let payload: any = {};
+          try { payload = JSON.parse(dataStr); } catch { continue; }
+          if (evType === "progress") {
+            if (typeof payload.pct === "number") setProgress(payload.pct);
+            if (payload.msg) setProgressLabel(payload.msg);
+            if (payload.data?.count != null) lastCount = payload.data.count;
+          } else if (evType === "error") {
+            streamErr = payload.message ?? "Unknown error";
+          }
+        }
+      }
+
+      if (streamErr) throw new Error(streamErr);
       setProgress(100);
       setProgressLabel("முடிந்தது!");
-      toast({ title: "பொருத்தம் கணக்கிடப்பட்டது", description: `${data?.count ?? 0} பொருத்தங்கள் கிடைத்தன` });
+      toast({ title: "பொருத்தம் கணக்கிடப்பட்டது", description: `${lastCount} பொருத்தங்கள் கிடைத்தன` });
       await loadAll();
     } catch (e: any) {
       toast({ title: "பிழை", description: e.message, variant: "destructive" });
@@ -198,10 +228,18 @@ export default function AutoMatchesPage() {
               உங்கள் ஜாதகம் & விருப்பங்களின் அடிப்படையில் தானியங்கி பொருத்தம்
             </p>
           </div>
-          <Button onClick={runAutoMatch} disabled={generating} className="gap-2">
-            <RefreshCw className={`w-4 h-4 ${generating ? "animate-spin" : ""}`} />
-            {generating ? "கணக்கிடுகிறது..." : "மீண்டும் கணக்கிடு"}
-          </Button>
+          <div className="flex gap-2 flex-wrap">
+            <Link to="/matrimony/match-history">
+              <Button variant="outline" className="gap-2"><History className="w-4 h-4" /> வரலாறு</Button>
+            </Link>
+            <Link to="/matrimony/buy-credits">
+              <Button variant="outline" className="gap-2"><Coins className="w-4 h-4" /> கிரெடிட் வாங்கு</Button>
+            </Link>
+            <Button onClick={runAutoMatch} disabled={generating} className="gap-2">
+              <RefreshCw className={`w-4 h-4 ${generating ? "animate-spin" : ""}`} />
+              {generating ? "கணக்கிடுகிறது..." : "மீண்டும் கணக்கிடு"}
+            </Button>
+          </div>
         </div>
 
         <Card className="mb-6 border-amber-300/50 bg-amber-50/40">
@@ -219,7 +257,7 @@ export default function AutoMatchesPage() {
                 ஒரு திறப்பு: <strong>{config.price}</strong> கிரெடிட்கள்
               </span>
               {credits < config.price && remainingFree === 0 && (
-                <Link to="/profile"><Button size="sm" variant="outline">டாப்-அப்</Button></Link>
+                <Link to="/matrimony/buy-credits"><Button size="sm" variant="outline">டாப்-அப்</Button></Link>
               )}
             </div>
           </CardContent>

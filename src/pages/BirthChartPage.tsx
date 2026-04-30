@@ -9,8 +9,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
-import { generateHoroscope, calculateNavamsa } from "@/lib/astrology/engine";
-import { RASI_NAMES, NAKSHATRA_DATA } from "@/lib/astrology/constants";
+import { generateHoroscope, calculateNavamsa, getCurrentPanchangamBasic } from "@/lib/astrology/engine";
+import {
+  RASI_NAMES,
+  NAKSHATRA_DATA,
+  TAMIL_DAYS,
+  TAMIL_MONTHS,
+  TITHI_NAMES,
+  YOGA_NAMES,
+  NAKSHATRA_GANA,
+  NAKSHATRA_YONI,
+  NAKSHATRA_RAJJU,
+} from "@/lib/astrology/constants";
+import {
+  getRahuKalam,
+  getYamagandam,
+  getKuligai,
+  getSunriseTime,
+  getSunsetTime,
+} from "@/lib/astrology/panchangam";
 import { detectDoshas, detectYogas } from "@/lib/astrology/dosha";
 import { calculateVimshottariDasha, getCurrentDasha } from "@/lib/astrology/dasha";
 import type { BirthData, HoroscopeChart, NavamsaChart, DoshaResult, YogaResult, DashaPeriod } from "@/lib/astrology/types";
@@ -175,6 +192,68 @@ export default function BirthChartPage() {
                   சந்திர நட்சத்திரம்: {chart.planets.find(p => p.planet === "Moon")?.nakshatraTamilName}
                 </p>
               </div>
+
+              {/* Birth Panchangam Details */}
+              {(() => {
+                const moon = chart.planets.find(p => p.planet === "Moon");
+                if (!moon) return null;
+                const moonNakIdx = NAKSHATRA_DATA.findIndex(n => n.en === moon.nakshatra);
+                const pan = getCurrentPanchangamBasic(birthData.dateOfBirth, birthData.latitude, birthData.longitude);
+                const tithi = TITHI_NAMES[pan.tithiIndex] || TITHI_NAMES[0];
+                const yoga = YOGA_NAMES[pan.yogaIndex] || "-";
+                const tamilDay = TAMIL_DAYS[birthData.dateOfBirth.getDay()];
+                const tamilMonth = TAMIL_MONTHS[birthData.dateOfBirth.getMonth()];
+                const gana = moonNakIdx >= 0 ? NAKSHATRA_GANA[moonNakIdx] : "-";
+                const yoni = moonNakIdx >= 0 ? NAKSHATRA_YONI[moonNakIdx] : null;
+                const rajju = moonNakIdx >= 0 ? NAKSHATRA_RAJJU[moonNakIdx] : "-";
+                const rahu = getRahuKalam(birthData.dateOfBirth, birthData.latitude);
+                const yama = getYamagandam(birthData.dateOfBirth, birthData.latitude);
+                const guli = getKuligai(birthData.dateOfBirth, birthData.latitude);
+                const sunrise = getSunriseTime(birthData.dateOfBirth, birthData.latitude);
+                const sunset = getSunsetTime(birthData.dateOfBirth, birthData.latitude);
+                const sun = chart.planets.find(p => p.planet === "Sun");
+
+                const rows: Array<[string, string, string]> = [
+                  ["பெயர்", "Name", birthData.name || "-"],
+                  ["பிறந்த தேதி", "Date of Birth", birthData.dateOfBirth.toLocaleDateString("en-GB")],
+                  ["பிறந்த நேரம்", "Time of Birth", birthData.timeOfBirth],
+                  ["பிறந்த இடம்", "Place of Birth", birthData.place],
+                  ["தமிழ் கிழமை", "Tamil Day", tamilDay],
+                  ["தமிழ் மாதம்", "Tamil Month", tamilMonth],
+                  ["திதி", "Tithi", `${tithi.ta} (${tithi.en})`],
+                  ["யோகம்", "Yoga", yoga],
+                  ["கரணம்", "Karana", String(pan.karanaIndex + 1)],
+                  ["நட்சத்திரம்", "Nakshatra", `${moon.nakshatraTamilName} - பாதம் ${moon.nakshatraPada}`],
+                  ["சந்திர ராசி", "Moon Sign (Rasi)", `${moon.rasiTamilName} (${moon.rasiName})`],
+                  ["சூரிய ராசி", "Sun Sign", sun ? `${sun.rasiTamilName} (${sun.rasiName})` : "-"],
+                  ["லக்னம்", "Lagna (Ascendant)", `${RASI_NAMES[chart.lagna].ta} (${RASI_NAMES[chart.lagna].en})`],
+                  ["கணம்", "Gana", gana],
+                  ["யோனி", "Yoni", yoni ? `${yoni.animal} (${yoni.gender})` : "-"],
+                  ["ரஜ்ஜு", "Rajju", rajju],
+                  ["சூரிய உதயம்", "Sunrise", sunrise],
+                  ["சூரிய அஸ்தமனம்", "Sunset", sunset],
+                  ["ராகு காலம்", "Rahu Kalam", `${rahu.start} - ${rahu.end}`],
+                  ["எமகண்டம்", "Yamagandam", `${yama.start} - ${yama.end}`],
+                  ["குளிகை", "Kuligai", `${guli.start} - ${guli.end}`],
+                ];
+
+                return (
+                  <div className="rasi-card overflow-x-auto">
+                    <h3 className="text-xl font-bold font-tamil mb-4">ஜோதிட விவரங்கள் (Astrological Details)</h3>
+                    <table className="w-full text-sm">
+                      <tbody>
+                        {rows.map(([ta, en, val], i) => (
+                          <tr key={i} className="border-b border-border/50 hover:bg-muted/30">
+                            <td className="p-2 font-tamil font-semibold w-1/3">{ta}</td>
+                            <td className="p-2 text-muted-foreground w-1/3">{en}</td>
+                            <td className="p-2 font-tamil">{val}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                );
+              })()}
 
               {/* Current Dasha & Bhukti */}
               {dashas.length > 0 && (() => {

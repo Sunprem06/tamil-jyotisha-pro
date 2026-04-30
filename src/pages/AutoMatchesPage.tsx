@@ -10,8 +10,12 @@ import { TamilEmptyState } from "@/components/TamilEmptyState";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Lock, Sparkles, CheckCircle2, XCircle, RefreshCw } from "lucide-react";
+import { Lock, Sparkles, CheckCircle2, XCircle, RefreshCw, Coins, Eye, Filter } from "lucide-react";
 
 interface AutoMatch {
   id: string;
@@ -46,9 +50,17 @@ export default function AutoMatchesPage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [progressLabel, setProgressLabel] = useState("");
   const [matches, setMatches] = useState<AutoMatch[]>([]);
   const [candidates, setCandidates] = useState<Record<string, CandidateProfile>>({});
   const [config, setConfig] = useState({ freeQuota: 3, price: 10 });
+  const [credits, setCredits] = useState<number>(0);
+  const [detailMatch, setDetailMatch] = useState<AutoMatch | null>(null);
+  const [sortBy, setSortBy] = useState<"combined" | "porutham" | "preference">("combined");
+  const [minPorutham, setMinPorutham] = useState<number>(0);
+  const [minPreference, setMinPreference] = useState<number>(0);
+  const [unlockFilter, setUnlockFilter] = useState<"all" | "unlocked" | "locked">("all");
 
   const loadAll = async () => {
     if (!user) return;
@@ -63,6 +75,13 @@ export default function AutoMatchesPage() {
       freeQuota: Number(cfgMap["matrimony.free_matches_count"] ?? 3),
       price: Number(cfgMap["matrimony.match_unlock_price"] ?? 10),
     });
+
+    const { data: creditRow } = await supabase
+      .from("credits")
+      .select("balance")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    setCredits(creditRow?.balance ?? 0);
 
     const { data: m } = await supabase
       .from("auto_matches")
@@ -86,17 +105,42 @@ export default function AutoMatchesPage() {
 
   useEffect(() => { loadAll(); /* eslint-disable-next-line */ }, [user]);
 
+  // Animated progress while edge function runs
+  useEffect(() => {
+    if (!generating) return;
+    setProgress(5);
+    const steps = [
+      { p: 15, l: "உங்கள் ஜாதக விவரம் ஏற்றப்படுகிறது..." },
+      { p: 35, l: "எதிர்பாலின சுயவிவரங்கள் சேகரிக்கப்படுகின்றன..." },
+      { p: 55, l: "10 பொருத்தம் (Porutham) கணக்கிடப்படுகிறது..." },
+      { p: 78, l: "பங்காளி விருப்பம் ஒப்பிடப்படுகிறது..." },
+      { p: 92, l: "முடிவுகள் தரவரிசைப்படுத்தப்படுகின்றன..." },
+    ];
+    let i = 0;
+    const id = setInterval(() => {
+      if (i >= steps.length) return;
+      setProgress(steps[i].p);
+      setProgressLabel(steps[i].l);
+      i++;
+    }, 700);
+    return () => clearInterval(id);
+  }, [generating]);
+
   const runAutoMatch = async () => {
     setGenerating(true);
+    setProgress(5);
+    setProgressLabel("தொடங்குகிறது...");
     try {
       const { data, error } = await supabase.functions.invoke("auto-match");
       if (error) throw error;
+      setProgress(100);
+      setProgressLabel("முடிந்தது!");
       toast({ title: "பொருத்தம் கணக்கிடப்பட்டது", description: `${data?.count ?? 0} பொருத்தங்கள் கிடைத்தன` });
       await loadAll();
     } catch (e: any) {
       toast({ title: "பிழை", description: e.message, variant: "destructive" });
     } finally {
-      setGenerating(false);
+      setTimeout(() => setGenerating(false), 400);
     }
   };
 
@@ -132,6 +176,16 @@ export default function AutoMatchesPage() {
   const unlockedCount = matches.filter((m) => m.is_unlocked).length;
   const remainingFree = Math.max(0, config.freeQuota - unlockedCount);
 
+  // Filtering & sorting
+  const visible = matches
+    .filter((m) => m.porutham_score >= minPorutham && m.preference_score >= minPreference)
+    .filter((m) => unlockFilter === "all" || (unlockFilter === "unlocked" ? m.is_unlocked : !m.is_unlocked))
+    .sort((a, b) =>
+      sortBy === "porutham" ? b.porutham_score - a.porutham_score
+      : sortBy === "preference" ? b.preference_score - a.preference_score
+      : b.combined_score - a.combined_score
+    );
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-orange-50/30 to-background">
       <Header />
@@ -151,16 +205,79 @@ export default function AutoMatchesPage() {
         </div>
 
         <Card className="mb-6 border-amber-300/50 bg-amber-50/40">
-          <CardContent className="p-4 flex flex-wrap items-center justify-between gap-3 text-sm">
-            <div>
-              <Sparkles className="w-4 h-4 inline text-amber-600 mr-1" />
-              <strong>{remainingFree}</strong> இலவச திறப்புகள் மீதம் ({config.freeQuota}-ல்)
+          <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-600" />
+              <span><strong>{remainingFree}</strong> / {config.freeQuota} இலவச திறப்புகள்</span>
             </div>
-            <div className="text-muted-foreground">
-              கூடுதல் திறப்பு: <strong>{config.price} கிரெடிட்கள் / பொருத்தம்</strong>
+            <div className="flex items-center gap-2">
+              <Coins className="w-4 h-4 text-amber-600" />
+              <span>இருப்பு: <strong>{credits}</strong> கிரெடிட்கள்</span>
+            </div>
+            <div className="flex items-center gap-2 sm:justify-end">
+              <span className="text-muted-foreground">
+                ஒரு திறப்பு: <strong>{config.price}</strong> கிரெடிட்கள்
+              </span>
+              {credits < config.price && remainingFree === 0 && (
+                <Link to="/profile"><Button size="sm" variant="outline">டாப்-அப்</Button></Link>
+              )}
             </div>
           </CardContent>
         </Card>
+
+        {/* Progress screen */}
+        {generating && (
+          <Card className="mb-6 border-primary/30">
+            <CardContent className="p-6 space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-semibold text-primary">{progressLabel || "செயலாக்கப்படுகிறது..."}</span>
+                <span className="text-muted-foreground">{progress}%</span>
+              </div>
+              <Progress value={progress} />
+              <p className="text-xs text-muted-foreground">
+                சேவையகம் Porutham & பங்காளி விருப்பங்களை கணக்கிடுகிறது. சில நொடிகள் ஆகலாம்.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Filters */}
+        {!loading && matches.length > 0 && (
+          <Card className="mb-6">
+            <CardContent className="p-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+              <div>
+                <label className="text-xs text-muted-foreground flex items-center gap-1 mb-1"><Filter className="w-3 h-3" /> வரிசை</label>
+                <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="combined">கூட்டு மதிப்பு</SelectItem>
+                    <SelectItem value="porutham">ஜாதகம் (Porutham)</SelectItem>
+                    <SelectItem value="preference">விருப்பம் (%)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">குறைந்த Porutham</label>
+                <Input type="number" min={0} max={10} value={minPorutham} onChange={(e) => setMinPorutham(Number(e.target.value) || 0)} />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">குறைந்த விருப்பம் %</label>
+                <Input type="number" min={0} max={100} value={minPreference} onChange={(e) => setMinPreference(Number(e.target.value) || 0)} />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">நிலை</label>
+                <Select value={unlockFilter} onValueChange={(v) => setUnlockFilter(v as any)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">அனைத்தும்</SelectItem>
+                    <SelectItem value="unlocked">திறக்கப்பட்டவை</SelectItem>
+                    <SelectItem value="locked">பூட்டியவை</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {loading ? (
           <TamilLoader />
@@ -177,7 +294,9 @@ export default function AutoMatchesPage() {
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
-            {matches.map((m) => {
+            {visible.length === 0 ? (
+              <div className="md:col-span-2"><TamilEmptyState message="வடிகட்டலுக்கு எதுவும் பொருந்தவில்லை" /></div>
+            ) : visible.map((m) => {
               const c = candidates[m.candidate_id];
               const photo = c?.photos?.[0];
               return (
@@ -211,6 +330,12 @@ export default function AutoMatchesPage() {
                     <div className="flex gap-2 flex-wrap text-xs">
                       <Badge variant="outline">ஜாதகம்: {m.porutham_score}/{m.porutham_max}</Badge>
                       <Badge variant="outline">விருப்பம்: {m.preference_score}%</Badge>
+                      <button
+                        onClick={() => setDetailMatch(m)}
+                        className="ml-auto inline-flex items-center gap-1 text-primary hover:underline text-xs"
+                      >
+                        <Eye className="w-3 h-3" /> Porutham விவரம்
+                      </button>
                     </div>
 
                     {/* Gap report */}
@@ -243,11 +368,16 @@ export default function AutoMatchesPage() {
                     ) : (
                       <Button
                         onClick={() => unlock(m.id)}
+                        disabled={remainingFree === 0 && credits < config.price}
                         className="w-full gap-2"
                         variant={remainingFree > 0 ? "default" : "secondary"}
                       >
                         <Lock className="w-4 h-4" />
-                        {remainingFree > 0 ? "இலவசமாக திற" : `${config.price} கிரெடிட்களில் திற`}
+                        {remainingFree > 0
+                          ? "இலவசமாக திற"
+                          : credits >= config.price
+                            ? `${config.price} கிரெடிட்களில் திற`
+                            : `கிரெடிட் போதாது (${credits}/${config.price})`}
                       </Button>
                     )}
                   </CardContent>
@@ -256,6 +386,49 @@ export default function AutoMatchesPage() {
             })}
           </div>
         )}
+
+        {/* Porutham detail dialog */}
+        <Dialog open={!!detailMatch} onOpenChange={(o) => !o && setDetailMatch(null)}>
+          <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="font-tamil">10 பொருத்தம் விவரம் (Porutham Details)</DialogTitle>
+            </DialogHeader>
+            {detailMatch && (
+              <div className="space-y-4">
+                <div className="flex gap-2 flex-wrap">
+                  <Badge className="bg-amber-500">மொத்தம்: {detailMatch.porutham_score}/{detailMatch.porutham_max}</Badge>
+                  <Badge variant="outline">விருப்பம்: {detailMatch.preference_score}%</Badge>
+                  <Badge variant="outline">கூட்டு: {detailMatch.combined_score}</Badge>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm mb-2 text-amber-700">ஜாதக பொருத்தம்</h4>
+                  <div className="space-y-1 text-sm">
+                    {detailMatch.porutham_breakdown?.map((p: any, i: number) => (
+                      <div key={i} className="flex items-center justify-between border-b border-border/50 py-1">
+                        <span className="flex items-center gap-2">
+                          {p.matched ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <XCircle className="w-4 h-4 text-red-500" />}
+                          <span>{p.tamilName} <span className="text-muted-foreground text-xs">({p.name})</span></span>
+                        </span>
+                        <span className="text-xs text-muted-foreground">{p.score}/{p.maxScore}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm mb-2 text-amber-700">பங்காளி விருப்பம்</h4>
+                  <div className="space-y-1 text-sm">
+                    {Object.entries(detailMatch.preference_match ?? {}).map(([k, v]) => (
+                      <div key={k} className="flex items-center gap-2 border-b border-border/50 py-1">
+                        {v.matched ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <XCircle className="w-4 h-4 text-red-500" />}
+                        <span>{v.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </main>
       <Footer />
     </div>

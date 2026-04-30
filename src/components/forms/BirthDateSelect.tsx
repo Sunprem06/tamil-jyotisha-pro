@@ -60,16 +60,16 @@ export function BirthDateSelect({
     "h-10 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2";
 
   return (
-    <div className={cn("grid grid-cols-[1.3fr_1fr_1fr] gap-2", className)}>
+    <div className={cn("grid grid-cols-[1fr_1fr_1.3fr] gap-2", className)}>
       <select
-        aria-label="Year"
-        value={safeYear}
-        onChange={(event) => updateDate("year", event.target.value)}
+        aria-label="Day"
+        value={safeDay}
+        onChange={(event) => updateDate("day", event.target.value)}
         className={selectClassName}
       >
-        {years.map((year) => (
-          <option key={year} value={year}>
-            {year}
+        {days.map((day) => (
+          <option key={day} value={day}>
+            {pad(day)}
           </option>
         ))}
       </select>
@@ -86,14 +86,14 @@ export function BirthDateSelect({
         ))}
       </select>
       <select
-        aria-label="Day"
-        value={safeDay}
-        onChange={(event) => updateDate("day", event.target.value)}
+        aria-label="Year"
+        value={safeYear}
+        onChange={(event) => updateDate("year", event.target.value)}
         className={selectClassName}
       >
-        {days.map((day) => (
-          <option key={day} value={day}>
-            {pad(day)}
+        {years.map((year) => (
+          <option key={year} value={year}>
+            {year}
           </option>
         ))}
       </select>

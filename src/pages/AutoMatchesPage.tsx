@@ -121,7 +121,7 @@ export default function AutoMatchesPage() {
         <Header />
         <main className="flex-1 container mx-auto p-6">
           <BackButton />
-          <TamilEmptyState title="உள்நுழைய வேண்டும்" message="ஆட்டோ பொருத்தத்தைப் பார்க்க உள்நுழையவும்" />
+          <TamilEmptyState message="உள்நுழைய வேண்டும்" subMessage="ஆட்டோ பொருத்தத்தைப் பார்க்க உள்நுழையவும்" />
           <Link to="/auth"><Button className="mt-4">உள்நுழை</Button></Link>
         </main>
         <Footer />
@@ -167,8 +167,8 @@ export default function AutoMatchesPage() {
         ) : matches.length === 0 ? (
           <div className="space-y-4">
             <TamilEmptyState
-              title="பொருத்தம் இல்லை"
-              message="உங்கள் சுயவிவரம் & பங்காளி விருப்பங்களைப் பூர்த்தி செய்து 'மீண்டும் கணக்கிடு' அழுத்தவும்."
+              message="பொருத்தம் இல்லை"
+              subMessage="உங்கள் சுயவிவரம் & பங்காளி விருப்பங்களைப் பூர்த்தி செய்து 'மீண்டும் கணக்கிடு' அழுத்தவும்."
             />
             <div className="flex gap-2 justify-center">
               <Link to="/matrimony/profile"><Button variant="outline">சுயவிவரம்</Button></Link>

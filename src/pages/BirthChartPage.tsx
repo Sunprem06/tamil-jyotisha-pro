@@ -11,7 +11,9 @@ import { Label } from "@/components/ui/label";
 import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
 import { generateHoroscope, calculateNavamsa } from "@/lib/astrology/engine";
 import { RASI_NAMES, NAKSHATRA_DATA } from "@/lib/astrology/constants";
-import type { BirthData, HoroscopeChart, NavamsaChart } from "@/lib/astrology/types";
+import { detectDoshas, detectYogas } from "@/lib/astrology/dosha";
+import { calculateVimshottariDasha, getCurrentDasha } from "@/lib/astrology/dasha";
+import type { BirthData, HoroscopeChart, NavamsaChart, DoshaResult, YogaResult, DashaPeriod } from "@/lib/astrology/types";
 import { BackButton } from "@/components/BackButton";
 import { PlaceAutocomplete } from "@/components/PlaceAutocomplete";
 import { BirthDateSelect, formatDateForInput, parseInputDate } from "@/components/forms/BirthDateSelect";
@@ -23,6 +25,9 @@ export default function BirthChartPage() {
   });
   const [chart, setChart] = useState<HoroscopeChart | null>(null);
   const [navamsa, setNavamsa] = useState<NavamsaChart | null>(null);
+  const [doshas, setDoshas] = useState<DoshaResult[]>([]);
+  const [yogas, setYogas] = useState<YogaResult[]>([]);
+  const [dashas, setDashas] = useState<DashaPeriod[]>([]);
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -30,6 +35,14 @@ export default function BirthChartPage() {
     const horoscope = generateHoroscope(birthData);
     setChart(horoscope);
     setNavamsa(calculateNavamsa(horoscope.planets));
+    setDoshas(detectDoshas(horoscope.planets, horoscope.lagna));
+    setYogas(detectYogas(horoscope.planets, horoscope.lagna));
+    const moon = horoscope.planets.find(p => p.planet === "Moon");
+    if (moon) {
+      const nakSpan = 360 / 27;
+      const degInNak = moon.longitude % nakSpan;
+      setDashas(calculateVimshottariDasha(moon.nakshatra, degInNak, birthData.dateOfBirth));
+    }
   };
 
   const handleSave = async () => {
@@ -162,6 +175,95 @@ export default function BirthChartPage() {
                   சந்திர நட்சத்திரம்: {chart.planets.find(p => p.planet === "Moon")?.nakshatraTamilName}
                 </p>
               </div>
+
+              {/* Current Dasha & Bhukti */}
+              {dashas.length > 0 && (() => {
+                const { mahadasha, bhukti } = getCurrentDasha(dashas);
+                return (
+                  <div className="rasi-card">
+                    <h3 className="text-xl font-bold font-tamil mb-3">தற்போதைய தசா (Current Dasha)</h3>
+                    {mahadasha ? (
+                      <div className="space-y-2 font-tamil">
+                        <p><span className="text-muted-foreground">மகா தசா:</span> <span className="font-bold text-primary">{mahadasha.tamilName}</span> ({mahadasha.startDate.toLocaleDateString()} → {mahadasha.endDate.toLocaleDateString()})</p>
+                        {bhukti && (
+                          <p><span className="text-muted-foreground">புத்தி:</span> <span className="font-bold">{bhukti.tamilName}</span> ({bhukti.startDate.toLocaleDateString()} → {bhukti.endDate.toLocaleDateString()})</p>
+                        )}
+                      </div>
+                    ) : <p className="text-muted-foreground">தரவு இல்லை</p>}
+                  </div>
+                );
+              })()}
+
+              {/* Vimshottari Dasha Timeline */}
+              {dashas.length > 0 && (
+                <div className="rasi-card overflow-x-auto">
+                  <h3 className="text-xl font-bold font-tamil mb-4">விம்சோத்தரி தசா (Vimshottari Dasha)</h3>
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="text-left p-2 font-tamil">கிரகம்</th>
+                        <th className="text-left p-2">Planet</th>
+                        <th className="text-left p-2 font-tamil">தொடக்கம்</th>
+                        <th className="text-left p-2 font-tamil">முடிவு</th>
+                        <th className="text-left p-2 font-tamil">ஆண்டுகள்</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dashas.map((d, i) => (
+                        <tr key={i} className="border-b border-border/50 hover:bg-muted/30">
+                          <td className="p-2 font-tamil font-semibold">{d.tamilName}</td>
+                          <td className="p-2">{d.planet}</td>
+                          <td className="p-2">{d.startDate.toLocaleDateString()}</td>
+                          <td className="p-2">{d.endDate.toLocaleDateString()}</td>
+                          <td className="p-2">{d.years}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Doshas */}
+              {doshas.length > 0 && (
+                <div className="rasi-card">
+                  <h3 className="text-xl font-bold font-tamil mb-4">தோஷ பரிசோதனை (Dosha Analysis)</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {doshas.map((d, i) => (
+                      <div key={i} className={`p-4 rounded-lg border ${d.isPresent ? 'border-destructive/40 bg-destructive/5' : 'border-green-500/30 bg-green-500/5'}`}>
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-bold font-tamil">{d.tamilName}</h4>
+                          <span className={`text-xs px-2 py-0.5 rounded ${d.isPresent ? 'bg-destructive/20 text-destructive' : 'bg-green-500/20 text-green-700'}`}>
+                            {d.isPresent ? `உள்ளது (${d.severity})` : 'இல்லை'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mb-1">{d.name}</p>
+                        <p className="text-sm font-tamil">{d.tamilExplanation}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Yogas */}
+              {yogas.length > 0 && (
+                <div className="rasi-card">
+                  <h3 className="text-xl font-bold font-tamil mb-4">யோகங்கள் (Yogas)</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {yogas.map((y, i) => (
+                      <div key={i} className={`p-4 rounded-lg border ${y.isPresent ? 'border-primary/40 bg-primary/5' : 'border-border bg-muted/20'}`}>
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-bold font-tamil">{y.tamilName}</h4>
+                          <span className={`text-xs px-2 py-0.5 rounded ${y.isPresent ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
+                            {y.isPresent ? 'உள்ளது' : 'இல்லை'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mb-1">{y.name}</p>
+                        <p className="text-sm font-tamil">{y.tamilExplanation}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

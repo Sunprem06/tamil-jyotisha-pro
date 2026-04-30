@@ -63,6 +63,8 @@ export default function BirthChartPage() {
               <div>
                 <Label className="font-tamil">பிறந்த தேதி (Date of Birth)</Label>
                 <Input type="date" value={birthData.dateOfBirth.toISOString().split('T')[0]}
+                  min="1900-01-01"
+                  max={new Date().toISOString().split('T')[0]}
                   onChange={e => setBirthData({...birthData, dateOfBirth: new Date(e.target.value)})} />
               </div>
               <div>

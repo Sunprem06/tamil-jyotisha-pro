@@ -11,6 +11,7 @@ import type { MatchingResult } from "@/lib/astrology/types";
 import { Heart, Check, X } from "lucide-react";
 import { BackButton } from "@/components/BackButton";
 import { PlaceAutocomplete } from "@/components/PlaceAutocomplete";
+import { BirthDateSelect } from "@/components/forms/BirthDateSelect";
 
 export default function PoruthamPage() {
   const [boyName, setBoyName] = useState("");
@@ -62,7 +63,7 @@ export default function PoruthamPage() {
                 </div>
                 <div>
                   <Label className="font-tamil">பிறந்த தேதி (Date of Birth)</Label>
-                  <Input type="date" value={boyDob} min="1900-01-01" max={new Date().toISOString().split('T')[0]} onChange={e => setBoyDob(e.target.value)} />
+                  <BirthDateSelect value={boyDob} onChange={setBoyDob} />
                 </div>
                 <div>
                   <Label className="font-tamil">பிறந்த நேரம் (Time of Birth)</Label>
@@ -112,7 +113,7 @@ export default function PoruthamPage() {
                 </div>
                 <div>
                   <Label className="font-tamil">பிறந்த தேதி (Date of Birth)</Label>
-                  <Input type="date" value={girlDob} min="1900-01-01" max={new Date().toISOString().split('T')[0]} onChange={e => setGirlDob(e.target.value)} />
+                  <BirthDateSelect value={girlDob} onChange={setGirlDob} />
                 </div>
                 <div>
                   <Label className="font-tamil">பிறந்த நேரம் (Time of Birth)</Label>

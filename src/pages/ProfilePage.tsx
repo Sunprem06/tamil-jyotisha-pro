@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { User, Users, Plus, Trash2, Save } from "lucide-react";
 import { BackButton } from "@/components/BackButton";
 import { PlaceAutocomplete } from "@/components/PlaceAutocomplete";
+import { BirthDateSelect } from "@/components/forms/BirthDateSelect";
 
 interface FamilyMember {
   id: string;
@@ -141,7 +142,7 @@ export default function ProfilePage() {
                   </div>
                   <div>
                     <Label className="text-xs">Date of Birth</Label>
-                    <Input type="date" value={newMember.date_of_birth} onChange={(e) => setNewMember({ ...newMember, date_of_birth: e.target.value })} />
+                    <BirthDateSelect value={newMember.date_of_birth} onChange={(value) => setNewMember({ ...newMember, date_of_birth: value })} />
                   </div>
                   <div>
                     <Label className="text-xs">Time of Birth</Label>

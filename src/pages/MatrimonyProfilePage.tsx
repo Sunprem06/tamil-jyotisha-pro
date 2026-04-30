@@ -98,7 +98,9 @@ export default function MatrimonyProfilePage() {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "திருமண சுயவிவரம் சேமிக்கப்பட்டது!" });
-      navigate("/matrimony/search");
+      // Trigger auto-matching in background, then route user to results
+      try { await supabase.functions.invoke("auto-match"); } catch {}
+      navigate("/matrimony/auto-matches");
     }
     setSaving(false);
   }

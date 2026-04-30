@@ -39,6 +39,7 @@ import MatrimonyProfilePage from "./pages/MatrimonyProfilePage";
 import MatrimonySearchPage from "./pages/MatrimonySearchPage";
 import MatrimonyViewProfilePage from "./pages/MatrimonyViewProfilePage";
 import PartnerPreferencesPage from "./pages/PartnerPreferencesPage";
+import AutoMatchesPage from "./pages/AutoMatchesPage";
 import MessagesPage from "./pages/MessagesPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
@@ -92,6 +93,7 @@ const App = () => (
             <Route path="/matrimony/profile" element={<ProtectedRoute><E><MatrimonyProfilePage /></E></ProtectedRoute>} />
             <Route path="/matrimony/preferences" element={<ProtectedRoute><E><PartnerPreferencesPage /></E></ProtectedRoute>} />
             <Route path="/matrimony/search" element={<E><MatrimonySearchPage /></E>} />
+            <Route path="/matrimony/auto-matches" element={<ProtectedRoute><E><AutoMatchesPage /></E></ProtectedRoute>} />
             <Route path="/matrimony/profile/:userId" element={<E><MatrimonyViewProfilePage /></E>} />
             <Route path="/messages" element={<ProtectedRoute><E><MessagesPage /></E></ProtectedRoute>} />
             <Route path="/admin" element={<E><AdminDashboardPage /></E>} />

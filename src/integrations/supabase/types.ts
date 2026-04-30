@@ -50,6 +50,60 @@ export type Database = {
         }
         Relationships: []
       }
+      auto_matches: {
+        Row: {
+          candidate_id: string
+          combined_score: number
+          created_at: string
+          credits_spent: number
+          id: string
+          is_unlocked: boolean
+          porutham_breakdown: Json
+          porutham_max: number
+          porutham_score: number
+          preference_match: Json
+          preference_score: number
+          requester_id: string
+          unlock_order: number | null
+          unlocked_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          candidate_id: string
+          combined_score?: number
+          created_at?: string
+          credits_spent?: number
+          id?: string
+          is_unlocked?: boolean
+          porutham_breakdown?: Json
+          porutham_max?: number
+          porutham_score?: number
+          preference_match?: Json
+          preference_score?: number
+          requester_id: string
+          unlock_order?: number | null
+          unlocked_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          candidate_id?: string
+          combined_score?: number
+          created_at?: string
+          credits_spent?: number
+          id?: string
+          is_unlocked?: boolean
+          porutham_breakdown?: Json
+          porutham_max?: number
+          porutham_score?: number
+          preference_match?: Json
+          preference_score?: number
+          requester_id?: string
+          unlock_order?: number | null
+          unlocked_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       birth_charts: {
         Row: {
           chart_data: Json
